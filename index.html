@@ -2,1126 +2,671 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-
-    <title>Cash Flow</title>
-
-    <style>
-
-        :root {
-            --bg: #000000;
-            --card: #171717;
-            --field: #222222;
-            --text: #f5f5f7;
-            --secondary: #a1a1a6;
-            --border: #303030;
-
-            --button: #f5f5f7;
-            --button-text: #000000;
-
-            --green: #45d483;
-            --red: #ff453a;
-            --zero: #66666b;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100%;
-
-            background: var(--bg);
-            color: var(--text);
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "SF Pro Display",
-                "SF Pro Text",
-                Helvetica,
-                Arial,
-                sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-        }
-
-        button,
-        input {
-            font-family: inherit;
-        }
-
-
-        /* =========================
-           APP
-           ========================= */
-
-        .app {
-            width: 100%;
-            max-width: 760px;
-
-            margin: 0 auto;
-
-            padding:
-                max(18px, env(safe-area-inset-top))
-                16px
-                max(28px, env(safe-area-inset-bottom));
-        }
-
-
-        /* =========================
-           HEADER
-           ========================= */
-
-        .header {
-            position: relative;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .account-name {
-            font-size: 25px;
-            font-weight: 700;
-            letter-spacing: -.5px;
-        }
-
-        .menu-button {
-            width: 38px;
-            height: 38px;
-
-            border: 0;
-            border-radius: 50%;
-
-            background: #242424;
-            color: var(--text);
-
-            font-size: 18px;
-
-            cursor: pointer;
-        }
-
-
-        /* =========================
-           BALANCE
-           ========================= */
-
-        .balance-section {
-            text-align: center;
-
-            padding: 8px 0 7px;
-        }
-
-        .balance {
-            font-size: 39px;
-            line-height: 1.05;
-
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        .balance.negative {
-            color: var(--red);
-        }
-
-        .balance-label {
-            margin-top: 4px;
-
-            color: var(--secondary);
-
-            font-size: 12px;
-        }
-
-
-        /* =========================
-           GRAPH
-           ========================= */
-
-        .graph-card {
-            margin-top: 9px;
-
-            background: var(--card);
-
-            border-radius: 17px;
-
-            padding:
-                12px
-                10px
-                8px
-                4px;
-        }
-
-        .graph {
-            position: relative;
-
-            height: 190px;
-
-            display: grid;
-
-            grid-template-columns: 46px 1fr;
-        }
-
-        .graph-scale {
-            position: relative;
-
-            height: 100%;
-
-            color: var(--secondary);
-
-            font-size: 10px;
-        }
-
-        .scale-value {
-            position: absolute;
-
-            right: 6px;
-
-            transform: translateY(-50%);
-        }
-
-        .scale-top {
-            top: 10%;
-        }
-
-        .scale-middle {
-            top: 35%;
-        }
-
-        .scale-zero {
-            top: 60%;
-
-            color: var(--text);
-
-            font-weight: 600;
-        }
-
-        .scale-negative {
-            top: 84%;
-
-            color: var(--red);
-        }
-
-        .graph-area {
-            position: relative;
-
-            height: 100%;
-        }
-
-        .zero-line {
-            position: absolute;
-
-            left: 0;
-            right: 0;
-
-            top: 60%;
-
-            border-top: 1px dashed var(--zero);
-
-            z-index: 1;
-        }
-
-        .graph svg {
-            width: 100%;
-            height: 100%;
-
-            display: block;
-
-            overflow: visible;
-        }
-
-        .graph-dates {
-            margin-left: 50px;
-
-            display: flex;
-            justify-content: space-between;
-
-            color: var(--secondary);
-
-            font-size: 10px;
-
-            padding: 5px 1px 0;
-        }
-
-
-        /* =========================
-           TRANSACTIONS
-           ========================= */
-
-        .transactions {
-            margin-top: 17px;
-        }
-
-        .transaction {
-            display: grid;
-
-            grid-template-columns:
-                45px
-                minmax(0, 1fr)
-                auto
-                auto;
-
-            gap: 7px;
-
-            align-items: center;
-
-            min-height: 31px;
-
-            padding: 3px 0;
-
-            border-bottom: 1px solid var(--border);
-        }
-
-        .transaction-date {
-            font-size: 14px;
-
-            font-weight: 700;
-
-            white-space: nowrap;
-        }
-
-        .transaction-comment {
-            min-width: 0;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-            white-space: nowrap;
-
-            font-size: 15px;
-
-            font-weight: 700;
-        }
-
-        .transaction-amount {
-            font-size: 15px;
-
-            font-weight: 700;
-
-            white-space: nowrap;
-        }
-
-        .transaction-balance {
-            min-width: 72px;
-
-            text-align: right;
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            white-space: nowrap;
-        }
-
-        .credit {
-            color: var(--green);
-        }
-
-        .debit,
-        .negative-balance {
-            color: var(--red);
-        }
-
-
-        /* =========================
-           ADD BUTTON
-           ========================= */
-
-        .add-button {
-            position: fixed;
-
-            right:
-                max(
-                    20px,
-                    calc((100vw - 760px) / 2 + 20px)
-                );
-
-            bottom:
-                max(
-                    22px,
-                    env(safe-area-inset-bottom)
-                );
-
-            width: 57px;
-            height: 57px;
-
-            border: 0;
-
-            border-radius: 50%;
-
-            background: var(--button);
-
-            color: var(--button-text);
-
-            font-size: 31px;
-
-            font-weight: 300;
-
-            line-height: 1;
-
-            box-shadow:
-                0 5px 18px rgba(0,0,0,.35);
-
-            cursor: pointer;
-        }
-
-        .add-button:active {
-            transform: scale(.95);
-        }
-
-
-        /* =========================
-           MODAL
-           ========================= */
-
-        .modal {
-            display: none;
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(0,0,0,.72);
-
-            z-index: 100;
-
-            align-items: flex-end;
-
-            justify-content: center;
-        }
-
-        .modal.open {
-            display: flex;
-        }
-
-        .form-card {
-            width: 100%;
-
-            max-width: 760px;
-
-            background: var(--card);
-
-            border-radius:
-                20px
-                20px
-                0
-                0;
-
-            padding:
-                10px
-                16px
-                max(
-                    16px,
-                    env(safe-area-inset-bottom)
-                );
-
-            max-height: 90vh;
-
-            overflow-y: auto;
-        }
-
-        .drag-bar {
-            width: 38px;
-            height: 4px;
-
-            border-radius: 5px;
-
-            background: #555;
-
-            margin:
-                0 auto
-                10px;
-        }
-
-        .form-header {
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            margin-bottom: 12px;
-        }
-
-        .form-title {
-            font-size: 21px;
-
-            font-weight: 700;
-        }
-
-        .close-button {
-            border: 0;
-
-            background: transparent;
-
-            color: var(--secondary);
-
-            font-size: 24px;
-
-            cursor: pointer;
-        }
-
-
-        /* =========================
-           FORM FIELDS
-           ========================= */
-
-        .field {
-            margin-bottom: 11px;
-        }
-
-        .field-label {
-            display: block;
-
-            margin-bottom: 4px;
-
-            color: var(--secondary);
-
-            font-size: 11px;
-        }
-
-        .date-input,
-        .text-input {
-            width: 100%;
-
-            height: 42px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 10px;
-
-            background: var(--field);
-
-            color: var(--text);
-
-            padding:
-                0 11px;
-
-            font-size: 16px;
-
-            outline: none;
-        }
-
-
-        /* =========================
-           AMOUNT
-           ========================= */
-
-        .amount-row {
-            display: grid;
-
-            grid-template-columns:
-                39px
-                39px
-                minmax(0, 1fr);
-
-            gap: 6px;
-
-            align-items: center;
-        }
-
-        .sign-button {
-            height: 46px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 10px;
-
-            background: var(--field);
-
-            color: var(--secondary);
-
-            font-size: 21px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-        }
-
-        .sign-button.selected {
-            background: var(--button);
-
-            color: var(--button-text);
-
-            border-color: var(--button);
-        }
-
-        .amount-input {
-            width: 100%;
-
-            height: 46px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 10px;
-
-            background: var(--field);
-
-            color: var(--text);
-
-            padding:
-                0 12px;
-
-            font-size: 22px;
-
-            font-weight: 700;
-
-            text-align: right;
-
-            outline: none;
-        }
-
-        .amount-input:focus {
-            border-color: #777;
-        }
-
-        .amount-hint {
-            margin-top: 3px;
-
-            color: var(--secondary);
-
-            font-size: 10px;
-        }
-
-
-        /* =========================
-           SUGGESTIONS
-           ========================= */
-
-        .suggestions {
-            display: flex;
-
-            flex-wrap: wrap;
-
-            gap: 4px;
-
-            margin-top: 5px;
-        }
-
-        .suggestion {
-            border:
-                1px solid var(--border);
-
-            border-radius: 14px;
-
-            background: transparent;
-
-            color: var(--secondary);
-
-            padding:
-                4px 8px;
-
-            font-size: 11px;
-
-            line-height: 1.1;
-
-            cursor: pointer;
-        }
-
-        .suggestion:active {
-            background: #303030;
-
-            color: var(--text);
-        }
-
-
-        /* =========================
-           ACTIONS
-           ========================= */
-
-        .form-actions {
-            display: grid;
-
-            grid-template-columns:
-                1fr
-                1.4fr;
-
-            gap: 8px;
-
-            margin-top: 14px;
-        }
-
-        .cancel-button,
-        .save-button {
-            height: 46px;
-
-            border-radius: 12px;
-
-            border: 0;
-
-            font-size: 15px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-        }
-
-        .cancel-button {
-            background: #292929;
-
-            color: var(--text);
-        }
-
-        .save-button {
-            background: var(--button);
-
-            color: var(--button-text);
-        }
-
-        .save-button:disabled {
-            opacity: .35;
-
-            cursor: default;
-        }
-
-
-        /* =========================
-           THEME MENU
-           ========================= */
-
-        .theme-menu {
-            display: none;
-
-            position: absolute;
-
-            top: 45px;
-            right: 0;
-
-            background: #202020;
-
-            border:
-                1px solid #353535;
-
-            border-radius: 12px;
-
-            padding: 6px;
-
-            z-index: 10;
-        }
-
-        .theme-menu button {
-            display: block;
-
-            width: 120px;
-
-            padding:
-                9px 12px;
-
-            border: 0;
-
-            border-radius: 8px;
-
-            background: transparent;
-
-            color: white;
-
-            text-align: left;
-
-            font-size: 14px;
-        }
-
-        .theme-menu button:hover {
-            background: #303030;
-        }
-
-
-        /* =========================
-           LIGHT THEME
-           ========================= */
-
-        body.light {
-            --bg: #f5f5f7;
-
-            --card: #ffffff;
-
-            --field: #f0f0f2;
-
-            --text: #1d1d1f;
-
-            --secondary: #77777c;
-
-            --border: #dedee2;
-
-            --button: #111111;
-
-            --button-text: #ffffff;
-
-            --green: #16834a;
-
-            --red: #d93025;
-
-            --zero: #b0b0b4;
-        }
-
-        body.light .menu-button {
-            background: #e5e5e7;
-
-            color: #1d1d1f;
-        }
-
-        body.light .cancel-button {
-            background: #e5e5e7;
-        }
-
-        body.light .theme-menu {
-            background: white;
-
-            border-color: #ddd;
-        }
-
-        body.light .theme-menu button {
-            color: #222;
-        }
-
-        body.light .theme-menu button:hover {
-            background: #eee;
-        }
-
-
-        /* =========================
-           DESKTOP
-           ========================= */
-
-        @media (min-width: 760px) {
-
-            .app {
-                padding-top: 32px;
-            }
-
-            .transaction {
-                grid-template-columns:
-                    55px
-                    minmax(0, 1fr)
-                    auto
-                    95px;
-
-                gap: 10px;
-            }
-
-            .transaction-comment,
-            .transaction-amount,
-            .transaction-balance {
-                font-size: 16px;
-            }
-
-            .modal {
-                align-items: center;
-            }
-
-            .form-card {
-                border-radius: 20px;
-
-                margin: 20px;
-
-                max-height: 760px;
-            }
-        }
-
-
-        /* =========================
-           SMALL PHONES
-           ========================= */
-
-        @media (max-width: 380px) {
-
-            .app {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .transaction {
-                grid-template-columns:
-                    42px
-                    minmax(0, 1fr)
-                    auto
-                    auto;
-
-                gap: 5px;
-            }
-
-            .transaction-comment,
-            .transaction-amount,
-            .transaction-balance {
-                font-size: 13px;
-            }
-
-            .transaction-balance {
-                min-width: 62px;
-            }
-
-            .balance {
-                font-size: 34px;
-            }
-
-            .form-card {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .suggestion {
-                padding:
-                    4px 7px;
-
-                font-size: 10px;
-            }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Cash Flow</title>
+
+<style>
+:root{
+    --bg:#000;
+    --card:#171717;
+    --field:#222;
+    --text:#f5f5f7;
+    --secondary:#999;
+    --border:#303030;
+    --button:#f5f5f7;
+    --buttonText:#000;
+    --green:#45d483;
+    --red:#ff453a;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+                 "SF Pro Text",Helvetica,Arial,sans-serif;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+button{
+    -webkit-tap-highlight-color:transparent;
+}
+
+.app{
+    width:100%;
+    max-width:760px;
+    margin:auto;
+    padding:
+        max(18px,env(safe-area-inset-top))
+        16px
+        max(90px,env(safe-area-inset-bottom));
+}
+
+/* HEADER */
+
+.header{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.account-name{
+    font-size:25px;
+    font-weight:700;
+}
+
+.menu-button{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    background:#242424;
+    color:white;
+    font-size:17px;
+}
+
+/* BALANCE */
+
+.balance-section{
+    text-align:center;
+    padding:8px 0 7px;
+}
+
+.balance{
+    font-size:39px;
+    line-height:1.05;
+    font-weight:700;
+    letter-spacing:-1px;
+}
+
+.balance.negative{
+    color:var(--red);
+}
+
+.balance-label{
+    margin-top:4px;
+    color:var(--secondary);
+    font-size:12px;
+}
+
+/* GRAPH */
+
+.graph-card{
+    margin-top:9px;
+    background:var(--card);
+    border-radius:17px;
+    padding:12px 10px 8px 4px;
+}
+
+.graph{
+    height:190px;
+    display:grid;
+    grid-template-columns:46px 1fr;
+}
+
+.graph-scale{
+    position:relative;
+    height:100%;
+    color:var(--secondary);
+    font-size:10px;
+}
+
+.scale-value{
+    position:absolute;
+    right:6px;
+    transform:translateY(-50%);
+}
+
+.scale-top{top:10%}
+.scale-middle{top:35%}
+.scale-zero{
+    top:60%;
+    color:var(--text);
+    font-weight:600;
+}
+.scale-negative{
+    top:84%;
+    color:var(--red);
+}
+
+.graph-area{
+    position:relative;
+}
+
+.zero-line{
+    position:absolute;
+    left:0;
+    right:0;
+    top:60%;
+    border-top:1px dashed #666;
+}
+
+.graph svg{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+.graph-dates{
+    margin-left:50px;
+    display:flex;
+    justify-content:space-between;
+    color:var(--secondary);
+    font-size:10px;
+    padding-top:5px;
+}
+
+/* TRANSACTIONS */
+
+.transactions{
+    margin-top:17px;
+    overflow:hidden;
+}
+
+.transaction-wrap{
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--border);
+}
+
+.transaction-delete{
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:78px;
+    border:0;
+    background:var(--red);
+    color:white;
+    font-size:14px;
+    font-weight:600;
+}
+
+.transaction{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:45px minmax(0,1fr) auto auto;
+    gap:7px;
+    align-items:center;
+    min-height:34px;
+    padding:3px 0;
+    background:var(--bg);
+    transition:transform .18s ease;
+    touch-action:pan-y;
+}
+
+.transaction.swiped{
+    transform:translateX(-78px);
+}
+
+.transaction-date{
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.transaction-comment{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:15px;
+    font-weight:700;
+}
+
+.transaction-amount,
+.transaction-balance{
+    font-size:15px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.transaction-balance{
+    min-width:72px;
+    text-align:right;
+}
+
+.credit{color:var(--green)}
+.debit,.negative-balance{color:var(--red)}
+
+/* ADD BUTTON */
+
+.add-button{
+    position:fixed;
+    right:max(20px,calc((100vw - 760px)/2 + 20px));
+    bottom:max(22px,env(safe-area-inset-bottom));
+    width:57px;
+    height:57px;
+    border:0;
+    border-radius:50%;
+    background:var(--button);
+    color:var(--buttonText);
+    font-size:31px;
+    box-shadow:0 5px 18px rgba(0,0,0,.35);
+    z-index:20;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    z-index:100;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.modal.open{
+    display:flex;
+}
+
+.form-card{
+    width:100%;
+    max-width:760px;
+    background:var(--card);
+    border-radius:20px 20px 0 0;
+    padding:
+        10px
+        16px
+        max(16px,env(safe-area-inset-bottom));
+    max-height:90vh;
+    overflow-y:auto;
+}
+
+.drag-bar{
+    width:38px;
+    height:4px;
+    border-radius:5px;
+    background:#555;
+    margin:0 auto 10px;
+}
+
+.form-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.form-title{
+    font-size:21px;
+    font-weight:700;
+}
+
+.close-button{
+    border:0;
+    background:transparent;
+    color:var(--secondary);
+    font-size:24px;
+}
+
+.field{
+    margin-bottom:10px;
+}
+
+.field-label{
+    display:block;
+    margin-bottom:4px;
+    color:var(--secondary);
+    font-size:11px;
+}
+
+.date-input,
+.text-input{
+    width:100%;
+    height:40px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--field);
+    color:var(--text);
+    padding:0 11px;
+    font-size:16px;
+    outline:none;
+}
+
+/* AMOUNT */
+
+.amount-row{
+    display:grid;
+    grid-template-columns:39px 39px minmax(0,1fr);
+    gap:6px;
+}
+
+.sign-button{
+    height:44px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--field);
+    color:var(--secondary);
+    font-size:21px;
+    font-weight:600;
+}
+
+.sign-button.selected{
+    background:var(--button);
+    color:var(--buttonText);
+    border-color:var(--button);
+}
+
+.amount-input{
+    width:100%;
+    height:44px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--field);
+    color:var(--text);
+    padding:0 12px;
+    font-size:21px;
+    font-weight:700;
+    text-align:right;
+    outline:none;
+}
+
+.amount-input.placeholder{
+    color:#666;
+}
+
+.amount-hint{
+    margin-top:3px;
+    color:var(--secondary);
+    font-size:10px;
+}
+
+/* SUGGESTIONS */
+
+.suggestions{
+    display:flex;
+    flex-wrap:nowrap;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:2px;
+}
+
+.suggestions::-webkit-scrollbar{
+    display:none;
+}
+
+.suggestion{
+    flex:0 0 auto;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:transparent;
+    color:var(--secondary);
+    padding:4px 8px;
+    font-size:11px;
+    line-height:1.1;
+}
+
+/* ACTIONS */
+
+.form-actions{
+    display:grid;
+    grid-template-columns:1fr 1.4fr;
+    gap:8px;
+    margin-top:13px;
+}
+
+.cancel-button,
+.save-button{
+    height:45px;
+    border:0;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+}
+
+.cancel-button{
+    background:#292929;
+    color:white;
+}
+
+.save-button{
+    background:var(--button);
+    color:var(--buttonText);
+}
+
+.delete-edit-button{
+    width:100%;
+    height:40px;
+    margin-top:9px;
+    border:0;
+    border-radius:11px;
+    background:transparent;
+    color:var(--red);
+    font-size:14px;
+    font-weight:600;
+}
+
+/* THEME */
+
+.theme-menu{
+    display:none;
+    position:absolute;
+    right:0;
+    top:45px;
+    background:#202020;
+    border:1px solid #353535;
+    border-radius:12px;
+    padding:6px;
+    z-index:30;
+}
+
+.theme-menu button{
+    display:block;
+    width:120px;
+    padding:9px 12px;
+    border:0;
+    background:transparent;
+    color:white;
+    text-align:left;
+    border-radius:8px;
+}
+
+@media(min-width:760px){
+
+    .app{
+        padding-top:32px;
+    }
+
+    .transaction{
+        grid-template-columns:55px minmax(0,1fr) auto 95px;
+        gap:10px;
+    }
+
+    .modal{
+        align-items:center;
+    }
+
+    .form-card{
+        margin:20px;
+        border-radius:20px;
+        max-height:760px;
+    }
+}
+
+@media(max-width:380px){
+
+    .app{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .transaction{
+        grid-template-columns:42px minmax(0,1fr) auto auto;
+        gap:5px;
+    }
+
+    .transaction-comment,
+    .transaction-amount,
+    .transaction-balance{
+        font-size:13px;
+    }
+
+    .transaction-balance{
+        min-width:62px;
+    }
+
+    .balance{
+        font-size:34px;
+    }
+
+    .form-card{
+        padding-left:12px;
+        padding-right:12px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
 <div class="app">
 
+<header class="header">
 
-    <!-- =========================
-         HEADER
-         ========================= -->
+    <div class="account-name">Checking</div>
 
-    <header class="header">
+    <button
+        class="menu-button"
+        onclick="toggleThemeMenu()">
+        •••
+    </button>
 
-        <div class="account-name">
-            Checking
+    <div
+        class="theme-menu"
+        id="themeMenu">
+
+        <button onclick="setTheme('dark')">Dark</button>
+        <button onclick="setTheme('light')">Light</button>
+
+    </div>
+
+</header>
+
+
+<section class="balance-section">
+
+    <div class="balance" id="currentBalance">
+        −1,500
+    </div>
+
+    <div class="balance-label">
+        current balance
+    </div>
+
+</section>
+
+
+<section class="graph-card">
+
+    <div class="graph">
+
+        <div class="graph-scale">
+            <span class="scale-value scale-top">20k</span>
+            <span class="scale-value scale-middle">10k</span>
+            <span class="scale-value scale-zero">0</span>
+            <span class="scale-value scale-negative">−10k</span>
         </div>
 
-        <button
-            class="menu-button"
-            onclick="toggleThemeMenu()"
-            aria-label="Settings">
+        <div class="graph-area">
 
-            •••
+            <div class="zero-line"></div>
 
-        </button>
+            <svg
+                viewBox="0 0 700 190"
+                preserveAspectRatio="none">
 
+                <path
+                    d="M0,82 L55,76 L110,67 L165,72 L220,61 L275,50 L330,56 L385,46 L440,59 L495,43 L540,51 L565,63"
+                    fill="none"
+                    stroke="#45d483"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
 
-        <div
-            class="theme-menu"
-            id="themeMenu">
+                <path
+                    d="M565,63 L585,78 L610,96 L640,116 L670,132 L700,143"
+                    fill="none"
+                    stroke="#ff453a"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
 
-            <button
-                onclick="setTheme('dark')">
-                Dark
-            </button>
-
-            <button
-                onclick="setTheme('light')">
-                Light
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- =========================
-         BALANCE
-         ========================= -->
-
-    <section class="balance-section">
-
-        <div
-            class="balance"
-            id="currentBalance">
-
-            −1,500
+            </svg>
 
         </div>
+    </div>
 
-        <div class="balance-label">
-            current balance
-        </div>
+    <div class="graph-dates">
+        <span>10/08</span>
+        <span>20/08</span>
+        <span>30/08</span>
+        <span>09/09</span>
+        <span>19/09</span>
+        <span>29/09</span>
+    </div>
 
-    </section>
-
-
-    <!-- =========================
-         GRAPH
-         ========================= -->
-
-    <section class="graph-card">
-
-        <div class="graph">
+</section>
 
 
-            <div class="graph-scale">
-
-                <span
-                    class="scale-value scale-top">
-                    20k
-                </span>
-
-                <span
-                    class="scale-value scale-middle">
-                    10k
-                </span>
-
-                <span
-                    class="scale-value scale-zero">
-                    0
-                </span>
-
-                <span
-                    class="scale-value scale-negative">
-                    −10k
-                </span>
-
-            </div>
-
-
-            <div class="graph-area">
-
-                <div class="zero-line"></div>
-
-
-                <svg
-                    viewBox="0 0 700 190"
-                    preserveAspectRatio="none">
-
-                    <path
-                        d="
-                            M0,82
-                            L55,76
-                            L110,67
-                            L165,72
-                            L220,61
-                            L275,50
-                            L330,56
-                            L385,46
-                            L440,59
-                            L495,43
-                            L540,51
-                            L565,63
-                        "
-                        fill="none"
-                        stroke="#45d483"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round" />
-
-
-                    <path
-                        d="
-                            M565,63
-                            L585,78
-                            L610,96
-                            L640,116
-                            L670,132
-                            L700,143
-                        "
-                        fill="none"
-                        stroke="#ff453a"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round" />
-
-                </svg>
-
-            </div>
-
-        </div>
-
-
-        <div class="graph-dates">
-
-            <span>10/08</span>
-            <span>20/08</span>
-            <span>30/08</span>
-            <span>09/09</span>
-            <span>19/09</span>
-            <span>29/09</span>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         TRANSACTIONS
-         ========================= -->
-
-    <section
-        class="transactions"
-        id="transactionList">
-
-    </section>
-
+<section
+    class="transactions"
+    id="transactionList">
+</section>
 
 </div>
 
 
-<!-- =========================
-     ADD BUTTON
-     ========================= -->
-
 <button
     class="add-button"
-    onclick="openAddTransaction()"
-    aria-label="Add transaction">
-
+    onclick="openAddTransaction()">
     +
-
 </button>
 
-
-
-<!-- =========================
-     ADD TRANSACTION
-     ========================= -->
 
 <div
     class="modal"
     id="transactionModal">
 
-
     <div class="form-card">
-
 
         <div class="drag-bar"></div>
 
-
         <div class="form-header">
 
-            <div class="form-title">
+            <div
+                class="form-title"
+                id="formTitle">
                 Add Transaction
             </div>
 
             <button
                 class="close-button"
-                onclick="closeAddTransaction()">
-
+                onclick="closeTransactionForm()">
                 ×
-
             </button>
 
         </div>
 
 
-        <!-- DATE -->
-
         <div class="field">
 
-            <label
-                class="field-label"
-                for="dateInput">
-
+            <label class="field-label">
                 Date
-
             </label>
-
 
             <input
                 id="dateInput"
@@ -1131,57 +676,37 @@
         </div>
 
 
-        <!-- AMOUNT -->
-
         <div class="field">
 
-            <label
-                class="field-label">
-
+            <label class="field-label">
                 Amount
-
             </label>
 
-
             <div class="amount-row">
-
-
-                <!-- DEBIT -->
 
                 <button
                     id="minusButton"
                     class="sign-button selected"
-                    onclick="setSign(-1)"
-                    aria-label="Debit">
-
+                    onclick="setSign(-1)">
                     −
-
                 </button>
-
-
-                <!-- CREDIT -->
 
                 <button
                     id="plusButton"
                     class="sign-button"
-                    onclick="setSign(1)"
-                    aria-label="Credit">
-
+                    onclick="setSign(1)">
                     +
-
                 </button>
-
 
                 <input
                     id="amountInput"
-                    class="amount-input"
+                    class="amount-input placeholder"
                     type="text"
                     inputmode="decimal"
                     autocomplete="off"
-                    value="0">
+                    placeholder="−0">
 
             </div>
-
 
             <div class="amount-hint">
                 Debit is selected by default
@@ -1190,48 +715,15 @@
         </div>
 
 
-        <!-- CATEGORY -->
-
-        <div class="field">
-
-            <label
-                class="field-label"
-                for="categoryInput">
-
-                Category
-
-            </label>
-
-
-            <input
-                id="categoryInput"
-                class="text-input"
-                type="text"
-                autocomplete="off"
-                placeholder="Optional">
-
-
-            <div
-                class="suggestions"
-                id="categorySuggestions">
-
-            </div>
-
-        </div>
-
-
-        <!-- COMMENT -->
+        <!-- COMMENT FIRST -->
 
         <div class="field">
 
             <label
                 class="field-label"
                 for="commentInput">
-
                 Comment
-
             </label>
-
 
             <input
                 id="commentInput"
@@ -1240,867 +732,1100 @@
                 autocomplete="off"
                 placeholder="Optional">
 
-
             <div
                 class="suggestions"
                 id="commentSuggestions">
-
             </div>
 
         </div>
 
 
-        <!-- ACTIONS -->
+        <!-- CATEGORY SECOND -->
+
+        <div class="field">
+
+            <label
+                class="field-label"
+                for="categoryInput">
+                Category
+            </label>
+
+            <input
+                id="categoryInput"
+                class="text-input"
+                type="text"
+                autocomplete="off"
+                placeholder="Optional">
+
+            <div
+                class="suggestions"
+                id="categorySuggestions">
+            </div>
+
+        </div>
+
 
         <div class="form-actions">
 
             <button
                 class="cancel-button"
-                onclick="closeAddTransaction()">
-
+                onclick="closeTransactionForm()">
                 Cancel
-
             </button>
-
 
             <button
                 class="save-button"
-                id="saveButton"
-                onclick="addTransaction()">
-
-                Add
-
+                onclick="saveTransaction()">
+                Save
             </button>
 
         </div>
 
+
+        <button
+            id="deleteEditButton"
+            class="delete-edit-button"
+            onclick="deleteEditingTransaction()"
+            style="display:none">
+            Delete transaction
+        </button>
+
     </div>
-
 </div>
-
 
 
 <script>
 
+/* =========================
+   DATA
+   ========================= */
 
-    /* =========================
-       DATA
-       ========================= */
-
-    let transactions = [
-
-        {
-            date: "2026-09-29",
-            amount: -12000,
-            category: "",
-            comment: "Large payment"
-        },
-
-        {
-            date: "2026-09-02",
-            amount: 8000,
-            category: "Salary",
-            comment: "Monthly salary"
-        },
-
-        {
-            date: "2026-08-20",
-            amount: -1200,
-            category: "Credit Card",
-            comment: "Credit card"
-        },
-
-        {
-            date: "2026-08-20",
-            amount: -3500,
-            category: "Rent",
-            comment: "Rent"
-        },
-
-        {
-            date: "2026-08-15",
-            amount: 8000,
-            category: "Salary",
-            comment: "Monthly salary"
-        },
-
-        {
-            date: "2026-08-12",
-            amount: -450,
-            category: "Utilities",
-            comment: "Electricity"
-        },
-
-        {
-            date: "2026-08-10",
-            amount: -350,
-            category: "Food",
-            comment: "Supermarket"
-        },
-
-        {
-            date: "2026-08-10",
-            amount: 8000,
-            category: "Salary",
-            comment: "Monthly salary"
-        }
-
-    ];
-
-
-    /* =========================
-       SIGN
-       ========================= */
-
-    let transactionSign = -1;
-
-
-    /* =========================
-       DEBIT LISTS
-       ========================= */
-
-    const debitCategories = [
-
-        "Credit Card",
-        "Rent",
-        "Electricity",
-        "Food",
-        "Insurance",
-        "Tax",
-        "Utilities",
-        "Other"
-
-    ];
-
-
-    const debitComments = [
-
-        "Credit card estimate",
-        "Rent",
-        "Electricity bill",
-        "Supermarket",
-        "Insurance",
-        "Tax payment",
-        "Monthly expenses",
-        "Other"
-
-    ];
-
-
-    /* =========================
-       CREDIT LISTS
-       ========================= */
-
-    const creditCategories = [
-
-        "Salary",
-        "Refund",
-        "Interest",
-        "Transfer",
-        "Bonus",
-        "Other"
-
-    ];
-
-
-    const creditComments = [
-
-        "Monthly salary",
-        "Refund",
-        "Interest",
-        "Transfer",
-        "Bonus",
-        "Other"
-
-    ];
-
-
-    /* =========================
-       SET SIGN
-       ========================= */
-
-    function setSign(sign) {
-
-        transactionSign = sign;
-
-
-        const minus =
-            document.getElementById(
-                "minusButton"
-            );
-
-        const plus =
-            document.getElementById(
-                "plusButton"
-            );
-
-
-        if (sign === -1) {
-
-            minus.classList.add(
-                "selected"
-            );
-
-            plus.classList.remove(
-                "selected"
-            );
-
-        } else {
-
-            plus.classList.add(
-                "selected"
-            );
-
-            minus.classList.remove(
-                "selected"
-            );
-
-        }
-
-
-        updateAmountDisplay();
-
-
-        renderSuggestions();
-
+let transactions = [
+    {
+        id:1,
+        date:"2026-09-29",
+        amount:-12000,
+        category:"",
+        comment:"Large payment"
+    },
+    {
+        id:2,
+        date:"2026-09-02",
+        amount:8000,
+        category:"Salary",
+        comment:"Monthly salary"
+    },
+    {
+        id:3,
+        date:"2026-08-20",
+        amount:-1200,
+        category:"Credit Card",
+        comment:"Credit card"
+    },
+    {
+        id:4,
+        date:"2026-08-20",
+        amount:-3500,
+        category:"Rent",
+        comment:"Rent"
+    },
+    {
+        id:5,
+        date:"2026-08-15",
+        amount:8000,
+        category:"Salary",
+        comment:"Monthly salary"
+    },
+    {
+        id:6,
+        date:"2026-08-12",
+        amount:-450,
+        category:"Utilities",
+        comment:"Electricity"
+    },
+    {
+        id:7,
+        date:"2026-08-10",
+        amount:-350,
+        category:"Food",
+        comment:"Supermarket"
+    },
+    {
+        id:8,
+        date:"2026-08-10",
+        amount:8000,
+        category:"Salary",
+        comment:"Monthly salary"
     }
+];
 
 
-    /* =========================
-       AMOUNT
-       ========================= */
-
-    function updateAmountDisplay() {
-
-        const input =
-            document.getElementById(
-                "amountInput"
-            );
+let transactionSign = -1;
+let editingId = null;
+let nextId = 100;
 
 
-        let value =
-            input.value
-                .replace(/[^\d.]/g, "");
+/* =========================
+   SUGGESTIONS
+   ========================= */
+
+const debitCategories = [
+    "Credit Card",
+    "Rent",
+    "Electricity",
+    "Food",
+    "Insurance",
+    "Tax",
+    "Utilities",
+    "Other"
+];
+
+const debitComments = [
+    "Credit card estimate",
+    "Rent",
+    "Electricity bill",
+    "Supermarket",
+    "Insurance",
+    "Tax payment",
+    "Monthly expenses",
+    "Other"
+];
+
+const creditCategories = [
+    "Salary",
+    "Refund",
+    "Interest",
+    "Transfer",
+    "Bonus",
+    "Other"
+];
+
+const creditComments = [
+    "Monthly salary",
+    "Refund",
+    "Interest",
+    "Transfer",
+    "Bonus",
+    "Other"
+];
 
 
-        if (value === "") {
-            value = "0";
-        }
+/* =========================
+   SIGN
+   ========================= */
 
+function setSign(sign){
 
-        /*
-         * We keep the sign visually
-         * represented by the buttons.
-         */
+    transactionSign = sign;
 
-        input.value = value;
-
-    }
-
-
-    /* =========================
-       SUGGESTIONS
-       ========================= */
-
-    function renderSuggestions() {
-
-        const categoryBox =
-            document.getElementById(
-                "categorySuggestions"
-            );
-
-        const commentBox =
-            document.getElementById(
-                "commentSuggestions"
-            );
-
-
-        const categories =
-            transactionSign === -1
-                ? debitCategories
-                : creditCategories;
-
-
-        const comments =
-            transactionSign === -1
-                ? debitComments
-                : creditComments;
-
-
-        categoryBox.innerHTML = "";
-
-
-        categories.forEach(
-            category => {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-                button.className =
-                    "suggestion";
-
-                button.textContent =
-                    category;
-
-                button.onclick =
-                    () => chooseCategory(
-                        category
-                    );
-
-                categoryBox.appendChild(
-                    button
-                );
-
-            }
+    document
+        .getElementById("minusButton")
+        .classList.toggle(
+            "selected",
+            sign === -1
         );
 
-
-        commentBox.innerHTML = "";
-
-
-        comments.forEach(
-            comment => {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-                button.className =
-                    "suggestion";
-
-                button.textContent =
-                    comment;
-
-                button.onclick =
-                    () => chooseComment(
-                        comment
-                    );
-
-                commentBox.appendChild(
-                    button
-                );
-
-            }
+    document
+        .getElementById("plusButton")
+        .classList.toggle(
+            "selected",
+            sign === 1
         );
-
-    }
-
-
-    function chooseCategory(value) {
-
-        document.getElementById(
-            "categoryInput"
-        ).value = value;
-
-    }
-
-
-    function chooseComment(value) {
-
-        document.getElementById(
-            "commentInput"
-        ).value = value;
-
-    }
-
-
-    /* =========================
-       ADD TRANSACTION
-       ========================= */
-
-    function openAddTransaction() {
-
-        const modal =
-            document.getElementById(
-                "transactionModal"
-            );
-
-
-        const date =
-            document.getElementById(
-                "dateInput"
-            );
-
-
-        const amount =
-            document.getElementById(
-                "amountInput"
-            );
-
-
-        const today =
-            new Date()
-                .toISOString()
-                .split("T")[0];
-
-
-        date.value = today;
-
-
-        /*
-         * Every new transaction starts
-         * as a debit.
-         */
-
-        transactionSign = -1;
-
-
-        document.getElementById(
-            "minusButton"
-        ).classList.add(
-            "selected"
-        );
-
-
-        document.getElementById(
-            "plusButton"
-        ).classList.remove(
-            "selected"
-        );
-
-
-        amount.value = "0";
-
-
-        document.getElementById(
-            "categoryInput"
-        ).value = "";
-
-
-        document.getElementById(
-            "commentInput"
-        ).value = "";
-
-
-        renderSuggestions();
-
-
-        modal.classList.add(
-            "open"
-        );
-
-
-        setTimeout(
-            () => amount.focus(),
-            150
-        );
-
-    }
-
-
-    function closeAddTransaction() {
-
-        document
-            .getElementById(
-                "transactionModal"
-            )
-            .classList.remove(
-                "open"
-            );
-
-    }
-
-
-    function addTransaction() {
-
-        const date =
-            document.getElementById(
-                "dateInput"
-            ).value;
-
-
-        const amountInput =
-            document.getElementById(
-                "amountInput"
-            );
-
-
-        const amountValue =
-            Number(
-                amountInput.value
-                    .replace(/,/g, "")
-            );
-
-
-        const category =
-            document.getElementById(
-                "categoryInput"
-            ).value.trim();
-
-
-        const comment =
-            document.getElementById(
-                "commentInput"
-            ).value.trim();
-
-
-        if (!date) {
-            return;
-        }
-
-
-        if (
-            !Number.isFinite(
-                amountValue
-            ) ||
-            amountValue <= 0
-        ) {
-
-            amountInput.focus();
-
-            return;
-
-        }
-
-
-        transactions.push({
-
-            date: date,
-
-            amount:
-                amountValue *
-                transactionSign,
-
-            category: category,
-
-            comment: comment
-
-        });
-
-
-        renderTransactions();
-
-
-        closeAddTransaction();
-
-    }
-
-
-    /* =========================
-       CALCULATE BALANCES
-       ========================= */
-
-    function calculateBalances() {
-
-        const sorted =
-            [...transactions].sort(
-                (a, b) =>
-                    a.date.localeCompare(
-                        b.date
-                    )
-            );
-
-
-        let balance = 0;
-
-
-        for (
-            const transaction
-            of sorted
-        ) {
-
-            balance +=
-                transaction.amount;
-
-            transaction.balance =
-                balance;
-
-        }
-
-
-        return sorted;
-
-    }
-
-
-    /* =========================
-       FORMAT
-       ========================= */
-
-    function formatAmount(value) {
-
-        const absolute =
-            Math.abs(value)
-                .toLocaleString(
-                    "en-US"
-                );
-
-
-        if (value < 0) {
-
-            return "−" + absolute;
-
-        }
-
-
-        return "+" + absolute;
-
-    }
-
-
-    function formatBalance(value) {
-
-        const absolute =
-            Math.abs(value)
-                .toLocaleString(
-                    "en-US"
-                );
-
-
-        if (value < 0) {
-
-            return "−" + absolute;
-
-        }
-
-
-        return absolute;
-
-    }
-
-
-    function formatDate(dateString) {
-
-        const parts =
-            dateString.split("-");
-
-
-        return (
-            parts[2] +
-            "/" +
-            parts[1]
-        );
-
-    }
-
-
-    /* =========================
-       TRANSACTIONS DISPLAY
-       ========================= */
-
-    function renderTransactions() {
-
-        const list =
-            document.getElementById(
-                "transactionList"
-            );
-
-
-        list.innerHTML = "";
-
-
-        const sorted =
-            calculateBalances();
-
-
-        /*
-         * Newest first.
-         */
-
-        sorted.reverse();
-
-
-        sorted.forEach(
-            transaction => {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "transaction";
-
-
-                const amountClass =
-                    transaction.amount < 0
-                        ? "transaction-amount debit"
-                        : "transaction-amount credit";
-
-
-                const balanceClass =
-                    transaction.balance < 0
-                        ? "transaction-balance negative-balance"
-                        : "transaction-balance";
-
-
-                row.innerHTML = `
-
-                    <div class="transaction-date">
-                        ${formatDate(
-                            transaction.date
-                        )}
-                    </div>
-
-                    <div class="transaction-comment">
-                        ${escapeHtml(
-                            transaction.comment || ""
-                        )}
-                    </div>
-
-                    <div class="${amountClass}">
-                        ${formatAmount(
-                            transaction.amount
-                        )}
-                    </div>
-
-                    <div class="${balanceClass}">
-                        ${formatBalance(
-                            transaction.balance
-                        )}
-                    </div>
-
-                `;
-
-
-                list.appendChild(row);
-
-            }
-        );
-
-
-        if (sorted.length > 0) {
-
-            const current =
-                sorted[0].balance;
-
-
-            const balanceElement =
-                document.getElementById(
-                    "currentBalance"
-                );
-
-
-            balanceElement.textContent =
-                formatBalance(
-                    current
-                );
-
-
-            if (current < 0) {
-
-                balanceElement.classList.add(
-                    "negative"
-                );
-
-            } else {
-
-                balanceElement.classList.remove(
-                    "negative"
-                );
-
-            }
-
-        }
-
-    }
-
-
-    function escapeHtml(text) {
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-
-        div.textContent =
-            text;
-
-
-        return div.innerHTML;
-
-    }
-
-
-    /* =========================
-       THEME
-       ========================= */
-
-    function toggleThemeMenu() {
-
-        const menu =
-            document.getElementById(
-                "themeMenu"
-            );
-
-
-        menu.style.display =
-            menu.style.display === "block"
-                ? "none"
-                : "block";
-
-    }
-
-
-    function setTheme(theme) {
-
-        if (
-            theme === "light"
-        ) {
-
-            document.body.classList.add(
-                "light"
-            );
-
-
-            localStorage.setItem(
-                "cashFlowTheme",
-                "light"
-            );
-
-        } else {
-
-            document.body.classList.remove(
-                "light"
-            );
-
-
-            localStorage.setItem(
-                "cashFlowTheme",
-                "dark"
-            );
-
-        }
-
-
-        document.getElementById(
-            "themeMenu"
-        ).style.display =
-            "none";
-
-    }
-
-
-    /* =========================
-       INITIALIZE
-       ========================= */
-
-    const savedTheme =
-        localStorage.getItem(
-            "cashFlowTheme"
-        );
-
-
-    if (
-        savedTheme === "light"
-    ) {
-
-        document.body.classList.add(
-            "light"
-        );
-
-    }
-
 
     renderSuggestions();
 
-    renderTransactions();
+    updateAmountPlaceholder();
+}
 
+
+function updateAmountPlaceholder(){
+
+    const input =
+        document.getElementById("amountInput");
+
+    if(!input.value){
+
+        input.placeholder =
+            transactionSign === -1
+                ? "−0"
+                : "+0";
+
+        input.classList.add(
+            "placeholder"
+        );
+    }
+}
+
+
+/* =========================
+   AMOUNT INPUT
+   ========================= */
+
+document
+    .getElementById("amountInput")
+    .addEventListener(
+        "input",
+        function(){
+
+            this.value =
+                this.value
+                    .replace(/[^\d.]/g,"");
+
+            if(this.value){
+
+                this.classList.remove(
+                    "placeholder"
+                );
+
+            }else{
+
+                this.classList.add(
+                    "placeholder"
+                );
+
+            }
+        }
+    );
+
+
+/* =========================
+   SUGGESTIONS
+   ========================= */
+
+function renderSuggestions(){
+
+    const categories =
+        transactionSign === -1
+            ? debitCategories
+            : creditCategories;
+
+    const comments =
+        transactionSign === -1
+            ? debitComments
+            : creditComments;
+
+    renderSuggestionList(
+        "categorySuggestions",
+        categories,
+        value => {
+            document
+                .getElementById("categoryInput")
+                .value = value;
+        }
+    );
+
+    renderSuggestionList(
+        "commentSuggestions",
+        comments,
+        value => {
+            document
+                .getElementById("commentInput")
+                .value = value;
+        }
+    );
+}
+
+
+function renderSuggestionList(
+    elementId,
+    values,
+    callback
+){
+
+    const box =
+        document.getElementById(
+            elementId
+        );
+
+    box.innerHTML = "";
+
+    values.forEach(value => {
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+        button.className = "suggestion";
+        button.textContent = value;
+
+        button.onclick = () =>
+            callback(value);
+
+        box.appendChild(button);
+
+    });
+}
+
+
+/* =========================
+   OPEN ADD
+   ========================= */
+
+function openAddTransaction(){
+
+    editingId = null;
+
+    document
+        .getElementById("formTitle")
+        .textContent =
+        "Add Transaction";
+
+    document
+        .getElementById("deleteEditButton")
+        .style.display = "none";
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+    document
+        .getElementById("dateInput")
+        .value = today;
+
+    document
+        .getElementById("amountInput")
+        .value = "";
+
+    document
+        .getElementById("categoryInput")
+        .value = "";
+
+    document
+        .getElementById("commentInput")
+        .value = "";
+
+    setSign(-1);
+
+    document
+        .getElementById("transactionModal")
+        .classList.add("open");
+
+    setTimeout(() => {
+
+        document
+            .getElementById("amountInput")
+            .focus();
+
+    },150);
+}
+
+
+/* =========================
+   OPEN EDIT
+   ========================= */
+
+function openEditTransaction(id){
+
+    closeAllSwipeRows();
+
+    const transaction =
+        transactions.find(
+            item => item.id === id
+        );
+
+    if(!transaction) return;
+
+    editingId = id;
+
+    document
+        .getElementById("formTitle")
+        .textContent =
+        "Edit Transaction";
+
+    document
+        .getElementById("deleteEditButton")
+        .style.display = "block";
+
+    document
+        .getElementById("dateInput")
+        .value =
+        transaction.date;
+
+    document
+        .getElementById("amountInput")
+        .value =
+        Math.abs(transaction.amount)
+            .toString();
+
+    document
+        .getElementById("amountInput")
+        .classList.remove(
+            "placeholder"
+        );
+
+    document
+        .getElementById("categoryInput")
+        .value =
+        transaction.category || "";
+
+    document
+        .getElementById("commentInput")
+        .value =
+        transaction.comment || "";
+
+    setSign(
+        transaction.amount < 0
+            ? -1
+            : 1
+    );
+
+    document
+        .getElementById("transactionModal")
+        .classList.add("open");
+}
+
+
+/* =========================
+   CLOSE
+   ========================= */
+
+function closeTransactionForm(){
+
+    document
+        .getElementById("transactionModal")
+        .classList.remove("open");
+
+    editingId = null;
+}
+
+
+/* =========================
+   SAVE
+   ========================= */
+
+function saveTransaction(){
+
+    const date =
+        document
+            .getElementById("dateInput")
+            .value;
+
+    const amountText =
+        document
+            .getElementById("amountInput")
+            .value;
+
+    const amount =
+        Number(
+            amountText.replace(/,/g,"")
+        );
+
+    const comment =
+        document
+            .getElementById("commentInput")
+            .value
+            .trim();
+
+    const category =
+        document
+            .getElementById("categoryInput")
+            .value
+            .trim();
+
+    if(!date) return;
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        document
+            .getElementById("amountInput")
+            .focus();
+
+        return;
+    }
+
+
+    const signedAmount =
+        amount * transactionSign;
+
+
+    if(editingId === null){
+
+        transactions.push({
+            id:nextId++,
+            date:date,
+            amount:signedAmount,
+            comment:comment,
+            category:category
+        });
+
+    }else{
+
+        const transaction =
+            transactions.find(
+                item =>
+                    item.id === editingId
+            );
+
+        if(transaction){
+
+            transaction.date = date;
+            transaction.amount =
+                signedAmount;
+            transaction.comment =
+                comment;
+            transaction.category =
+                category;
+        }
+    }
+
+
+    closeTransactionForm();
+
+    renderTransactions();
+}
+
+
+/* =========================
+   DELETE FROM EDIT
+   ========================= */
+
+function deleteEditingTransaction(){
+
+    if(editingId === null) return;
+
+    if(
+        !confirm(
+            "Delete this transaction?"
+        )
+    ){
+        return;
+    }
+
+    transactions =
+        transactions.filter(
+            item =>
+                item.id !== editingId
+        );
+
+    closeTransactionForm();
+
+    renderTransactions();
+}
+
+
+/* =========================
+   DELETE FROM SWIPE
+   ========================= */
+
+function deleteTransaction(id){
+
+    if(
+        !confirm(
+            "Delete this transaction?"
+        )
+    ){
+        closeAllSwipeRows();
+        return;
+    }
+
+    transactions =
+        transactions.filter(
+            item =>
+                item.id !== id
+        );
+
+    renderTransactions();
+}
+
+
+/* =========================
+   BALANCES
+   ========================= */
+
+function calculateBalances(){
+
+    const sorted =
+        [...transactions].sort(
+            (a,b) => {
+
+                const dateCompare =
+                    a.date.localeCompare(
+                        b.date
+                    );
+
+                if(dateCompare !== 0){
+                    return dateCompare;
+                }
+
+                return a.id - b.id;
+            }
+        );
+
+    let balance = 0;
+
+    sorted.forEach(transaction => {
+
+        balance +=
+            transaction.amount;
+
+        transaction.balance =
+            balance;
+    });
+
+    return sorted;
+}
+
+
+/* =========================
+   DISPLAY
+   ========================= */
+
+function formatAmount(value){
+
+    const number =
+        Math.abs(value)
+            .toLocaleString("en-US");
+
+    return value < 0
+        ? "−" + number
+        : "+" + number;
+}
+
+
+function formatBalance(value){
+
+    const number =
+        Math.abs(value)
+            .toLocaleString("en-US");
+
+    return value < 0
+        ? "−" + number
+        : number;
+}
+
+
+function formatDate(date){
+
+    const parts =
+        date.split("-");
+
+    return (
+        parts[2] +
+        "/" +
+        parts[1]
+    );
+}
+
+
+function escapeHtml(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
+
+/* =========================
+   RENDER
+   ========================= */
+
+function renderTransactions(){
+
+    const list =
+        document.getElementById(
+            "transactionList"
+        );
+
+    list.innerHTML = "";
+
+    const sorted =
+        calculateBalances();
+
+    sorted.reverse();
+
+
+    sorted.forEach(transaction => {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "transaction-wrap";
+
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.className =
+            "transaction-delete";
+
+        deleteButton.textContent =
+            "Delete";
+
+        deleteButton.onclick =
+            event => {
+
+                event.stopPropagation();
+
+                deleteTransaction(
+                    transaction.id
+                );
+            };
+
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "transaction";
+
+
+        const amountClass =
+            transaction.amount < 0
+                ? "transaction-amount debit"
+                : "transaction-amount credit";
+
+
+        const balanceClass =
+            transaction.balance < 0
+                ? "transaction-balance negative-balance"
+                : "transaction-balance";
+
+
+        row.innerHTML = `
+
+            <div class="transaction-date">
+                ${formatDate(transaction.date)}
+            </div>
+
+            <div class="transaction-comment">
+                ${escapeHtml(
+                    transaction.comment || ""
+                )}
+            </div>
+
+            <div class="${amountClass}">
+                ${formatAmount(transaction.amount)}
+            </div>
+
+            <div class="${balanceClass}">
+                ${formatBalance(transaction.balance)}
+            </div>
+
+        `;
+
+
+        row.onclick = () =>
+            openEditTransaction(
+                transaction.id
+            );
+
+
+        addSwipeSupport(
+            row,
+            wrapper
+        );
+
+
+        wrapper.appendChild(
+            deleteButton
+        );
+
+        wrapper.appendChild(row);
+
+        list.appendChild(wrapper);
+
+    });
+
+
+    updateCurrentBalance();
+
+}
+
+
+function updateCurrentBalance(){
+
+    const sorted =
+        calculateBalances();
+
+    const balanceElement =
+        document.getElementById(
+            "currentBalance"
+        );
+
+    if(!sorted.length){
+
+        balanceElement.textContent =
+            "0";
+
+        balanceElement.classList.remove(
+            "negative"
+        );
+
+        return;
+    }
+
+    const current =
+        sorted[sorted.length - 1]
+            .balance;
+
+    balanceElement.textContent =
+        formatBalance(current);
+
+    balanceElement.classList.toggle(
+        "negative",
+        current < 0
+    );
+}
+
+
+/* =========================
+   SWIPE
+   ========================= */
+
+function addSwipeSupport(
+    row,
+    wrapper
+){
+
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+
+    row.addEventListener(
+        "touchstart",
+        event => {
+
+            if(
+                event.touches.length !== 1
+            ){
+                return;
+            }
+
+            startX =
+                event.touches[0].clientX;
+
+            currentX = startX;
+
+            dragging = true;
+
+        },
+        {passive:true}
+    );
+
+
+    row.addEventListener(
+        "touchmove",
+        event => {
+
+            if(!dragging) return;
+
+            currentX =
+                event.touches[0].clientX;
+
+            const distance =
+                currentX - startX;
+
+            /*
+             * Only allow a left swipe.
+             */
+
+            if(distance < 0){
+
+                const amount =
+                    Math.max(
+                        -78,
+                        distance
+                    );
+
+                row.style.transition =
+                    "none";
+
+                row.style.transform =
+                    `translateX(${amount}px)`;
+            }
+
+        },
+        {passive:true}
+    );
+
+
+    row.addEventListener(
+        "touchend",
+        () => {
+
+            if(!dragging) return;
+
+            dragging = false;
+
+            const distance =
+                currentX - startX;
+
+            row.style.transition =
+                "transform .18s ease";
+
+            if(distance < -40){
+
+                closeAllSwipeRows(
+                    row
+                );
+
+                row.classList.add(
+                    "swiped"
+                );
+
+            }else{
+
+                row.style.transform =
+                    "";
+
+            }
+
+        }
+    );
+}
+
+
+function closeAllSwipeRows(
+    except = null
+){
+
+    document
+        .querySelectorAll(
+            ".transaction.swiped"
+        )
+        .forEach(row => {
+
+            if(row !== except){
+
+                row.classList.remove(
+                    "swiped"
+                );
+
+                row.style.transform =
+                    "";
+            }
+
+        });
+
+}
+
+
+/* =========================
+   THEME
+   ========================= */
+
+function toggleThemeMenu(){
+
+    const menu =
+        document.getElementById(
+            "themeMenu"
+        );
+
+    menu.style.display =
+        menu.style.display === "block"
+            ? "none"
+            : "block";
+}
+
+
+function setTheme(theme){
+
+    if(theme === "light"){
+
+        document.body.style.setProperty(
+            "--bg",
+            "#f5f5f7"
+        );
+
+        document.body.style.setProperty(
+            "--card",
+            "#fff"
+        );
+
+        document.body.style.setProperty(
+            "--field",
+            "#f0f0f2"
+        );
+
+        document.body.style.setProperty(
+            "--text",
+            "#1d1d1f"
+        );
+
+        document.body.style.setProperty(
+            "--secondary",
+            "#777"
+        );
+
+        document.body.style.setProperty(
+            "--border",
+            "#dedee2"
+        );
+
+        document.body.style.setProperty(
+            "--button",
+            "#111"
+        );
+
+        document.body.style.setProperty(
+            "--buttonText",
+            "#fff"
+        );
+
+    }else{
+
+        document.body.style.setProperty(
+            "--bg",
+            "#000"
+        );
+
+        document.body.style.setProperty(
+            "--card",
+            "#171717"
+        );
+
+        document.body.style.setProperty(
+            "--field",
+            "#222"
+        );
+
+        document.body.style.setProperty(
+            "--text",
+            "#f5f5f7"
+        );
+
+        document.body.style.setProperty(
+            "--secondary",
+            "#999"
+        );
+
+        document.body.style.setProperty(
+            "--border",
+            "#303030"
+        );
+
+        document.body.style.setProperty(
+            "--button",
+            "#f5f5f7"
+        );
+
+        document.body.style.setProperty(
+            "--buttonText",
+            "#000"
+        );
+    }
+
+    document.getElementById(
+        "themeMenu"
+    ).style.display = "none";
+}
+
+
+/* =========================
+   INITIALIZE
+   ========================= */
+
+renderSuggestions();
+renderTransactions();
 
 </script>
 
