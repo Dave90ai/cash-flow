@@ -241,11 +241,11 @@ amountInput.addEventListener(
         const raw = this.value;
 
         // Allow the PC keyboard + and - keys
-        if (raw.includes("-")) {
-            setSign(-1);
-        } else if (raw.includes("+")) {
-            setSign(1);
-        }
+  //      if (raw.includes("-")) {
+  //          setSign(-1);
+  //      } else if (raw.includes("+")) {
+  //          setSign(1);
+  //      }
 
         let value =
             raw.replace(/[^\d.]/g, "");
@@ -353,6 +353,103 @@ function updateAmountColor() {
             : "credit"
     );
 }
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        /*
+         * Only handle these keys while the
+         * Add/Edit transaction window is open.
+         */
+        if (!modal || !modal.classList.contains("open")) {
+            return;
+        }
+
+
+        /*
+         * ESC = Cancel / close
+         */
+        if (event.key === "Escape") {
+
+            event.preventDefault();
+
+            closeTransactionForm();
+
+            return;
+        }
+
+
+        /*
+         * ENTER = Save
+         *
+         * Don't trigger it while clicking a
+         * suggestion with the keyboard.
+         */
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            saveTransaction();
+
+            return;
+        }
+
+
+        /*
+         * Only interpret + and - when the
+         * amount field is active.
+         */
+        if (
+            document.activeElement === amountInput
+        ) {
+
+            /*
+             * Minus key
+             *
+             * Handles:
+             * -
+             * numpad -
+             */
+            if (
+                event.key === "-" ||
+                event.code === "NumpadSubtract"
+            ) {
+
+                event.preventDefault();
+
+                setSign(-1);
+
+                return;
+            }
+
+
+            /*
+             * Plus key
+             *
+             * Handles:
+             * +
+             * numpad +
+             */
+            if (
+                event.key === "+" ||
+                event.code === "NumpadAdd"
+            ) {
+
+                event.preventDefault();
+
+                setSign(1);
+
+                return;
+            }
+        }
+    }
+);
 
 
 /* =========================================================
