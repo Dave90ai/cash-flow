@@ -238,8 +238,17 @@ amountInput.addEventListener(
     "input",
     function () {
 
+        const raw = this.value;
+
+        // Allow the PC keyboard + and - keys
+        if (raw.includes("-")) {
+            setSign(-1);
+        } else if (raw.includes("+")) {
+            setSign(1);
+        }
+
         let value =
-            this.value.replace(/[^\d.]/g, "");
+            raw.replace(/[^\d.]/g, "");
 
         if (!value) {
 
@@ -281,7 +290,6 @@ amountInput.addEventListener(
         updateAmountColor();
     }
 );
-
 
 amountInput.addEventListener(
     "focus",
