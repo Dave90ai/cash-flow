@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,524 +7,543 @@
 <title>Cash Flow</title>
 
 <style>
-:root{
-    --bg:#000;
-    --card:#171717;
-    --field:#222;
-    --text:#f5f5f7;
-    --secondary:#999;
-    --border:#303030;
-    --button:#f5f5f7;
-    --buttonText:#000;
-    --green:#45d483;
-    --red:#ff453a;
+:root {
+    --bg: #000;
+    --card: #171717;
+    --field: #222;
+    --text: #f5f5f7;
+    --secondary: #999;
+    --border: #303030;
+    --button: #f5f5f7;
+    --buttonText: #000;
+    --green: #45d483;
+    --red: #ff453a;
 }
 
-*{box-sizing:border-box}
-
-html,body{
-    margin:0;
-    min-height:100%;
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-                 "SF Pro Text",Helvetica,Arial,sans-serif;
+* {
+    box-sizing: border-box;
 }
 
-button,input{
-    font-family:inherit;
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        Helvetica,
+        Arial,
+        sans-serif;
 }
 
-button{
-    -webkit-tap-highlight-color:transparent;
+button,
+input {
+    font-family: inherit;
 }
 
-.app{
-    width:100%;
-    max-width:760px;
-    margin:auto;
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+    width: 100%;
+    max-width: 760px;
+    margin: auto;
     padding:
-        max(18px,env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-top))
         16px
-        max(90px,env(safe-area-inset-bottom));
+        max(90px, env(safe-area-inset-bottom));
 }
 
 /* HEADER */
 
-.header{
-    position:relative;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.account-name{
-    font-size:25px;
-    font-weight:700;
+.account-name {
+    font-size: 25px;
+    font-weight: 700;
 }
 
-.menu-button{
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:#242424;
-    color:white;
-    font-size:17px;
+.menu-button {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: #242424;
+    color: white;
+    font-size: 17px;
 }
 
 /* BALANCE */
 
-.balance-section{
-    text-align:center;
-    padding:8px 0 7px;
+.balance-section {
+    text-align: center;
+    padding: 8px 0 7px;
 }
 
-.balance{
-    font-size:39px;
-    line-height:1.05;
-    font-weight:700;
-    letter-spacing:-1px;
+.balance {
+    font-size: 39px;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -1px;
 }
 
-.balance.negative{
-    color:var(--red);
+.balance.negative {
+    color: var(--red);
 }
 
-.balance-label{
-    margin-top:4px;
-    color:var(--secondary);
-    font-size:12px;
+.balance-label {
+    margin-top: 4px;
+    color: var(--secondary);
+    font-size: 12px;
 }
 
 /* GRAPH */
 
-.graph-card{
-    margin-top:9px;
-    background:var(--card);
-    border-radius:17px;
-    padding:12px 10px 8px 4px;
+.graph-card {
+    margin-top: 9px;
+    background: var(--card);
+    border-radius: 17px;
+    padding: 12px 10px 8px 4px;
 }
 
-.graph{
-    height:190px;
-    display:grid;
-    grid-template-columns:46px 1fr;
+.graph {
+    height: 190px;
+    display: grid;
+    grid-template-columns: 46px 1fr;
 }
 
-.graph-scale{
-    position:relative;
-    height:100%;
-    color:var(--secondary);
-    font-size:10px;
+.graph-scale {
+    position: relative;
+    height: 100%;
+    color: var(--secondary);
+    font-size: 10px;
 }
 
-.scale-value{
-    position:absolute;
-    right:6px;
-    transform:translateY(-50%);
+.scale-value {
+    position: absolute;
+    right: 6px;
+    transform: translateY(-50%);
 }
 
-.scale-top{top:10%}
-.scale-middle{top:35%}
-.scale-zero{
-    top:60%;
-    color:var(--text);
-    font-weight:600;
-}
-.scale-negative{
-    top:84%;
-    color:var(--red);
+.scale-top {
+    top: 10%;
 }
 
-.graph-area{
-    position:relative;
+.scale-middle {
+    top: 35%;
 }
 
-.zero-line{
-    position:absolute;
-    left:0;
-    right:0;
-    top:60%;
-    border-top:1px dashed #666;
+.scale-zero {
+    top: 60%;
+    color: var(--text);
+    font-weight: 600;
 }
 
-.graph svg{
-    width:100%;
-    height:100%;
-    display:block;
+.scale-negative {
+    top: 84%;
+    color: var(--red);
 }
 
-.graph-dates{
-    margin-left:50px;
-    display:flex;
-    justify-content:space-between;
-    color:var(--secondary);
-    font-size:10px;
-    padding-top:5px;
+.graph-area {
+    position: relative;
+}
+
+.zero-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60%;
+    border-top: 1px dashed #666;
+}
+
+.graph svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.graph-dates {
+    margin-left: 50px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--secondary);
+    font-size: 10px;
+    padding-top: 5px;
 }
 
 /* TRANSACTIONS */
 
-.transactions{
-    margin-top:17px;
-    overflow:hidden;
+.transactions {
+    margin-top: 17px;
+    overflow: hidden;
 }
 
-.transaction-wrap{
-    position:relative;
-    overflow:hidden;
-    border-bottom:1px solid var(--border);
+.transaction-wrap {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
 }
 
-.transaction-delete{
-    position:absolute;
-    right:0;
-    top:0;
-    bottom:0;
-    width:78px;
-    border:0;
-    background:var(--red);
-    color:white;
-    font-size:14px;
-    font-weight:600;
+.transaction-delete {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 78px;
+    border: 0;
+    background: var(--red);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.transaction{
-    position:relative;
-    z-index:2;
-    display:grid;
-    grid-template-columns:45px minmax(0,1fr) auto auto;
-    gap:7px;
-    align-items:center;
-    min-height:34px;
-    padding:3px 0;
-    background:var(--bg);
-    transition:transform .18s ease;
-    touch-action:pan-y;
+.transaction {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 45px minmax(0, 1fr) auto auto;
+    gap: 7px;
+    align-items: center;
+    min-height: 34px;
+    padding: 3px 0;
+    background: var(--bg);
+    transform: translateX(0);
+    transition: transform 0.18s ease;
+    touch-action: pan-y;
 }
 
-.transaction.swiped{
-    transform:translateX(-78px);
+.transaction-date {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-.transaction-date{
-    font-size:14px;
-    font-weight:700;
-    white-space:nowrap;
-}
-
-.transaction-comment{
-    min-width:0;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    font-size:15px;
-    font-weight:700;
+.transaction-comment {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .transaction-amount,
-.transaction-balance{
-    font-size:15px;
-    font-weight:700;
-    white-space:nowrap;
+.transaction-balance {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-.transaction-balance{
-    min-width:72px;
-    text-align:right;
+.transaction-balance {
+    min-width: 72px;
+    text-align: right;
 }
 
-.credit{color:var(--green)}
-.debit,.negative-balance{color:var(--red)}
+.credit {
+    color: var(--green);
+}
+
+.debit,
+.negative-balance {
+    color: var(--red);
+}
 
 /* ADD BUTTON */
 
-.add-button{
-    position:fixed;
-    right:max(20px,calc((100vw - 760px)/2 + 20px));
-    bottom:max(22px,env(safe-area-inset-bottom));
-    width:57px;
-    height:57px;
-    border:0;
-    border-radius:50%;
-    background:var(--button);
-    color:var(--buttonText);
-    font-size:31px;
-    box-shadow:0 5px 18px rgba(0,0,0,.35);
-    z-index:20;
+.add-button {
+    position: fixed;
+    right: max(20px, calc((100vw - 760px) / 2 + 20px));
+    bottom: max(22px, env(safe-area-inset-bottom));
+    width: 57px;
+    height: 57px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--button);
+    color: var(--buttonText);
+    font-size: 31px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.35);
+    z-index: 20;
 }
 
 /* MODAL */
 
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.72);
-    z-index:100;
-    align-items:flex-end;
-    justify-content:center;
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
 }
 
-.modal.open{
-    display:flex;
+.modal.open {
+    display: flex;
 }
 
-.form-card{
-    width:100%;
-    max-width:760px;
-    background:var(--card);
-    border-radius:20px 20px 0 0;
+.form-card {
+    width: 100%;
+    max-width: 760px;
+    background: var(--card);
+    border-radius: 20px 20px 0 0;
     padding:
         10px
         16px
-        max(16px,env(safe-area-inset-bottom));
-    max-height:90vh;
-    overflow-y:auto;
+        max(16px, env(safe-area-inset-bottom));
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-.drag-bar{
-    width:38px;
-    height:4px;
-    border-radius:5px;
-    background:#555;
-    margin:0 auto 10px;
+.drag-bar {
+    width: 38px;
+    height: 4px;
+    border-radius: 5px;
+    background: #555;
+    margin: 0 auto 10px;
 }
 
-.form-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:12px;
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.form-title{
-    font-size:21px;
-    font-weight:700;
+.form-title {
+    font-size: 21px;
+    font-weight: 700;
 }
 
-.close-button{
-    border:0;
-    background:transparent;
-    color:var(--secondary);
-    font-size:24px;
+.close-button {
+    border: 0;
+    background: transparent;
+    color: var(--secondary);
+    font-size: 24px;
 }
 
-.field{
-    margin-bottom:10px;
+.field {
+    margin-bottom: 10px;
 }
 
-.field-label{
-    display:block;
-    margin-bottom:4px;
-    color:var(--secondary);
-    font-size:11px;
+.field-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--secondary);
+    font-size: 11px;
 }
 
 .date-input,
-.text-input{
-    width:100%;
-    height:40px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:var(--field);
-    color:var(--text);
-    padding:0 11px;
-    font-size:16px;
-    outline:none;
+.text-input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--text);
+    padding: 0 11px;
+    font-size: 16px;
+    outline: none;
 }
 
 /* AMOUNT */
 
-.amount-row{
-    display:grid;
-    grid-template-columns:39px 39px minmax(0,1fr);
-    gap:6px;
+.amount-row {
+    display: grid;
+    grid-template-columns: 39px 39px minmax(0,1fr);
+    gap: 6px;
 }
 
-.sign-button{
-    height:44px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:var(--field);
-    color:var(--secondary);
-    font-size:21px;
-    font-weight:600;
+.sign-button {
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--secondary);
+    font-size: 21px;
+    font-weight: 600;
 }
 
-.sign-button.selected{
-    background:var(--button);
-    color:var(--buttonText);
-    border-color:var(--button);
+.sign-button.selected {
+    background: var(--button);
+    color: var(--buttonText);
+    border-color: var(--button);
 }
 
-.amount-input{
-    width:100%;
-    height:44px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:var(--field);
-    color:var(--text);
-    padding:0 12px;
-    font-size:21px;
-    font-weight:700;
-    text-align:right;
-    outline:none;
+.amount-input {
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--text);
+    padding: 0 12px;
+    font-size: 21px;
+    font-weight: 700;
+    text-align: right;
+    outline: none;
 }
 
-.amount-input.placeholder{
-    color:#666;
+.amount-input.placeholder {
+    color: #666;
 }
 
-.amount-hint{
-    margin-top:3px;
-    color:var(--secondary);
-    font-size:10px;
+.amount-hint {
+    margin-top: 3px;
+    color: var(--secondary);
+    font-size: 10px;
 }
 
 /* SUGGESTIONS */
 
-.suggestions{
-    display:flex;
-    flex-wrap:nowrap;
-    gap:4px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    padding-bottom:2px;
+.suggestions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
 }
 
-.suggestions::-webkit-scrollbar{
-    display:none;
+.suggestions::-webkit-scrollbar {
+    display: none;
 }
 
-.suggestion{
-    flex:0 0 auto;
-    border:1px solid var(--border);
-    border-radius:13px;
-    background:transparent;
-    color:var(--secondary);
-    padding:4px 8px;
-    font-size:11px;
-    line-height:1.1;
+.suggestion {
+    flex: 0 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: transparent;
+    color: var(--secondary);
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 1.1;
 }
 
 /* ACTIONS */
 
-.form-actions{
-    display:grid;
-    grid-template-columns:1fr 1.4fr;
-    gap:8px;
-    margin-top:13px;
+.form-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 8px;
+    margin-top: 13px;
 }
 
 .cancel-button,
-.save-button{
-    height:45px;
-    border:0;
-    border-radius:12px;
-    font-size:15px;
-    font-weight:600;
+.save-button {
+    height: 45px;
+    border: 0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
 }
 
-.cancel-button{
-    background:#292929;
-    color:white;
+.cancel-button {
+    background: #292929;
+    color: white;
 }
 
-.save-button{
-    background:var(--button);
-    color:var(--buttonText);
+.save-button {
+    background: var(--button);
+    color: var(--buttonText);
 }
 
-.delete-edit-button{
-    width:100%;
-    height:40px;
-    margin-top:9px;
-    border:0;
-    border-radius:11px;
-    background:transparent;
-    color:var(--red);
-    font-size:14px;
-    font-weight:600;
+.delete-edit-button {
+    width: 100%;
+    height: 40px;
+    margin-top: 9px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 600;
 }
 
-/* THEME */
+/* MENU */
 
-.theme-menu{
-    display:none;
-    position:absolute;
-    right:0;
-    top:45px;
-    background:#202020;
-    border:1px solid #353535;
-    border-radius:12px;
-    padding:6px;
-    z-index:30;
+.theme-menu {
+    display: none;
+    position: absolute;
+    right: 16px;
+    top: 60px;
+    background: #202020;
+    border: 1px solid #353535;
+    border-radius: 12px;
+    padding: 6px;
+    z-index: 30;
 }
 
-.theme-menu button{
-    display:block;
-    width:120px;
-    padding:9px 12px;
-    border:0;
-    background:transparent;
-    color:white;
-    text-align:left;
-    border-radius:8px;
+.theme-menu button {
+    display: block;
+    width: 120px;
+    padding: 9px 12px;
+    border: 0;
+    background: transparent;
+    color: white;
+    text-align: left;
+    border-radius: 8px;
 }
 
-@media(min-width:760px){
+@media (min-width: 760px) {
 
-    .app{
-        padding-top:32px;
+    .app {
+        padding-top: 32px;
     }
 
-    .transaction{
-        grid-template-columns:55px minmax(0,1fr) auto 95px;
-        gap:10px;
+    .transaction {
+        grid-template-columns: 55px minmax(0,1fr) auto 95px;
+        gap: 10px;
     }
 
-    .modal{
-        align-items:center;
+    .modal {
+        align-items: center;
     }
 
-    .form-card{
-        margin:20px;
-        border-radius:20px;
-        max-height:760px;
+    .form-card {
+        margin: 20px;
+        border-radius: 20px;
+        max-height: 760px;
     }
 }
 
-@media(max-width:380px){
+@media (max-width: 380px) {
 
-    .app{
-        padding-left:12px;
-        padding-right:12px;
+    .app {
+        padding-left: 12px;
+        padding-right: 12px;
     }
 
-    .transaction{
-        grid-template-columns:42px minmax(0,1fr) auto auto;
-        gap:5px;
+    .transaction {
+        grid-template-columns: 42px minmax(0,1fr) auto auto;
+        gap: 5px;
     }
 
     .transaction-comment,
     .transaction-amount,
-    .transaction-balance{
-        font-size:13px;
+    .transaction-balance {
+        font-size: 13px;
     }
 
-    .transaction-balance{
-        min-width:62px;
+    .transaction-balance {
+        min-width: 62px;
     }
 
-    .balance{
-        font-size:34px;
+    .balance {
+        font-size: 34px;
     }
 
-    .form-card{
-        padding-left:12px;
-        padding-right:12px;
+    .form-card {
+        padding-left: 12px;
+        padding-right: 12px;
     }
 }
 </style>
@@ -560,7 +578,7 @@ button{
 <section class="balance-section">
 
     <div class="balance" id="currentBalance">
-        −1,500
+        0
     </div>
 
     <div class="balance-label">
@@ -575,10 +593,23 @@ button{
     <div class="graph">
 
         <div class="graph-scale">
-            <span class="scale-value scale-top">20k</span>
-            <span class="scale-value scale-middle">10k</span>
-            <span class="scale-value scale-zero">0</span>
-            <span class="scale-value scale-negative">−10k</span>
+
+            <span class="scale-value scale-top">
+                20k
+            </span>
+
+            <span class="scale-value scale-middle">
+                10k
+            </span>
+
+            <span class="scale-value scale-zero">
+                0
+            </span>
+
+            <span class="scale-value scale-negative">
+                −10k
+            </span>
+
         </div>
 
         <div class="graph-area">
@@ -590,7 +621,8 @@ button{
                 preserveAspectRatio="none">
 
                 <path
-                    d="M0,82 L55,76 L110,67 L165,72 L220,61 L275,50 L330,56 L385,46 L440,59 L495,43 L540,51 L565,63"
+                    id="greenGraph"
+                    d=""
                     fill="none"
                     stroke="#45d483"
                     stroke-width="3"
@@ -598,7 +630,8 @@ button{
                     stroke-linejoin="round"/>
 
                 <path
-                    d="M565,63 L585,78 L610,96 L640,116 L670,132 L700,143"
+                    id="redGraph"
+                    d=""
                     fill="none"
                     stroke="#ff453a"
                     stroke-width="3"
@@ -608,15 +641,12 @@ button{
             </svg>
 
         </div>
+
     </div>
 
-    <div class="graph-dates">
-        <span>10/08</span>
-        <span>20/08</span>
-        <span>30/08</span>
-        <span>09/09</span>
-        <span>19/09</span>
-        <span>29/09</span>
+    <div
+        class="graph-dates"
+        id="graphDates">
     </div>
 
 </section>
@@ -715,7 +745,7 @@ button{
         </div>
 
 
-        <!-- COMMENT FIRST -->
+        <!-- COMMENT -->
 
         <div class="field">
 
@@ -740,7 +770,7 @@ button{
         </div>
 
 
-        <!-- CATEGORY SECOND -->
+        <!-- CATEGORY -->
 
         <div class="field">
 
@@ -791,83 +821,83 @@ button{
         </button>
 
     </div>
+
 </div>
 
 
 <script>
 
-/* =========================
-   DATA
-   ========================= */
+/* =====================================================
+   DEMO DATA
+   ===================================================== */
 
 let transactions = [
     {
-        id:1,
-        date:"2026-09-29",
-        amount:-12000,
-        category:"",
-        comment:"Large payment"
+        id: 1,
+        date: "2026-09-29",
+        amount: -12000,
+        category: "",
+        comment: "Large payment"
     },
     {
-        id:2,
-        date:"2026-09-02",
-        amount:8000,
-        category:"Salary",
-        comment:"Monthly salary"
+        id: 2,
+        date: "2026-09-02",
+        amount: 8000,
+        category: "Salary",
+        comment: "Monthly salary"
     },
     {
-        id:3,
-        date:"2026-08-20",
-        amount:-1200,
-        category:"Credit Card",
-        comment:"Credit card"
+        id: 3,
+        date: "2026-08-20",
+        amount: -1200,
+        category: "Credit Card",
+        comment: "Credit card"
     },
     {
-        id:4,
-        date:"2026-08-20",
-        amount:-3500,
-        category:"Rent",
-        comment:"Rent"
+        id: 4,
+        date: "2026-08-20",
+        amount: -3500,
+        category: "Rent",
+        comment: "Rent"
     },
     {
-        id:5,
-        date:"2026-08-15",
-        amount:8000,
-        category:"Salary",
-        comment:"Monthly salary"
+        id: 5,
+        date: "2026-08-15",
+        amount: 8000,
+        category: "Salary",
+        comment: "Monthly salary"
     },
     {
-        id:6,
-        date:"2026-08-12",
-        amount:-450,
-        category:"Utilities",
-        comment:"Electricity"
+        id: 6,
+        date: "2026-08-12",
+        amount: -450,
+        category: "Utilities",
+        comment: "Electricity"
     },
     {
-        id:7,
-        date:"2026-08-10",
-        amount:-350,
-        category:"Food",
-        comment:"Supermarket"
+        id: 7,
+        date: "2026-08-10",
+        amount: -350,
+        category: "Food",
+        comment: "Supermarket"
     },
     {
-        id:8,
-        date:"2026-08-10",
-        amount:8000,
-        category:"Salary",
-        comment:"Monthly salary"
+        id: 8,
+        date: "2026-08-10",
+        amount: 8000,
+        category: "Salary",
+        comment: "Monthly salary"
     }
 ];
-
 
 let transactionSign = -1;
 let editingId = null;
 let nextId = 100;
 
 
-/* =========================
+/* =====================================================
    SUGGESTIONS
-   ========================= */
+   ===================================================== */
 
 const debitCategories = [
     "Credit Card",
@@ -910,11 +940,11 @@ const creditComments = [
 ];
 
 
-/* =========================
+/* =====================================================
    SIGN
-   ========================= */
+   ===================================================== */
 
-function setSign(sign){
+function setSign(sign) {
 
     transactionSign = sign;
 
@@ -935,64 +965,187 @@ function setSign(sign){
     renderSuggestions();
 
     updateAmountPlaceholder();
+
+    updateAmountDisplay();
 }
 
 
-function updateAmountPlaceholder(){
+function updateAmountPlaceholder() {
 
     const input =
         document.getElementById("amountInput");
 
-    if(!input.value){
+    if (!input.value) {
 
         input.placeholder =
             transactionSign === -1
                 ? "−0"
                 : "+0";
 
-        input.classList.add(
-            "placeholder"
-        );
+        input.classList.add("placeholder");
     }
 }
 
 
-/* =========================
-   AMOUNT INPUT
-   ========================= */
+/* =====================================================
+   AMOUNT
+   ===================================================== */
 
-document
-    .getElementById("amountInput")
-    .addEventListener(
-        "input",
-        function(){
+const amountInput =
+    document.getElementById("amountInput");
+
+
+amountInput.addEventListener(
+    "input",
+    function () {
+
+        let value =
+            this.value.replace(/[^\d.]/g, "");
+
+        const parts =
+            value.split(".");
+
+        if (parts.length > 2) {
+            value =
+                parts[0] +
+                "." +
+                parts.slice(1).join("");
+        }
+
+        if (!value) {
+
+            this.value = "";
+
+            this.classList.add(
+                "placeholder"
+            );
+
+            return;
+        }
+
+        const number = Number(value);
+
+        if (!Number.isFinite(number)) {
+            return;
+        }
+
+        /*
+         * Formatting while typing.
+         *
+         * Example:
+         * 1
+         * 12
+         * 123
+         * 1,234
+         * 12,345
+         */
+
+        this.value =
+            number.toLocaleString(
+                "en-US",
+                {
+                    maximumFractionDigits: 2
+                }
+            );
+
+        this.classList.remove(
+            "placeholder"
+        );
+    }
+);
+
+
+amountInput.addEventListener(
+    "focus",
+    function () {
+
+        /*
+         * Select the formatted value so
+         * typing replaces it.
+         */
+
+        if (this.value) {
+            this.select();
+        }
+    }
+);
+
+
+amountInput.addEventListener(
+    "blur",
+    function () {
+
+        if (!this.value) {
+
+            this.classList.add(
+                "placeholder"
+            );
+
+            return;
+        }
+
+        const number =
+            Number(
+                this.value.replace(/,/g, "")
+            );
+
+        if (Number.isFinite(number)) {
 
             this.value =
-                this.value
-                    .replace(/[^\d.]/g,"");
-
-            if(this.value){
-
-                this.classList.remove(
-                    "placeholder"
+                number.toLocaleString(
+                    "en-US",
+                    {
+                        maximumFractionDigits: 2
+                    }
                 );
-
-            }else{
-
-                this.classList.add(
-                    "placeholder"
-                );
-
-            }
         }
-    );
+    }
+);
 
 
-/* =========================
+/*
+ * Show the sign next to the amount
+ * when the field is not being edited.
+ *
+ * While editing, the sign buttons are
+ * easier to use and the field remains
+ * numeric.
+ */
+
+function updateAmountDisplay() {
+
+    const input =
+        document.getElementById("amountInput");
+
+    if (!input.value) {
+        return;
+    }
+
+    const number =
+        Number(
+            input.value.replace(/,/g, "")
+        );
+
+    if (!Number.isFinite(number)) {
+        return;
+    }
+
+    /*
+     * We keep the actual input without
+     * a sign so the iPhone numeric keyboard
+     * remains easy to use.
+     *
+     * The selected +/- button provides
+     * the sign.
+     */
+}
+
+
+/* =====================================================
    SUGGESTIONS
-   ========================= */
+   ===================================================== */
 
-function renderSuggestions(){
+function renderSuggestions() {
 
     const categories =
         transactionSign === -1
@@ -1008,6 +1161,7 @@ function renderSuggestions(){
         "categorySuggestions",
         categories,
         value => {
+
             document
                 .getElementById("categoryInput")
                 .value = value;
@@ -1018,6 +1172,7 @@ function renderSuggestions(){
         "commentSuggestions",
         comments,
         value => {
+
             document
                 .getElementById("commentInput")
                 .value = value;
@@ -1030,7 +1185,7 @@ function renderSuggestionList(
     elementId,
     values,
     callback
-){
+) {
 
     const box =
         document.getElementById(
@@ -1048,20 +1203,19 @@ function renderSuggestionList(
         button.className = "suggestion";
         button.textContent = value;
 
-        button.onclick = () =>
-            callback(value);
+        button.onclick =
+            () => callback(value);
 
         box.appendChild(button);
-
     });
 }
 
 
-/* =========================
-   OPEN ADD
-   ========================= */
+/* =====================================================
+   ADD
+   ===================================================== */
 
-function openAddTransaction(){
+function openAddTransaction() {
 
     editingId = null;
 
@@ -1072,7 +1226,8 @@ function openAddTransaction(){
 
     document
         .getElementById("deleteEditButton")
-        .style.display = "none";
+        .style.display =
+        "none";
 
     const today =
         new Date()
@@ -1086,6 +1241,16 @@ function openAddTransaction(){
     document
         .getElementById("amountInput")
         .value = "";
+
+    document
+        .getElementById("amountInput")
+        .placeholder = "−0";
+
+    document
+        .getElementById("amountInput")
+        .classList.add(
+            "placeholder"
+        );
 
     document
         .getElementById("categoryInput")
@@ -1107,15 +1272,15 @@ function openAddTransaction(){
             .getElementById("amountInput")
             .focus();
 
-    },150);
+    }, 150);
 }
 
 
-/* =========================
-   OPEN EDIT
-   ========================= */
+/* =====================================================
+   EDIT
+   ===================================================== */
 
-function openEditTransaction(id){
+function openEditTransaction(id) {
 
     closeAllSwipeRows();
 
@@ -1124,7 +1289,9 @@ function openEditTransaction(id){
             item => item.id === id
         );
 
-    if(!transaction) return;
+    if (!transaction) {
+        return;
+    }
 
     editingId = id;
 
@@ -1135,7 +1302,8 @@ function openEditTransaction(id){
 
     document
         .getElementById("deleteEditButton")
-        .style.display = "block";
+        .style.display =
+        "block";
 
     document
         .getElementById("dateInput")
@@ -1145,8 +1313,14 @@ function openEditTransaction(id){
     document
         .getElementById("amountInput")
         .value =
-        Math.abs(transaction.amount)
-            .toString();
+        Math.abs(
+            transaction.amount
+        ).toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 2
+            }
+        );
 
     document
         .getElementById("amountInput")
@@ -1176,25 +1350,27 @@ function openEditTransaction(id){
 }
 
 
-/* =========================
-   CLOSE
-   ========================= */
+/* =====================================================
+   CLOSE FORM
+   ===================================================== */
 
-function closeTransactionForm(){
+function closeTransactionForm() {
 
     document
         .getElementById("transactionModal")
-        .classList.remove("open");
+        .classList.remove(
+            "open"
+        );
 
     editingId = null;
 }
 
 
-/* =========================
+/* =====================================================
    SAVE
-   ========================= */
+   ===================================================== */
 
-function saveTransaction(){
+function saveTransaction() {
 
     const date =
         document
@@ -1208,7 +1384,7 @@ function saveTransaction(){
 
     const amount =
         Number(
-            amountText.replace(/,/g,"")
+            amountText.replace(/,/g, "")
         );
 
     const comment =
@@ -1223,12 +1399,14 @@ function saveTransaction(){
             .value
             .trim();
 
-    if(!date) return;
+    if (!date) {
+        return;
+    }
 
-    if(
+    if (
         !Number.isFinite(amount) ||
         amount <= 0
-    ){
+    ) {
 
         document
             .getElementById("amountInput")
@@ -1237,22 +1415,23 @@ function saveTransaction(){
         return;
     }
 
-
     const signedAmount =
         amount * transactionSign;
 
 
-    if(editingId === null){
+    if (editingId === null) {
 
         transactions.push({
-            id:nextId++,
-            date:date,
-            amount:signedAmount,
-            comment:comment,
-            category:category
+
+            id: nextId++,
+            date: date,
+            amount: signedAmount,
+            comment: comment,
+            category: category
+
         });
 
-    }else{
+    } else {
 
         const transaction =
             transactions.find(
@@ -1260,18 +1439,21 @@ function saveTransaction(){
                     item.id === editingId
             );
 
-        if(transaction){
+        if (transaction) {
 
-            transaction.date = date;
+            transaction.date =
+                date;
+
             transaction.amount =
                 signedAmount;
+
             transaction.comment =
                 comment;
+
             transaction.category =
                 category;
         }
     }
-
 
     closeTransactionForm();
 
@@ -1279,19 +1461,21 @@ function saveTransaction(){
 }
 
 
-/* =========================
+/* =====================================================
    DELETE FROM EDIT
-   ========================= */
+   ===================================================== */
 
-function deleteEditingTransaction(){
+function deleteEditingTransaction() {
 
-    if(editingId === null) return;
+    if (editingId === null) {
+        return;
+    }
 
-    if(
+    if (
         !confirm(
             "Delete this transaction?"
         )
-    ){
+    ) {
         return;
     }
 
@@ -1307,18 +1491,20 @@ function deleteEditingTransaction(){
 }
 
 
-/* =========================
+/* =====================================================
    DELETE FROM SWIPE
-   ========================= */
+   ===================================================== */
 
-function deleteTransaction(id){
+function deleteTransaction(id) {
 
-    if(
+    if (
         !confirm(
             "Delete this transaction?"
         )
-    ){
+    ) {
+
         closeAllSwipeRows();
+
         return;
     }
 
@@ -1332,23 +1518,42 @@ function deleteTransaction(id){
 }
 
 
-/* =========================
+/* =====================================================
    BALANCES
-   ========================= */
+   ===================================================== */
 
-function calculateBalances(){
+function calculateBalances() {
 
     const sorted =
         [...transactions].sort(
-            (a,b) => {
+            (a, b) => {
 
                 const dateCompare =
                     a.date.localeCompare(
                         b.date
                     );
 
-                if(dateCompare !== 0){
+                if (dateCompare !== 0) {
                     return dateCompare;
+                }
+
+                /*
+                 * On the same date,
+                 * credits appear before debits.
+                 */
+
+                if (
+                    a.amount >= 0 &&
+                    b.amount < 0
+                ) {
+                    return -1;
+                }
+
+                if (
+                    a.amount < 0 &&
+                    b.amount >= 0
+                ) {
+                    return 1;
                 }
 
                 return a.id - b.id;
@@ -1370,15 +1575,17 @@ function calculateBalances(){
 }
 
 
-/* =========================
-   DISPLAY
-   ========================= */
+/* =====================================================
+   FORMATTING
+   ===================================================== */
 
-function formatAmount(value){
+function formatAmount(value) {
 
     const number =
         Math.abs(value)
-            .toLocaleString("en-US");
+            .toLocaleString(
+                "en-US"
+            );
 
     return value < 0
         ? "−" + number
@@ -1386,11 +1593,13 @@ function formatAmount(value){
 }
 
 
-function formatBalance(value){
+function formatBalance(value) {
 
     const number =
         Math.abs(value)
-            .toLocaleString("en-US");
+            .toLocaleString(
+                "en-US"
+            );
 
     return value < 0
         ? "−" + number
@@ -1398,7 +1607,7 @@ function formatBalance(value){
 }
 
 
-function formatDate(date){
+function formatDate(date) {
 
     const parts =
         date.split("-");
@@ -1411,10 +1620,12 @@ function formatDate(date){
 }
 
 
-function escapeHtml(text){
+function escapeHtml(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     div.textContent = text;
 
@@ -1422,11 +1633,11 @@ function escapeHtml(text){
 }
 
 
-/* =========================
-   RENDER
-   ========================= */
+/* =====================================================
+   TRANSACTIONS
+   ===================================================== */
 
-function renderTransactions(){
+function renderTransactions() {
 
     const list =
         document.getElementById(
@@ -1438,20 +1649,28 @@ function renderTransactions(){
     const sorted =
         calculateBalances();
 
+    /*
+     * Newest first.
+     */
+
     sorted.reverse();
 
 
     sorted.forEach(transaction => {
 
         const wrapper =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         wrapper.className =
             "transaction-wrap";
 
 
         const deleteButton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         deleteButton.className =
             "transaction-delete";
@@ -1471,7 +1690,9 @@ function renderTransactions(){
 
 
         const row =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         row.className =
             "transaction";
@@ -1492,7 +1713,9 @@ function renderTransactions(){
         row.innerHTML = `
 
             <div class="transaction-date">
-                ${formatDate(transaction.date)}
+                ${formatDate(
+                    transaction.date
+                )}
             </div>
 
             <div class="transaction-comment">
@@ -1502,25 +1725,50 @@ function renderTransactions(){
             </div>
 
             <div class="${amountClass}">
-                ${formatAmount(transaction.amount)}
+                ${formatAmount(
+                    transaction.amount
+                )}
             </div>
 
             <div class="${balanceClass}">
-                ${formatBalance(transaction.balance)}
+                ${formatBalance(
+                    transaction.balance
+                )}
             </div>
-
         `;
 
 
-        row.onclick = () =>
+        row.onclick = () => {
+
+            /*
+             * If Delete is currently revealed,
+             * tapping the row closes it instead
+             * of opening Edit.
+             */
+
+            if (
+                row.classList.contains(
+                    "swiped"
+                )
+            ) {
+
+                row.classList.remove(
+                    "swiped"
+                );
+
+                row.style.transform = "";
+
+                return;
+            }
+
             openEditTransaction(
                 transaction.id
             );
+        };
 
 
         addSwipeSupport(
-            row,
-            wrapper
+            row
         );
 
 
@@ -1528,19 +1776,29 @@ function renderTransactions(){
             deleteButton
         );
 
-        wrapper.appendChild(row);
+        wrapper.appendChild(
+            row
+        );
 
-        list.appendChild(wrapper);
-
+        list.appendChild(
+            wrapper
+        );
     });
 
 
     updateCurrentBalance();
 
+    updateGraph(
+        sorted
+    );
 }
 
 
-function updateCurrentBalance(){
+/* =====================================================
+   CURRENT BALANCE
+   ===================================================== */
+
+function updateCurrentBalance() {
 
     const sorted =
         calculateBalances();
@@ -1550,7 +1808,7 @@ function updateCurrentBalance(){
             "currentBalance"
         );
 
-    if(!sorted.length){
+    if (!sorted.length) {
 
         balanceElement.textContent =
             "0";
@@ -1563,8 +1821,9 @@ function updateCurrentBalance(){
     }
 
     const current =
-        sorted[sorted.length - 1]
-            .balance;
+        sorted[
+            sorted.length - 1
+        ].balance;
 
     balanceElement.textContent =
         formatBalance(current);
@@ -1576,14 +1835,11 @@ function updateCurrentBalance(){
 }
 
 
-/* =========================
+/* =====================================================
    SWIPE
-   ========================= */
+   ===================================================== */
 
-function addSwipeSupport(
-    row,
-    wrapper
-){
+function addSwipeSupport(row) {
 
     let startX = 0;
     let currentX = 0;
@@ -1594,21 +1850,24 @@ function addSwipeSupport(
         "touchstart",
         event => {
 
-            if(
+            if (
                 event.touches.length !== 1
-            ){
+            ) {
                 return;
             }
 
             startX =
                 event.touches[0].clientX;
 
-            currentX = startX;
+            currentX =
+                startX;
 
             dragging = true;
 
         },
-        {passive:true}
+        {
+            passive: true
+        }
     );
 
 
@@ -1616,7 +1875,9 @@ function addSwipeSupport(
         "touchmove",
         event => {
 
-            if(!dragging) return;
+            if (!dragging) {
+                return;
+            }
 
             currentX =
                 event.touches[0].clientX;
@@ -1625,10 +1886,10 @@ function addSwipeSupport(
                 currentX - startX;
 
             /*
-             * Only allow a left swipe.
+             * Left swipe.
              */
 
-            if(distance < 0){
+            if (distance < 0) {
 
                 const amount =
                     Math.max(
@@ -1643,8 +1904,34 @@ function addSwipeSupport(
                     `translateX(${amount}px)`;
             }
 
+            /*
+             * Right swipe when
+             * Delete is already open.
+             */
+
+            else if (
+                row.classList.contains(
+                    "swiped"
+                )
+            ) {
+
+                const amount =
+                    Math.min(
+                        0,
+                        -78 + distance
+                    );
+
+                row.style.transition =
+                    "none";
+
+                row.style.transform =
+                    `translateX(${amount}px)`;
+            }
+
         },
-        {passive:true}
+        {
+            passive: true
+        }
     );
 
 
@@ -1652,7 +1939,9 @@ function addSwipeSupport(
         "touchend",
         () => {
 
-            if(!dragging) return;
+            if (!dragging) {
+                return;
+            }
 
             dragging = false;
 
@@ -1662,7 +1951,13 @@ function addSwipeSupport(
             row.style.transition =
                 "transform .18s ease";
 
-            if(distance < -40){
+
+            /*
+             * Swipe left:
+             * reveal Delete.
+             */
+
+            if (distance < -40) {
 
                 closeAllSwipeRows(
                     row
@@ -1672,11 +1967,48 @@ function addSwipeSupport(
                     "swiped"
                 );
 
-            }else{
+                row.style.transform =
+                    "translateX(-78px)";
+
+                return;
+            }
+
+
+            /*
+             * Swipe right:
+             * close Delete.
+             */
+
+            if (
+                row.classList.contains(
+                    "swiped"
+                ) &&
+                distance > 25
+            ) {
+
+                row.classList.remove(
+                    "swiped"
+                );
 
                 row.style.transform =
                     "";
 
+                return;
+            }
+
+
+            /*
+             * Small movement.
+             */
+
+            if (
+                !row.classList.contains(
+                    "swiped"
+                )
+            ) {
+
+                row.style.transform =
+                    "";
             }
 
         }
@@ -1686,7 +2018,7 @@ function addSwipeSupport(
 
 function closeAllSwipeRows(
     except = null
-){
+) {
 
     document
         .querySelectorAll(
@@ -1694,7 +2026,7 @@ function closeAllSwipeRows(
         )
         .forEach(row => {
 
-            if(row !== except){
+            if (row !== except) {
 
                 row.classList.remove(
                     "swiped"
@@ -1703,17 +2035,50 @@ function closeAllSwipeRows(
                 row.style.transform =
                     "";
             }
-
         });
-
 }
 
 
-/* =========================
-   THEME
-   ========================= */
+/*
+ * Tapping anywhere outside the open
+ * transaction closes the Delete action.
+ */
 
-function toggleThemeMenu(){
+document.addEventListener(
+    "touchstart",
+    event => {
+
+        const openRow =
+            document.querySelector(
+                ".transaction.swiped"
+            );
+
+        if (!openRow) {
+            return;
+        }
+
+        if (
+            openRow.contains(
+                event.target
+            )
+        ) {
+            return;
+        }
+
+        closeAllSwipeRows();
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =====================================================
+   THEME
+   ===================================================== */
+
+function toggleThemeMenu() {
 
     const menu =
         document.getElementById(
@@ -1727,9 +2092,9 @@ function toggleThemeMenu(){
 }
 
 
-function setTheme(theme){
+function setTheme(theme) {
 
-    if(theme === "light"){
+    if (theme === "light") {
 
         document.body.style.setProperty(
             "--bg",
@@ -1771,7 +2136,7 @@ function setTheme(theme){
             "#fff"
         );
 
-    }else{
+    } else {
 
         document.body.style.setProperty(
             "--bg",
@@ -1820,9 +2185,9 @@ function setTheme(theme){
 }
 
 
-/* =========================
+/* =====================================================
    INITIALIZE
-   ========================= */
+   ===================================================== */
 
 renderSuggestions();
 renderTransactions();
@@ -1831,4 +2196,3 @@ renderTransactions();
 
 </body>
 </html>
-```
