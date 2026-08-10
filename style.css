@@ -772,3 +772,16 @@ button {
         padding-right: 12px;
     }
 }
+
+/* Keep graph dates aligned with the graph itself */
+
+.graph-dates {
+    position: relative;
+}
+
+.graph-date {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
