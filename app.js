@@ -918,7 +918,24 @@ function updateGraph(sorted) {
     );
 
 
-    /*
+/*
+ * Position the zero line according to the
+ * actual graph scale.
+ */
+const zeroLine =
+    document.querySelector(".zero-line");
+
+if (zeroLine) {
+
+    const zeroPosition =
+        (top / (top - bottom)) * 100;
+
+    zeroLine.style.top =
+        zeroPosition + "%";
+}
+   
+   
+   /*
      * Scale.
      */
     document.getElementById(
