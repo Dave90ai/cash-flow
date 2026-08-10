@@ -1,0 +1,774 @@
+:root {
+    --bg: #000;
+    --card: #171717;
+    --field: #222;
+    --text: #f5f5f7;
+    --secondary: #999;
+    --border: #303030;
+    --button: #f5f5f7;
+    --button-text: #000;
+
+    --green: #45d483;
+    --red: #ff453a;
+}
+
+
+/* =====================================================
+   GENERAL
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =====================================================
+   APP
+   ===================================================== */
+
+.app {
+    width: 100%;
+    max-width: 760px;
+
+    margin: auto;
+
+    padding:
+        max(18px, env(safe-area-inset-top))
+        16px
+        max(90px, env(safe-area-inset-bottom));
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-name {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.menu-button {
+    width: 38px;
+    height: 38px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: #242424;
+    color: white;
+
+    font-size: 17px;
+}
+
+
+/* =====================================================
+   THEME MENU
+   ===================================================== */
+
+.theme-menu {
+    display: none;
+
+    position: absolute;
+
+    right: 0;
+    top: 48px;
+
+    background: #202020;
+
+    border: 1px solid #353535;
+    border-radius: 12px;
+
+    padding: 6px;
+
+    z-index: 30;
+}
+
+.theme-menu button {
+    display: block;
+
+    width: 120px;
+
+    padding: 9px 12px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: white;
+
+    text-align: left;
+}
+
+
+/* =====================================================
+   BALANCE
+   ===================================================== */
+
+.balance-section {
+    text-align: center;
+
+    padding: 8px 0 7px;
+}
+
+.balance {
+    font-size: 39px;
+    line-height: 1.05;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
+}
+
+.balance.negative {
+    color: var(--red);
+}
+
+.balance-label {
+    margin-top: 4px;
+
+    color: var(--secondary);
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   GRAPH
+   ===================================================== */
+
+.graph-card {
+    margin-top: 9px;
+
+    background: var(--card);
+
+    border-radius: 17px;
+
+    padding: 12px 10px 8px 4px;
+}
+
+.graph {
+    height: 190px;
+
+    display: grid;
+
+    grid-template-columns: 46px 1fr;
+}
+
+.graph-scale {
+    position: relative;
+
+    height: 100%;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+}
+
+.scale-value {
+    position: absolute;
+
+    right: 6px;
+
+    transform: translateY(-50%);
+}
+
+.scale-top {
+    top: 10%;
+}
+
+.scale-middle {
+    top: 35%;
+}
+
+.scale-zero {
+    top: 60%;
+
+    color: var(--text);
+
+    font-weight: 600;
+}
+
+.scale-negative {
+    top: 84%;
+
+    color: var(--red);
+}
+
+.graph-area {
+    position: relative;
+}
+
+.zero-line {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 60%;
+
+    border-top: 1px dashed #666;
+}
+
+.graph svg {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+.graph-dates {
+    margin-left: 50px;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+
+    padding-top: 5px;
+}
+
+
+/* =====================================================
+   TRANSACTIONS
+   ===================================================== */
+
+.transactions {
+    margin-top: 17px;
+
+    overflow: hidden;
+}
+
+.transaction-wrap {
+    position: relative;
+
+    overflow: hidden;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.transaction-delete {
+    position: absolute;
+
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 78px;
+
+    border: 0;
+
+    background: var(--red);
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.transaction {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        45px
+        minmax(0, 1fr)
+        auto
+        auto;
+
+    gap: 7px;
+
+    align-items: center;
+
+    min-height: 34px;
+
+    padding: 3px 0;
+
+    background: var(--bg);
+
+    transform: translateX(0);
+
+    transition: transform .18s ease;
+
+    touch-action: pan-y;
+
+    cursor: pointer;
+}
+
+.transaction-date {
+    font-size: 14px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.transaction-comment {
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.transaction-amount,
+.transaction-balance {
+    font-size: 15px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.transaction-balance {
+    min-width: 72px;
+
+    text-align: right;
+}
+
+.credit {
+    color: var(--green);
+}
+
+.debit,
+.negative-balance {
+    color: var(--red);
+}
+
+
+/* =====================================================
+   ADD BUTTON
+   ===================================================== */
+
+.add-button {
+    position: fixed;
+
+    right:
+        max(
+            20px,
+            calc((100vw - 760px) / 2 + 20px)
+        );
+
+    bottom:
+        max(
+            22px,
+            env(safe-area-inset-bottom)
+        );
+
+    width: 57px;
+    height: 57px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--button);
+    color: var(--button-text);
+
+    font-size: 31px;
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.35);
+
+    z-index: 20;
+}
+
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.modal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.72);
+
+    z-index: 100;
+
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 760px;
+
+    background: var(--card);
+
+    border-radius: 20px 20px 0 0;
+
+    padding:
+        10px
+        16px
+        max(16px, env(safe-area-inset-bottom));
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+}
+
+.drag-bar {
+    width: 38px;
+    height: 4px;
+
+    border-radius: 5px;
+
+    background: #555;
+
+    margin: 0 auto 10px;
+}
+
+.form-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.form-title {
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.close-button {
+    border: 0;
+
+    background: transparent;
+
+    color: var(--secondary);
+
+    font-size: 24px;
+}
+
+
+/* =====================================================
+   FORM FIELDS
+   ===================================================== */
+
+.field {
+    margin-bottom: 10px;
+}
+
+.field-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--secondary);
+
+    font-size: 11px;
+}
+
+.date-input,
+.text-input {
+    width: 100%;
+    height: 40px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--field);
+    color: var(--text);
+
+    padding: 0 11px;
+
+    font-size: 16px;
+
+    outline: none;
+}
+
+
+/* =====================================================
+   AMOUNT
+   ===================================================== */
+
+.amount-row {
+    display: grid;
+
+    grid-template-columns:
+        39px
+        39px
+        minmax(0,1fr);
+
+    gap: 6px;
+}
+
+.sign-button {
+    height: 44px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--field);
+    color: var(--secondary);
+
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.sign-button.selected {
+    background: var(--button);
+    color: var(--button-text);
+
+    border-color: var(--button);
+}
+
+.amount-input {
+    width: 100%;
+    height: 44px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--field);
+
+    padding: 0 12px;
+
+    font-size: 21px;
+    font-weight: 700;
+
+    text-align: right;
+
+    outline: none;
+}
+
+.amount-input.placeholder {
+    color: #666;
+}
+
+.amount-input.debit {
+    color: var(--red);
+}
+
+.amount-input.credit {
+    color: var(--green);
+}
+
+.amount-hint {
+    margin-top: 3px;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   SUGGESTIONS
+   ===================================================== */
+
+.suggestions {
+    display: flex;
+
+    flex-wrap: nowrap;
+
+    gap: 4px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+
+    padding-bottom: 2px;
+}
+
+.suggestions::-webkit-scrollbar {
+    display: none;
+}
+
+.suggestion {
+    flex: 0 0 auto;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: transparent;
+    color: var(--secondary);
+
+    padding: 4px 8px;
+
+    font-size: 11px;
+
+    line-height: 1.1;
+}
+
+
+/* =====================================================
+   FORM BUTTONS
+   ===================================================== */
+
+.form-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.4fr;
+
+    gap: 8px;
+
+    margin-top: 13px;
+}
+
+.cancel-button,
+.save-button {
+    height: 45px;
+
+    border: 0;
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.cancel-button {
+    background: #292929;
+    color: white;
+}
+
+.save-button {
+    background: var(--button);
+    color: var(--button-text);
+}
+
+.delete-edit-button {
+    display: none;
+
+    width: 100%;
+    height: 40px;
+
+    margin-top: 9px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: var(--red);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   DESKTOP
+   ===================================================== */
+
+@media (min-width: 760px) {
+
+    .app {
+        padding-top: 32px;
+    }
+
+    .transaction {
+        grid-template-columns:
+            55px
+            minmax(0,1fr)
+            auto
+            95px;
+
+        gap: 10px;
+    }
+
+    .modal {
+        align-items: center;
+    }
+
+    .form-card {
+        margin: 20px;
+
+        border-radius: 20px;
+
+        max-height: 760px;
+    }
+}
+
+
+/* =====================================================
+   SMALL IPHONES
+   ===================================================== */
+
+@media (max-width: 380px) {
+
+    .app {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .transaction {
+        grid-template-columns:
+            42px
+            minmax(0,1fr)
+            auto
+            auto;
+
+        gap: 5px;
+    }
+
+    .transaction-comment,
+    .transaction-amount,
+    .transaction-balance {
+        font-size: 13px;
+    }
+
+    .transaction-balance {
+        min-width: 62px;
+    }
+
+    .balance {
+        font-size: 34px;
+    }
+
+    .form-card {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
