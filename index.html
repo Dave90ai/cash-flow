@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
+
     <title>Cash Flow</title>
 
     <style>
+
         :root {
             --bg: #000000;
             --card: #171717;
@@ -15,8 +17,10 @@
             --text: #f5f5f7;
             --secondary: #a1a1a6;
             --border: #303030;
+
             --button: #f5f5f7;
             --button-text: #000000;
+
             --green: #45d483;
             --red: #ff453a;
             --zero: #66666b;
@@ -26,15 +30,23 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             min-height: 100%;
+
             background: var(--bg);
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont,
-                         "SF Pro Display", "SF Pro Text",
-                         Helvetica, Arial, sans-serif;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "SF Pro Text",
+                Helvetica,
+                Arial,
+                sans-serif;
         }
 
         body {
@@ -42,20 +54,27 @@
         }
 
         button,
-        input,
-        select {
+        input {
             font-family: inherit;
         }
+
+
+        /* =========================
+           APP
+           ========================= */
 
         .app {
             width: 100%;
             max-width: 760px;
+
             margin: 0 auto;
+
             padding:
                 max(18px, env(safe-area-inset-top))
                 16px
                 max(28px, env(safe-area-inset-bottom));
         }
+
 
         /* =========================
            HEADER
@@ -63,6 +82,7 @@
 
         .header {
             position: relative;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -71,19 +91,24 @@
         .account-name {
             font-size: 25px;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: -.5px;
         }
 
         .menu-button {
             width: 38px;
             height: 38px;
+
             border: 0;
             border-radius: 50%;
+
             background: #242424;
             color: var(--text);
+
             font-size: 18px;
+
             cursor: pointer;
         }
+
 
         /* =========================
            BALANCE
@@ -91,12 +116,14 @@
 
         .balance-section {
             text-align: center;
+
             padding: 8px 0 7px;
         }
 
         .balance {
             font-size: 39px;
             line-height: 1.05;
+
             font-weight: 700;
             letter-spacing: -1px;
         }
@@ -107,9 +134,12 @@
 
         .balance-label {
             margin-top: 4px;
+
             color: var(--secondary);
+
             font-size: 12px;
         }
+
 
         /* =========================
            GRAPH
@@ -117,28 +147,43 @@
 
         .graph-card {
             margin-top: 9px;
+
             background: var(--card);
+
             border-radius: 17px;
-            padding: 12px 10px 8px 4px;
+
+            padding:
+                12px
+                10px
+                8px
+                4px;
         }
 
         .graph {
             position: relative;
+
             height: 190px;
+
             display: grid;
+
             grid-template-columns: 46px 1fr;
         }
 
         .graph-scale {
             position: relative;
+
             height: 100%;
+
             color: var(--secondary);
+
             font-size: 10px;
         }
 
         .scale-value {
             position: absolute;
+
             right: 6px;
+
             transform: translateY(-50%);
         }
 
@@ -152,44 +197,59 @@
 
         .scale-zero {
             top: 60%;
+
             color: var(--text);
+
             font-weight: 600;
         }
 
         .scale-negative {
             top: 84%;
+
             color: var(--red);
         }
 
         .graph-area {
             position: relative;
+
             height: 100%;
         }
 
         .zero-line {
             position: absolute;
+
             left: 0;
             right: 0;
+
             top: 60%;
+
             border-top: 1px dashed var(--zero);
+
             z-index: 1;
         }
 
         .graph svg {
             width: 100%;
             height: 100%;
+
             display: block;
+
             overflow: visible;
         }
 
         .graph-dates {
             margin-left: 50px;
+
             display: flex;
             justify-content: space-between;
+
             color: var(--secondary);
+
             font-size: 10px;
+
             padding: 5px 1px 0;
         }
+
 
         /* =========================
            TRANSACTIONS
@@ -201,11 +261,19 @@
 
         .transaction {
             display: grid;
-            grid-template-columns: 45px minmax(0, 1fr) auto auto;
+
+            grid-template-columns:
+                45px
+                minmax(0, 1fr)
+                auto
+                auto;
+
             gap: 7px;
+
             align-items: center;
 
             min-height: 31px;
+
             padding: 3px 0;
 
             border-bottom: 1px solid var(--border);
@@ -213,30 +281,43 @@
 
         .transaction-date {
             font-size: 14px;
+
             font-weight: 700;
+
             white-space: nowrap;
         }
 
         .transaction-comment {
             min-width: 0;
+
             overflow: hidden;
+
             text-overflow: ellipsis;
+
             white-space: nowrap;
+
             font-size: 15px;
+
             font-weight: 700;
         }
 
         .transaction-amount {
             font-size: 15px;
+
             font-weight: 700;
+
             white-space: nowrap;
         }
 
         .transaction-balance {
             min-width: 72px;
+
             text-align: right;
+
             font-size: 15px;
+
             font-weight: 700;
+
             white-space: nowrap;
         }
 
@@ -249,31 +330,53 @@
             color: var(--red);
         }
 
+
         /* =========================
            ADD BUTTON
            ========================= */
 
         .add-button {
             position: fixed;
-            right: max(20px, calc((100vw - 760px) / 2 + 20px));
-            bottom: max(22px, env(safe-area-inset-bottom));
+
+            right:
+                max(
+                    20px,
+                    calc((100vw - 760px) / 2 + 20px)
+                );
+
+            bottom:
+                max(
+                    22px,
+                    env(safe-area-inset-bottom)
+                );
 
             width: 57px;
             height: 57px;
 
             border: 0;
+
             border-radius: 50%;
 
             background: var(--button);
+
             color: var(--button-text);
 
             font-size: 31px;
+
             font-weight: 300;
+
             line-height: 1;
 
-            box-shadow: 0 5px 18px rgba(0,0,0,.35);
+            box-shadow:
+                0 5px 18px rgba(0,0,0,.35);
+
             cursor: pointer;
         }
+
+        .add-button:active {
+            transform: scale(.95);
+        }
+
 
         /* =========================
            MODAL
@@ -283,13 +386,16 @@
             display: none;
 
             position: fixed;
+
             inset: 0;
 
-            background: rgba(0,0,0,.72);
+            background:
+                rgba(0,0,0,.72);
 
             z-index: 100;
 
             align-items: flex-end;
+
             justify-content: center;
         }
 
@@ -299,101 +405,196 @@
 
         .form-card {
             width: 100%;
+
             max-width: 760px;
 
             background: var(--card);
 
-            border-radius: 22px 22px 0 0;
+            border-radius:
+                20px
+                20px
+                0
+                0;
 
             padding:
-                14px
-                18px
-                max(22px, env(safe-area-inset-bottom));
+                10px
+                16px
+                max(
+                    16px,
+                    env(safe-area-inset-bottom)
+                );
 
-            max-height: 92vh;
+            max-height: 90vh;
+
             overflow-y: auto;
         }
 
         .drag-bar {
-            width: 42px;
-            height: 5px;
+            width: 38px;
+            height: 4px;
+
             border-radius: 5px;
+
             background: #555;
-            margin: 0 auto 16px;
+
+            margin:
+                0 auto
+                10px;
         }
 
         .form-header {
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
-            margin-bottom: 20px;
+
+            margin-bottom: 12px;
         }
 
         .form-title {
-            font-size: 23px;
+            font-size: 21px;
+
             font-weight: 700;
         }
 
         .close-button {
             border: 0;
+
             background: transparent;
+
             color: var(--secondary);
-            font-size: 25px;
+
+            font-size: 24px;
+
             cursor: pointer;
         }
+
 
         /* =========================
            FORM FIELDS
            ========================= */
 
         .field {
-            margin-bottom: 17px;
+            margin-bottom: 11px;
         }
 
         .field-label {
             display: block;
-            margin-bottom: 6px;
+
+            margin-bottom: 4px;
+
             color: var(--secondary);
-            font-size: 12px;
+
+            font-size: 11px;
         }
 
         .date-input,
-        .amount-input,
-        .text-input,
-        .select-input {
+        .text-input {
             width: 100%;
-            height: 50px;
 
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            height: 42px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
 
             background: var(--field);
+
             color: var(--text);
 
-            padding: 0 14px;
+            padding:
+                0 11px;
 
-            font-size: 17px;
+            font-size: 16px;
+
             outline: none;
         }
 
-        .date-input:focus,
-        .amount-input:focus,
-        .text-input:focus {
-            border-color: #777;
+
+        /* =========================
+           AMOUNT
+           ========================= */
+
+        .amount-row {
+            display: grid;
+
+            grid-template-columns:
+                39px
+                39px
+                minmax(0, 1fr);
+
+            gap: 6px;
+
+            align-items: center;
+        }
+
+        .sign-button {
+            height: 46px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: var(--field);
+
+            color: var(--secondary);
+
+            font-size: 21px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .sign-button.selected {
+            background: var(--button);
+
+            color: var(--button-text);
+
+            border-color: var(--button);
         }
 
         .amount-input {
-            height: 62px;
-            font-size: 28px;
+            width: 100%;
+
+            height: 46px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: var(--field);
+
+            color: var(--text);
+
+            padding:
+                0 12px;
+
+            font-size: 22px;
+
             font-weight: 700;
+
             text-align: right;
+
+            outline: none;
+        }
+
+        .amount-input:focus {
+            border-color: #777;
         }
 
         .amount-hint {
-            margin-top: 5px;
+            margin-top: 3px;
+
             color: var(--secondary);
-            font-size: 11px;
+
+            font-size: 10px;
         }
+
 
         /* =========================
            SUGGESTIONS
@@ -401,63 +602,90 @@
 
         .suggestions {
             display: flex;
+
             flex-wrap: wrap;
-            gap: 7px;
-            margin-top: 8px;
+
+            gap: 4px;
+
+            margin-top: 5px;
         }
 
         .suggestion {
-            border: 1px solid var(--border);
-            border-radius: 20px;
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
             background: transparent;
+
             color: var(--secondary);
 
-            padding: 7px 11px;
+            padding:
+                4px 8px;
 
-            font-size: 12px;
+            font-size: 11px;
+
+            line-height: 1.1;
+
             cursor: pointer;
         }
 
         .suggestion:active {
             background: #303030;
+
             color: var(--text);
         }
 
+
         /* =========================
-           FORM ACTIONS
+           ACTIONS
            ========================= */
 
         .form-actions {
             display: grid;
-            grid-template-columns: 1fr 1.4fr;
-            gap: 10px;
-            margin-top: 23px;
+
+            grid-template-columns:
+                1fr
+                1.4fr;
+
+            gap: 8px;
+
+            margin-top: 14px;
         }
 
         .cancel-button,
         .save-button {
-            height: 52px;
-            border-radius: 14px;
+            height: 46px;
+
+            border-radius: 12px;
+
             border: 0;
-            font-size: 16px;
+
+            font-size: 15px;
+
             font-weight: 600;
+
             cursor: pointer;
         }
 
         .cancel-button {
             background: #292929;
+
             color: var(--text);
         }
 
         .save-button {
             background: var(--button);
+
             color: var(--button-text);
         }
 
         .save-button:disabled {
             opacity: .35;
+
             cursor: default;
         }
+
 
         /* =========================
            THEME MENU
@@ -467,11 +695,15 @@
             display: none;
 
             position: absolute;
+
             top: 45px;
             right: 0;
 
             background: #202020;
-            border: 1px solid #353535;
+
+            border:
+                1px solid #353535;
+
             border-radius: 12px;
 
             padding: 6px;
@@ -484,15 +716,19 @@
 
             width: 120px;
 
-            padding: 9px 12px;
+            padding:
+                9px 12px;
 
             border: 0;
+
             border-radius: 8px;
 
             background: transparent;
+
             color: white;
 
             text-align: left;
+
             font-size: 14px;
         }
 
@@ -500,26 +736,38 @@
             background: #303030;
         }
 
+
         /* =========================
            LIGHT THEME
            ========================= */
 
         body.light {
             --bg: #f5f5f7;
+
             --card: #ffffff;
+
             --field: #f0f0f2;
+
             --text: #1d1d1f;
+
             --secondary: #77777c;
+
             --border: #dedee2;
+
             --button: #111111;
+
             --button-text: #ffffff;
+
             --green: #16834a;
+
             --red: #d93025;
+
             --zero: #b0b0b4;
         }
 
         body.light .menu-button {
             background: #e5e5e7;
+
             color: #1d1d1f;
         }
 
@@ -529,6 +777,7 @@
 
         body.light .theme-menu {
             background: white;
+
             border-color: #ddd;
         }
 
@@ -539,6 +788,7 @@
         body.light .theme-menu button:hover {
             background: #eee;
         }
+
 
         /* =========================
            DESKTOP
@@ -551,7 +801,12 @@
             }
 
             .transaction {
-                grid-template-columns: 55px minmax(0, 1fr) auto 95px;
+                grid-template-columns:
+                    55px
+                    minmax(0, 1fr)
+                    auto
+                    95px;
+
                 gap: 10px;
             }
 
@@ -567,10 +822,13 @@
 
             .form-card {
                 border-radius: 20px;
+
                 margin: 20px;
-                max-height: 800px;
+
+                max-height: 760px;
             }
         }
+
 
         /* =========================
            SMALL PHONES
@@ -584,7 +842,12 @@
             }
 
             .transaction {
-                grid-template-columns: 42px minmax(0, 1fr) auto auto;
+                grid-template-columns:
+                    42px
+                    minmax(0, 1fr)
+                    auto
+                    auto;
+
                 gap: 5px;
             }
 
@@ -601,82 +864,164 @@
             .balance {
                 font-size: 34px;
             }
+
+            .form-card {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .suggestion {
+                padding:
+                    4px 7px;
+
+                font-size: 10px;
+            }
         }
+
     </style>
 </head>
 
+
 <body>
+
 
 <div class="app">
 
+
+    <!-- =========================
+         HEADER
+         ========================= -->
+
     <header class="header">
 
-        <div class="account-name">Checking</div>
+        <div class="account-name">
+            Checking
+        </div>
 
-        <button class="menu-button"
-                onclick="toggleThemeMenu()"
-                aria-label="Settings">
+        <button
+            class="menu-button"
+            onclick="toggleThemeMenu()"
+            aria-label="Settings">
+
             •••
+
         </button>
 
-        <div class="theme-menu" id="themeMenu">
-            <button onclick="setTheme('dark')">Dark</button>
-            <button onclick="setTheme('light')">Light</button>
+
+        <div
+            class="theme-menu"
+            id="themeMenu">
+
+            <button
+                onclick="setTheme('dark')">
+                Dark
+            </button>
+
+            <button
+                onclick="setTheme('light')">
+                Light
+            </button>
+
         </div>
 
     </header>
 
+
+    <!-- =========================
+         BALANCE
+         ========================= -->
+
     <section class="balance-section">
-        <div class="balance" id="currentBalance">−1,500</div>
-        <div class="balance-label">current balance</div>
+
+        <div
+            class="balance"
+            id="currentBalance">
+
+            −1,500
+
+        </div>
+
+        <div class="balance-label">
+            current balance
+        </div>
+
     </section>
 
-    <!-- Graph prototype -->
+
+    <!-- =========================
+         GRAPH
+         ========================= -->
 
     <section class="graph-card">
 
         <div class="graph">
 
+
             <div class="graph-scale">
-                <span class="scale-value scale-top">20k</span>
-                <span class="scale-value scale-middle">10k</span>
-                <span class="scale-value scale-zero">0</span>
-                <span class="scale-value scale-negative">−10k</span>
+
+                <span
+                    class="scale-value scale-top">
+                    20k
+                </span>
+
+                <span
+                    class="scale-value scale-middle">
+                    10k
+                </span>
+
+                <span
+                    class="scale-value scale-zero">
+                    0
+                </span>
+
+                <span
+                    class="scale-value scale-negative">
+                    −10k
+                </span>
+
             </div>
+
 
             <div class="graph-area">
 
                 <div class="zero-line"></div>
 
-                <svg viewBox="0 0 700 190"
-                     preserveAspectRatio="none">
+
+                <svg
+                    viewBox="0 0 700 190"
+                    preserveAspectRatio="none">
 
                     <path
-                        d="M0,82
-                           L55,76
-                           L110,67
-                           L165,72
-                           L220,61
-                           L275,50
-                           L330,56
-                           L385,46
-                           L440,59
-                           L495,43
-                           L540,51
-                           L565,63"
+                        d="
+                            M0,82
+                            L55,76
+                            L110,67
+                            L165,72
+                            L220,61
+                            L275,50
+                            L330,56
+                            L385,46
+                            L440,59
+                            L495,43
+                            L540,51
+                            L565,63
+                        "
                         fill="none"
                         stroke="#45d483"
                         stroke-width="3"
                         stroke-linecap="round"
                         stroke-linejoin="round" />
 
+
                     <path
-                        d="M565,63
-                           L585,78
-                           L610,96
-                           L640,116
-                           L670,132
-                           L700,143"
+                        d="
+                            M565,63
+                            L585,78
+                            L610,96
+                            L640,116
+                            L670,132
+                            L700,143
+                        "
                         fill="none"
                         stroke="#ff453a"
                         stroke-width="3"
@@ -686,59 +1031,97 @@
                 </svg>
 
             </div>
+
         </div>
 
+
         <div class="graph-dates">
+
             <span>10/08</span>
             <span>20/08</span>
             <span>30/08</span>
             <span>09/09</span>
             <span>19/09</span>
             <span>29/09</span>
+
         </div>
 
     </section>
 
-    <!-- Transactions -->
 
-    <section class="transactions" id="transactionList"></section>
+    <!-- =========================
+         TRANSACTIONS
+         ========================= -->
+
+    <section
+        class="transactions"
+        id="transactionList">
+
+    </section>
+
 
 </div>
 
-<button class="add-button"
-        onclick="openAddTransaction()"
-        aria-label="Add transaction">
+
+<!-- =========================
+     ADD BUTTON
+     ========================= -->
+
+<button
+    class="add-button"
+    onclick="openAddTransaction()"
+    aria-label="Add transaction">
+
     +
+
 </button>
 
 
+
 <!-- =========================
-     ADD TRANSACTION MODAL
+     ADD TRANSACTION
      ========================= -->
 
-<div class="modal" id="transactionModal">
+<div
+    class="modal"
+    id="transactionModal">
+
 
     <div class="form-card">
 
+
         <div class="drag-bar"></div>
 
-        <div class="form-header">
-            <div class="form-title">Add Transaction</div>
 
-            <button class="close-button"
-                    onclick="closeAddTransaction()">
+        <div class="form-header">
+
+            <div class="form-title">
+                Add Transaction
+            </div>
+
+            <button
+                class="close-button"
+                onclick="closeAddTransaction()">
+
                 ×
+
             </button>
+
         </div>
 
 
-        <!-- Date -->
+        <!-- DATE -->
 
         <div class="field">
 
-            <label class="field-label" for="dateInput">
+            <label
+                class="field-label"
+                for="dateInput">
+
                 Date
+
             </label>
+
 
             <input
                 id="dateInput"
@@ -748,36 +1131,77 @@
         </div>
 
 
-        <!-- Amount -->
+        <!-- AMOUNT -->
 
         <div class="field">
 
-            <label class="field-label" for="amountInput">
+            <label
+                class="field-label">
+
                 Amount
+
             </label>
 
-            <input
-                id="amountInput"
-                class="amount-input"
-                type="text"
-                inputmode="decimal"
-                autocomplete="off"
-                placeholder="+0">
+
+            <div class="amount-row">
+
+
+                <!-- DEBIT -->
+
+                <button
+                    id="minusButton"
+                    class="sign-button selected"
+                    onclick="setSign(-1)"
+                    aria-label="Debit">
+
+                    −
+
+                </button>
+
+
+                <!-- CREDIT -->
+
+                <button
+                    id="plusButton"
+                    class="sign-button"
+                    onclick="setSign(1)"
+                    aria-label="Credit">
+
+                    +
+
+                </button>
+
+
+                <input
+                    id="amountInput"
+                    class="amount-input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    value="0">
+
+            </div>
+
 
             <div class="amount-hint">
-                Use + for income and − for debit
+                Debit is selected by default
             </div>
 
         </div>
 
 
-        <!-- Category -->
+        <!-- CATEGORY -->
 
         <div class="field">
 
-            <label class="field-label" for="categoryInput">
+            <label
+                class="field-label"
+                for="categoryInput">
+
                 Category
+
             </label>
+
 
             <input
                 id="categoryInput"
@@ -786,45 +1210,28 @@
                 autocomplete="off"
                 placeholder="Optional">
 
-            <div class="suggestions">
 
-                <button class="suggestion"
-                        onclick="chooseCategory('Salary')">
-                    Salary
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseCategory('Rent')">
-                    Rent
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseCategory('Utilities')">
-                    Utilities
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseCategory('Food')">
-                    Food
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseCategory('Credit Card')">
-                    Credit Card
-                </button>
+            <div
+                class="suggestions"
+                id="categorySuggestions">
 
             </div>
 
         </div>
 
 
-        <!-- Comment -->
+        <!-- COMMENT -->
 
         <div class="field">
 
-            <label class="field-label" for="commentInput">
+            <label
+                class="field-label"
+                for="commentInput">
+
                 Comment
+
             </label>
+
 
             <input
                 id="commentInput"
@@ -833,45 +1240,36 @@
                 autocomplete="off"
                 placeholder="Optional">
 
-            <div class="suggestions">
 
-                <button class="suggestion"
-                        onclick="chooseComment('Monthly salary')">
-                    Monthly salary
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseComment('Electricity bill')">
-                    Electricity bill
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseComment('Credit card estimate')">
-                    Credit card estimate
-                </button>
-
-                <button class="suggestion"
-                        onclick="chooseComment('Rent')">
-                    Rent
-                </button>
+            <div
+                class="suggestions"
+                id="commentSuggestions">
 
             </div>
 
         </div>
 
 
+        <!-- ACTIONS -->
+
         <div class="form-actions">
 
-            <button class="cancel-button"
-                    onclick="closeAddTransaction()">
+            <button
+                class="cancel-button"
+                onclick="closeAddTransaction()">
+
                 Cancel
+
             </button>
 
-            <button class="save-button"
-                    id="saveButton"
-                    onclick="addTransaction()"
-                    disabled>
+
+            <button
+                class="save-button"
+                id="saveButton"
+                onclick="addTransaction()">
+
                 Add
+
             </button>
 
         </div>
@@ -881,10 +1279,12 @@
 </div>
 
 
+
 <script>
 
+
     /* =========================
-       DEMO DATA
+       DATA
        ========================= */
 
     let transactions = [
@@ -949,250 +1349,242 @@
 
 
     /* =========================
-       FORMATTERS
+       SIGN
        ========================= */
 
-    function formatAmount(value) {
-
-        const absolute = Math.abs(value);
-
-        const formatted = absolute.toLocaleString(
-            "en-US",
-            {
-                maximumFractionDigits: 2
-            }
-        );
-
-        if (value < 0) {
-            return "−" + formatted;
-        }
-
-        return "+" + formatted;
-    }
-
-
-    function formatBalance(value) {
-
-        const absolute = Math.abs(value);
-
-        const formatted = absolute.toLocaleString(
-            "en-US",
-            {
-                maximumFractionDigits: 2
-            }
-        );
-
-        if (value < 0) {
-            return "−" + formatted;
-        }
-
-        return formatted;
-    }
-
-
-    function formatDate(dateString) {
-
-        const parts = dateString.split("-");
-
-        return parts[2] + "/" + parts[1];
-
-    }
+    let transactionSign = -1;
 
 
     /* =========================
-       CALCULATE BALANCES
+       DEBIT LISTS
        ========================= */
 
-    function calculateBalances() {
+    const debitCategories = [
 
-        /*
-         * Temporary demo calculation.
-         *
-         * Later this will be replaced by the
-         * real adjustment/balance engine.
-         */
+        "Credit Card",
+        "Rent",
+        "Electricity",
+        "Food",
+        "Insurance",
+        "Tax",
+        "Utilities",
+        "Other"
 
-        const sorted = [...transactions].sort(
-            (a, b) => a.date.localeCompare(b.date)
-        );
+    ];
 
-        let balance = 0;
 
-        for (const transaction of sorted) {
+    const debitComments = [
 
-            balance += transaction.amount;
+        "Credit card estimate",
+        "Rent",
+        "Electricity bill",
+        "Supermarket",
+        "Insurance",
+        "Tax payment",
+        "Monthly expenses",
+        "Other"
 
-            transaction.balance = balance;
-
-        }
-
-        return sorted;
-
-    }
+    ];
 
 
     /* =========================
-       DISPLAY TRANSACTIONS
+       CREDIT LISTS
        ========================= */
 
-    function renderTransactions() {
+    const creditCategories = [
 
-        const list =
-            document.getElementById("transactionList");
+        "Salary",
+        "Refund",
+        "Interest",
+        "Transfer",
+        "Bonus",
+        "Other"
 
-        list.innerHTML = "";
-
-        const sorted = calculateBalances();
-
-        /*
-         * Newest first.
-         */
-
-        sorted.reverse();
-
-        for (const transaction of sorted) {
-
-            const row =
-                document.createElement("div");
-
-            row.className = "transaction";
-
-            const balanceClass =
-                transaction.balance < 0
-                    ? "transaction-balance negative-balance"
-                    : "transaction-balance";
-
-            const amountClass =
-                transaction.amount < 0
-                    ? "transaction-amount debit"
-                    : "transaction-amount credit";
-
-            row.innerHTML = `
-                <div class="transaction-date">
-                    ${formatDate(transaction.date)}
-                </div>
-
-                <div class="transaction-comment">
-                    ${escapeHtml(
-                        transaction.comment || ""
-                    )}
-                </div>
-
-                <div class="${amountClass}">
-                    ${formatAmount(transaction.amount)}
-                </div>
-
-                <div class="${balanceClass}">
-                    ${formatBalance(transaction.balance)}
-                </div>
-            `;
-
-            list.appendChild(row);
-        }
-
-        /*
-         * Current balance is the balance
-         * after the newest transaction.
-         */
-
-        if (sorted.length > 0) {
-
-            const current =
-                sorted[0].balance;
-
-            const balanceElement =
-                document.getElementById(
-                    "currentBalance"
-                );
-
-            balanceElement.textContent =
-                formatBalance(current);
-
-            if (current < 0) {
-                balanceElement.classList.add(
-                    "negative"
-                );
-            } else {
-                balanceElement.classList.remove(
-                    "negative"
-                );
-            }
-        }
-
-    }
+    ];
 
 
-    function escapeHtml(text) {
+    const creditComments = [
 
-        const div =
-            document.createElement("div");
+        "Monthly salary",
+        "Refund",
+        "Interest",
+        "Transfer",
+        "Bonus",
+        "Other"
 
-        div.textContent = text;
-
-        return div.innerHTML;
-
-    }
+    ];
 
 
     /* =========================
-       ADD TRANSACTION
+       SET SIGN
        ========================= */
 
-    function openAddTransaction() {
+    function setSign(sign) {
 
-        const modal =
+        transactionSign = sign;
+
+
+        const minus =
             document.getElementById(
-                "transactionModal"
+                "minusButton"
             );
 
-        const date =
+        const plus =
             document.getElementById(
-                "dateInput"
+                "plusButton"
             );
 
-        const amount =
+
+        if (sign === -1) {
+
+            minus.classList.add(
+                "selected"
+            );
+
+            plus.classList.remove(
+                "selected"
+            );
+
+        } else {
+
+            plus.classList.add(
+                "selected"
+            );
+
+            minus.classList.remove(
+                "selected"
+            );
+
+        }
+
+
+        updateAmountDisplay();
+
+
+        renderSuggestions();
+
+    }
+
+
+    /* =========================
+       AMOUNT
+       ========================= */
+
+    function updateAmountDisplay() {
+
+        const input =
             document.getElementById(
                 "amountInput"
             );
 
-        const today =
-            new Date()
-                .toISOString()
-                .split("T")[0];
 
-        date.value = today;
+        let value =
+            input.value
+                .replace(/[^\d.]/g, "");
 
-        amount.value = "";
 
-        document.getElementById(
-            "categoryInput"
-        ).value = "";
+        if (value === "") {
+            value = "0";
+        }
 
-        document.getElementById(
-            "commentInput"
-        ).value = "";
-
-        updateSaveButton();
-
-        modal.classList.add("open");
 
         /*
-         * Amount is the field we expect
-         * to be entered most often.
+         * We keep the sign visually
+         * represented by the buttons.
          */
 
-        setTimeout(() => {
-            amount.focus();
-        }, 150);
+        input.value = value;
 
     }
 
 
-    function closeAddTransaction() {
+    /* =========================
+       SUGGESTIONS
+       ========================= */
 
-        document
-            .getElementById("transactionModal")
-            .classList.remove("open");
+    function renderSuggestions() {
+
+        const categoryBox =
+            document.getElementById(
+                "categorySuggestions"
+            );
+
+        const commentBox =
+            document.getElementById(
+                "commentSuggestions"
+            );
+
+
+        const categories =
+            transactionSign === -1
+                ? debitCategories
+                : creditCategories;
+
+
+        const comments =
+            transactionSign === -1
+                ? debitComments
+                : creditComments;
+
+
+        categoryBox.innerHTML = "";
+
+
+        categories.forEach(
+            category => {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.className =
+                    "suggestion";
+
+                button.textContent =
+                    category;
+
+                button.onclick =
+                    () => chooseCategory(
+                        category
+                    );
+
+                categoryBox.appendChild(
+                    button
+                );
+
+            }
+        );
+
+
+        commentBox.innerHTML = "";
+
+
+        comments.forEach(
+            comment => {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.className =
+                    "suggestion";
+
+                button.textContent =
+                    comment;
+
+                button.onclick =
+                    () => chooseComment(
+                        comment
+                    );
+
+                commentBox.appendChild(
+                    button
+                );
+
+            }
+        );
 
     }
 
@@ -1215,22 +1607,99 @@
     }
 
 
-    function updateSaveButton() {
+    /* =========================
+       ADD TRANSACTION
+       ========================= */
+
+    function openAddTransaction() {
+
+        const modal =
+            document.getElementById(
+                "transactionModal"
+            );
+
+
+        const date =
+            document.getElementById(
+                "dateInput"
+            );
+
 
         const amount =
             document.getElementById(
                 "amountInput"
-            ).value.trim();
-
-        const saveButton =
-            document.getElementById(
-                "saveButton"
             );
 
-        saveButton.disabled =
-            amount === "" ||
-            amount === "+" ||
-            amount === "-";
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+
+        date.value = today;
+
+
+        /*
+         * Every new transaction starts
+         * as a debit.
+         */
+
+        transactionSign = -1;
+
+
+        document.getElementById(
+            "minusButton"
+        ).classList.add(
+            "selected"
+        );
+
+
+        document.getElementById(
+            "plusButton"
+        ).classList.remove(
+            "selected"
+        );
+
+
+        amount.value = "0";
+
+
+        document.getElementById(
+            "categoryInput"
+        ).value = "";
+
+
+        document.getElementById(
+            "commentInput"
+        ).value = "";
+
+
+        renderSuggestions();
+
+
+        modal.classList.add(
+            "open"
+        );
+
+
+        setTimeout(
+            () => amount.focus(),
+            150
+        );
+
+    }
+
+
+    function closeAddTransaction() {
+
+        document
+            .getElementById(
+                "transactionModal"
+            )
+            .classList.remove(
+                "open"
+            );
 
     }
 
@@ -1242,25 +1711,30 @@
                 "dateInput"
             ).value;
 
-        let amountText =
+
+        const amountInput =
             document.getElementById(
                 "amountInput"
-            ).value
-            .trim()
-            .replace(/,/g, "");
+            );
+
+
+        const amountValue =
+            Number(
+                amountInput.value
+                    .replace(/,/g, "")
+            );
 
 
         const category =
             document.getElementById(
                 "categoryInput"
-            ).value
-            .trim();
+            ).value.trim();
+
 
         const comment =
             document.getElementById(
                 "commentInput"
-            ).value
-            .trim();
+            ).value.trim();
 
 
         if (!date) {
@@ -1268,16 +1742,14 @@
         }
 
 
-        /*
-         * Convert the typed amount to a number.
-         */
+        if (
+            !Number.isFinite(
+                amountValue
+            ) ||
+            amountValue <= 0
+        ) {
 
-        const amount =
-            Number(amountText);
-
-
-        if (!Number.isFinite(amount) ||
-            amount === 0) {
+            amountInput.focus();
 
             return;
 
@@ -1288,7 +1760,9 @@
 
             date: date,
 
-            amount: amount,
+            amount:
+                amountValue *
+                transactionSign,
 
             category: category,
 
@@ -1299,7 +1773,246 @@
 
         renderTransactions();
 
+
         closeAddTransaction();
+
+    }
+
+
+    /* =========================
+       CALCULATE BALANCES
+       ========================= */
+
+    function calculateBalances() {
+
+        const sorted =
+            [...transactions].sort(
+                (a, b) =>
+                    a.date.localeCompare(
+                        b.date
+                    )
+            );
+
+
+        let balance = 0;
+
+
+        for (
+            const transaction
+            of sorted
+        ) {
+
+            balance +=
+                transaction.amount;
+
+            transaction.balance =
+                balance;
+
+        }
+
+
+        return sorted;
+
+    }
+
+
+    /* =========================
+       FORMAT
+       ========================= */
+
+    function formatAmount(value) {
+
+        const absolute =
+            Math.abs(value)
+                .toLocaleString(
+                    "en-US"
+                );
+
+
+        if (value < 0) {
+
+            return "−" + absolute;
+
+        }
+
+
+        return "+" + absolute;
+
+    }
+
+
+    function formatBalance(value) {
+
+        const absolute =
+            Math.abs(value)
+                .toLocaleString(
+                    "en-US"
+                );
+
+
+        if (value < 0) {
+
+            return "−" + absolute;
+
+        }
+
+
+        return absolute;
+
+    }
+
+
+    function formatDate(dateString) {
+
+        const parts =
+            dateString.split("-");
+
+
+        return (
+            parts[2] +
+            "/" +
+            parts[1]
+        );
+
+    }
+
+
+    /* =========================
+       TRANSACTIONS DISPLAY
+       ========================= */
+
+    function renderTransactions() {
+
+        const list =
+            document.getElementById(
+                "transactionList"
+            );
+
+
+        list.innerHTML = "";
+
+
+        const sorted =
+            calculateBalances();
+
+
+        /*
+         * Newest first.
+         */
+
+        sorted.reverse();
+
+
+        sorted.forEach(
+            transaction => {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "transaction";
+
+
+                const amountClass =
+                    transaction.amount < 0
+                        ? "transaction-amount debit"
+                        : "transaction-amount credit";
+
+
+                const balanceClass =
+                    transaction.balance < 0
+                        ? "transaction-balance negative-balance"
+                        : "transaction-balance";
+
+
+                row.innerHTML = `
+
+                    <div class="transaction-date">
+                        ${formatDate(
+                            transaction.date
+                        )}
+                    </div>
+
+                    <div class="transaction-comment">
+                        ${escapeHtml(
+                            transaction.comment || ""
+                        )}
+                    </div>
+
+                    <div class="${amountClass}">
+                        ${formatAmount(
+                            transaction.amount
+                        )}
+                    </div>
+
+                    <div class="${balanceClass}">
+                        ${formatBalance(
+                            transaction.balance
+                        )}
+                    </div>
+
+                `;
+
+
+                list.appendChild(row);
+
+            }
+        );
+
+
+        if (sorted.length > 0) {
+
+            const current =
+                sorted[0].balance;
+
+
+            const balanceElement =
+                document.getElementById(
+                    "currentBalance"
+                );
+
+
+            balanceElement.textContent =
+                formatBalance(
+                    current
+                );
+
+
+            if (current < 0) {
+
+                balanceElement.classList.add(
+                    "negative"
+                );
+
+            } else {
+
+                balanceElement.classList.remove(
+                    "negative"
+                );
+
+            }
+
+        }
+
+    }
+
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.textContent =
+            text;
+
+
+        return div.innerHTML;
 
     }
 
@@ -1315,6 +2028,7 @@
                 "themeMenu"
             );
 
+
         menu.style.display =
             menu.style.display === "block"
                 ? "none"
@@ -1325,11 +2039,14 @@
 
     function setTheme(theme) {
 
-        if (theme === "light") {
+        if (
+            theme === "light"
+        ) {
 
             document.body.classList.add(
                 "light"
             );
+
 
             localStorage.setItem(
                 "cashFlowTheme",
@@ -1342,6 +2059,7 @@
                 "light"
             );
 
+
             localStorage.setItem(
                 "cashFlowTheme",
                 "dark"
@@ -1349,23 +2067,13 @@
 
         }
 
+
         document.getElementById(
             "themeMenu"
-        ).style.display = "none";
+        ).style.display =
+            "none";
 
     }
-
-
-    /* =========================
-       INPUT EVENTS
-       ========================= */
-
-    document
-        .getElementById("amountInput")
-        .addEventListener(
-            "input",
-            updateSaveButton
-        );
 
 
     /* =========================
@@ -1377,7 +2085,10 @@
             "cashFlowTheme"
         );
 
-    if (savedTheme === "light") {
+
+    if (
+        savedTheme === "light"
+    ) {
 
         document.body.classList.add(
             "light"
@@ -1386,7 +2097,10 @@
     }
 
 
+    renderSuggestions();
+
     renderTransactions();
+
 
 </script>
 
