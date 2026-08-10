@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +53,7 @@
         /* Header */
 
         .header {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -87,6 +89,10 @@
             line-height: 1.05;
             font-weight: 700;
             letter-spacing: -1px;
+        }
+
+        .balance.negative {
+            color: var(--red);
         }
 
         .balance-label {
@@ -228,6 +234,10 @@
             color: var(--red);
         }
 
+        .negative-balance {
+            color: var(--red);
+        }
+
         /* Add button */
 
         .add-button {
@@ -256,13 +266,13 @@
             transform: scale(.95);
         }
 
-        /* Theme menu prototype */
+        /* Theme menu */
 
         .theme-menu {
             display: none;
             position: absolute;
-            top: 60px;
-            right: 16px;
+            top: 45px;
+            right: 0;
             background: #202020;
             border: 1px solid #353535;
             border-radius: 12px;
@@ -375,7 +385,7 @@
     </header>
 
     <section class="balance-section">
-        <div class="balance">8,250</div>
+        <div class="balance">-1,500</div>
         <div class="balance-label">current balance</div>
     </section>
 
@@ -384,10 +394,10 @@
         <div class="graph">
 
             <div class="graph-scale">
-                <span class="scale-value scale-top">10k</span>
-                <span class="scale-value scale-middle">5k</span>
+                <span class="scale-value scale-top">20k</span>
+                <span class="scale-value scale-middle">10k</span>
                 <span class="scale-value scale-zero">0</span>
-                <span class="scale-value scale-negative">−5k</span>
+                <span class="scale-value scale-negative">−10k</span>
             </div>
 
             <div class="graph-area">
@@ -398,32 +408,34 @@
                      preserveAspectRatio="none"
                      aria-label="Balance graph">
 
-                    <!-- Positive section -->
+                    <!-- Green section -->
                     <path
-                        d="M0,78
-                           L55,72
-                           L110,63
-                           L165,68
-                           L220,57
-                           L275,46
-                           L330,52
-                           L385,42
-                           L440,55
-                           L495,39
-                           L540,47"
+                        d="M0,82
+                           L55,76
+                           L110,67
+                           L165,72
+                           L220,61
+                           L275,50
+                           L330,56
+                           L385,46
+                           L440,59
+                           L495,43
+                           L540,51
+                           L565,63"
                         fill="none"
                         stroke="#45d483"
                         stroke-width="3"
                         stroke-linecap="round"
                         stroke-linejoin="round" />
 
-                    <!-- Negative section -->
+                    <!-- Red section after crossing zero -->
                     <path
-                        d="M540,47
-                           L585,65
-                           L630,91
-                           L670,120
-                           L700,137"
+                        d="M565,63
+                           L585,78
+                           L610,96
+                           L640,116
+                           L670,132
+                           L700,143"
                         fill="none"
                         stroke="#ff453a"
                         stroke-width="3"
@@ -448,55 +460,62 @@
 
     <section class="transactions">
 
-        <!-- Oldest first -->
+        <!-- Newest first -->
 
         <div class="transaction">
-            <div class="transaction-date">10/08</div>
-            <div class="transaction-comment">Salary</div>
-            <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">8,000</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">10/08</div>
-            <div class="transaction-comment">Supermarket</div>
-            <div class="transaction-amount debit">−350</div>
-            <div class="transaction-balance">7,650</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">12/08</div>
-            <div class="transaction-comment">Electricity</div>
-            <div class="transaction-amount debit">−450</div>
-            <div class="transaction-balance">7,200</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">15/08</div>
-            <div class="transaction-comment">Salary</div>
-            <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">15,200</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">20/08</div>
-            <div class="transaction-comment">Rent</div>
-            <div class="transaction-amount debit">−3,500</div>
-            <div class="transaction-balance">11,700</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">20/08</div>
-            <div class="transaction-comment">Credit card</div>
-            <div class="transaction-amount debit">−1,200</div>
-            <div class="transaction-balance">10,500</div>
+            <div class="transaction-date">29/09</div>
+            <div class="transaction-comment">Large payment</div>
+            <div class="transaction-amount debit">−12,000</div>
+            <div class="transaction-balance negative-balance">−1,500</div>
         </div>
 
         <div class="transaction">
             <div class="transaction-date">02/09</div>
             <div class="transaction-comment">Salary</div>
             <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">18,500</div>
+            <div class="transaction-balance">10,500</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">20/08</div>
+            <div class="transaction-comment">Credit card</div>
+            <div class="transaction-amount debit">−1,200</div>
+            <div class="transaction-balance">2,500</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">20/08</div>
+            <div class="transaction-comment">Rent</div>
+            <div class="transaction-amount debit">−3,500</div>
+            <div class="transaction-balance">3,700</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">15/08</div>
+            <div class="transaction-comment">Salary</div>
+            <div class="transaction-amount credit">+8,000</div>
+            <div class="transaction-balance">7,200</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">12/08</div>
+            <div class="transaction-comment">Electricity</div>
+            <div class="transaction-amount debit">−450</div>
+            <div class="transaction-balance">−800</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">10/08</div>
+            <div class="transaction-comment">Supermarket</div>
+            <div class="transaction-amount debit">−350</div>
+            <div class="transaction-balance">−350</div>
+        </div>
+
+        <div class="transaction">
+            <div class="transaction-date">10/08</div>
+            <div class="transaction-comment">Salary</div>
+            <div class="transaction-amount credit">+8,000</div>
+            <div class="transaction-balance">8,000</div>
         </div>
 
     </section>
@@ -537,3 +556,5 @@
 
 </body>
 </html>
+```
+
