@@ -1,3 +1,4 @@
+```javascript
 /* =====================================================
    CASH FLOW
    ===================================================== */
@@ -5,10 +6,6 @@
 
 /* =====================================================
    DEMO DATA
-
-   This is temporary.
-
-   Later this will be replaced by local storage.
    ===================================================== */
 
 let transactions = [
@@ -80,9 +77,7 @@ let transactions = [
 
 
 let nextId = 100;
-
 let transactionSign = -1;
-
 let editingId = null;
 
 
@@ -136,33 +131,23 @@ const creditComments = [
    ===================================================== */
 
 const modal =
-    document.getElementById(
-        "transactionModal"
-    );
+    document.getElementById("transactionModal");
 
 const amountInput =
-    document.getElementById(
-        "amountInput"
-    );
+    document.getElementById("amountInput");
 
 const minusButton =
-    document.getElementById(
-        "minusButton"
-    );
+    document.getElementById("minusButton");
 
 const plusButton =
-    document.getElementById(
-        "plusButton"
-    );
+    document.getElementById("plusButton");
 
 const amountHint =
-    document.getElementById(
-        "amountHint"
-    );
+    document.getElementById("amountHint");
 
 
 /* =====================================================
-   UTILITIES
+   FORMATTERS
    ===================================================== */
 
 function formatAmount(value) {
@@ -203,23 +188,16 @@ function formatBalance(value) {
 
 function formatDate(date) {
 
-    const parts =
-        date.split("-");
+    const parts = date.split("-");
 
-    return (
-        parts[2] +
-        "/" +
-        parts[1]
-    );
+    return parts[2] + "/" + parts[1];
 }
 
 
 function escapeHtml(text) {
 
     const div =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
     div.textContent = text;
 
@@ -270,38 +248,30 @@ amountInput.addEventListener(
                 ""
             );
 
-        const parts =
-            value.split(".");
+        const parts = value.split(".");
 
         if (parts.length > 2) {
 
             value =
                 parts[0] +
                 "." +
-                parts
-                    .slice(1)
-                    .join("");
+                parts.slice(1).join("");
         }
 
         if (!value) {
 
             this.value = "";
 
-            this.classList.add(
-                "placeholder"
-            );
+            this.classList.add("placeholder");
 
             updateAmountAppearance();
 
             return;
         }
 
-        const number =
-            Number(value);
+        const number = Number(value);
 
-        if (
-            !Number.isFinite(number)
-        ) {
+        if (!Number.isFinite(number)) {
             return;
         }
 
@@ -313,9 +283,7 @@ amountInput.addEventListener(
                 }
             );
 
-        this.classList.remove(
-            "placeholder"
-        );
+        this.classList.remove("placeholder");
 
         updateAmountAppearance();
     }
@@ -339,9 +307,7 @@ amountInput.addEventListener(
 
         if (!this.value) {
 
-            this.classList.add(
-                "placeholder"
-            );
+            this.classList.add("placeholder");
 
             updateAmountAppearance();
 
@@ -350,15 +316,10 @@ amountInput.addEventListener(
 
         const number =
             Number(
-                this.value.replace(
-                    /,/g,
-                    ""
-                )
+                this.value.replace(/,/g, "")
             );
 
-        if (
-            Number.isFinite(number)
-        ) {
+        if (Number.isFinite(number)) {
 
             this.value =
                 number.toLocaleString(
@@ -381,9 +342,7 @@ function updateAmountAppearance() {
         "credit"
     );
 
-    if (
-        amountInput.value
-    ) {
+    if (amountInput.value) {
 
         amountInput.classList.add(
             transactionSign === -1
@@ -391,23 +350,6 @@ function updateAmountAppearance() {
                 : "credit"
         );
     }
-
-    /*
-     * The sign is displayed visually
-     * inside the input by temporarily
-     * using a CSS pseudo-like technique:
-     *
-     * Instead of modifying the actual
-     * numeric value, we update the
-     * placeholder when empty.
-     *
-     * For a typed amount, the sign is
-     * represented by the +/- button
-     * and color.
-     *
-     * The transaction list always shows
-     * the explicit sign.
-     */
 }
 
 
@@ -433,11 +375,9 @@ function renderSuggestions() {
         categories,
         value => {
 
-            document
-                .getElementById(
-                    "categoryInput"
-                )
-                .value = value;
+            document.getElementById(
+                "categoryInput"
+            ).value = value;
         }
     );
 
@@ -447,11 +387,9 @@ function renderSuggestions() {
         comments,
         value => {
 
-            document
-                .getElementById(
-                    "commentInput"
-                )
-                .value = value;
+            document.getElementById(
+                "commentInput"
+            ).value = value;
         }
     );
 }
@@ -464,26 +402,20 @@ function renderSuggestionList(
 ) {
 
     const box =
-        document.getElementById(
-            elementId
-        );
+        document.getElementById(elementId);
 
     box.innerHTML = "";
 
     values.forEach(value => {
 
         const button =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
         button.type = "button";
 
-        button.className =
-            "suggestion";
+        button.className = "suggestion";
 
-        button.textContent =
-            value;
+        button.textContent = value;
 
         button.addEventListener(
             "click",
@@ -497,6 +429,10 @@ function renderSuggestionList(
 
 /* =====================================================
    BALANCE CALCULATION
+
+   Important:
+   Credits are processed BEFORE debits
+   on the same date.
    ===================================================== */
 
 function calculateBalances() {
@@ -506,20 +442,11 @@ function calculateBalances() {
             (a, b) => {
 
                 const dateCompare =
-                    a.date.localeCompare(
-                        b.date
-                    );
+                    a.date.localeCompare(b.date);
 
-                if (
-                    dateCompare !== 0
-                ) {
+                if (dateCompare !== 0) {
                     return dateCompare;
                 }
-
-                /*
-                 * Credits first on the
-                 * same date.
-                 */
 
                 if (
                     a.amount >= 0 &&
@@ -543,16 +470,12 @@ function calculateBalances() {
     let balance = 0;
 
 
-    sorted.forEach(
-        transaction => {
+    sorted.forEach(transaction => {
 
-            balance +=
-                transaction.amount;
+        balance += transaction.amount;
 
-            transaction.balance =
-                balance;
-        }
-    );
+        transaction.balance = balance;
+    });
 
 
     return sorted;
@@ -560,7 +483,7 @@ function calculateBalances() {
 
 
 /* =====================================================
-   RENDER TRANSACTIONS
+   TRANSACTIONS
    ===================================================== */
 
 function renderTransactions() {
@@ -573,156 +496,129 @@ function renderTransactions() {
     list.innerHTML = "";
 
 
-    const sorted =
+    const chronological =
         calculateBalances();
 
 
     /*
-     * Newest first.
+     * The list is newest first.
      */
+    const display =
+        [...chronological].reverse();
 
-    sorted.reverse();
+
+    display.forEach(transaction => {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "transaction-wrap";
 
 
-    sorted.forEach(
-        transaction => {
+        const deleteButton =
+            document.createElement("button");
 
-            const wrapper =
-                document.createElement(
-                    "div"
+        deleteButton.className =
+            "transaction-delete";
+
+        deleteButton.textContent =
+            "Delete";
+
+
+        deleteButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                deleteTransaction(
+                    transaction.id
                 );
-
-            wrapper.className =
-                "transaction-wrap";
-
-
-            const deleteButton =
-                document.createElement(
-                    "button"
-                );
-
-            deleteButton.className =
-                "transaction-delete";
-
-            deleteButton.textContent =
-                "Delete";
+            }
+        );
 
 
-            deleteButton.addEventListener(
-                "click",
-                event => {
+        const row =
+            document.createElement("div");
 
-                    event.stopPropagation();
+        row.className =
+            "transaction";
 
-                    deleteTransaction(
-                        transaction.id
-                    );
+
+        const amountClass =
+            transaction.amount < 0
+                ? "transaction-amount debit"
+                : "transaction-amount credit";
+
+
+        const balanceClass =
+            transaction.balance < 0
+                ? "transaction-balance negative-balance"
+                : "transaction-balance";
+
+
+        row.innerHTML = `
+
+            <div class="transaction-date">
+                ${formatDate(transaction.date)}
+            </div>
+
+            <div class="transaction-comment">
+                ${escapeHtml(transaction.comment || "")}
+            </div>
+
+            <div class="${amountClass}">
+                ${formatAmount(transaction.amount)}
+            </div>
+
+            <div class="${balanceClass}">
+                ${formatBalance(transaction.balance)}
+            </div>
+        `;
+
+
+        row.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    row.classList.contains("swiped")
+                ) {
+
+                    row.classList.remove("swiped");
+
+                    row.style.transform = "";
+
+                    return;
                 }
-            );
 
-
-            const row =
-                document.createElement(
-                    "div"
+                openEditTransaction(
+                    transaction.id
                 );
-
-            row.className =
-                "transaction";
-
-
-            const amountClass =
-                transaction.amount < 0
-                    ? "transaction-amount debit"
-                    : "transaction-amount credit";
+            }
+        );
 
 
-            const balanceClass =
-                transaction.balance < 0
-                    ? "transaction-balance negative-balance"
-                    : "transaction-balance";
+        addSwipeSupport(row);
 
 
-            row.innerHTML = `
+        wrapper.appendChild(deleteButton);
 
-                <div class="transaction-date">
-                    ${formatDate(
-                        transaction.date
-                    )}
-                </div>
+        wrapper.appendChild(row);
 
-                <div class="transaction-comment">
-                    ${escapeHtml(
-                        transaction.comment || ""
-                    )}
-                </div>
-
-                <div class="${amountClass}">
-                    ${formatAmount(
-                        transaction.amount
-                    )}
-                </div>
-
-                <div class="${balanceClass}">
-                    ${formatBalance(
-                        transaction.balance
-                    )}
-                </div>
-            `;
-
-
-            row.addEventListener(
-                "click",
-                () => {
-
-                    if (
-                        row.classList.contains(
-                            "swiped"
-                        )
-                    ) {
-
-                        row.classList.remove(
-                            "swiped"
-                        );
-
-                        row.style.transform =
-                            "";
-
-                        return;
-                    }
-
-                    openEditTransaction(
-                        transaction.id
-                    );
-                }
-            );
-
-
-            addSwipeSupport(row);
-
-
-            wrapper.appendChild(
-                deleteButton
-            );
-
-            wrapper.appendChild(
-                row
-            );
-
-            list.appendChild(
-                wrapper
-            );
-        }
-    );
+        list.appendChild(wrapper);
+    });
 
 
     updateCurrentBalance();
 
-    updateGraph(sorted);
+    updateGraph(chronological);
 }
 
 
 /* =====================================================
-   CURRENT BALANCE
+   BALANCE DISPLAY
    ===================================================== */
 
 function updateCurrentBalance() {
@@ -732,37 +628,52 @@ function updateCurrentBalance() {
             "currentBalance"
         );
 
+    const label =
+        document.querySelector(
+            ".balance-label"
+        );
+
+
     const sorted =
         calculateBalances();
 
 
     if (!sorted.length) {
 
-        element.textContent =
-            "0";
+        element.textContent = "0";
 
         element.classList.remove(
             "negative"
         );
 
+        label.textContent =
+            "balance for —";
+
         return;
     }
 
 
-    const current =
-        sorted[
-            sorted.length - 1
-        ].balance;
+    const latest =
+        sorted[sorted.length - 1];
 
 
     element.textContent =
-        formatBalance(current);
+        formatBalance(latest.balance);
 
 
     element.classList.toggle(
         "negative",
-        current < 0
+        latest.balance < 0
     );
+
+
+    /*
+     * Show the date of the latest
+     * transaction.
+     */
+    label.textContent =
+        "balance for " +
+        formatDate(latest.date);
 }
 
 
@@ -772,12 +683,12 @@ function updateCurrentBalance() {
 
 function updateGraph(sorted) {
 
-    const positivePath =
+    const positiveGraph =
         document.getElementById(
             "positiveGraph"
         );
 
-    const negativePath =
+    const negativeGraph =
         document.getElementById(
             "negativeGraph"
         );
@@ -788,12 +699,12 @@ function updateGraph(sorted) {
         );
 
 
-    positivePath.setAttribute(
+    positiveGraph.setAttribute(
         "d",
         ""
     );
 
-    negativePath.setAttribute(
+    negativeGraph.setAttribute(
         "d",
         ""
     );
@@ -807,11 +718,12 @@ function updateGraph(sorted) {
 
 
     /*
-     * Use each transaction's balance.
+     * sorted is chronological:
      *
-     * This means the graph and the
-     * transaction list use exactly
-     * the same numbers.
+     * oldest → newest
+     *
+     * The graph therefore naturally runs
+     * from left to right.
      */
 
     const values =
@@ -834,10 +746,6 @@ function updateGraph(sorted) {
         );
 
 
-    /*
-     * Give the graph some breathing room.
-     */
-
     const range =
         Math.max(
             1,
@@ -856,27 +764,9 @@ function updateGraph(sorted) {
         minimum - padding;
 
 
-    /*
-     * SVG coordinates.
-     *
-     * 0 = top
-     * 190 = bottom
-     */
-
-    function y(value) {
-
-        return (
-            (top - value) /
-            (top - bottom)
-        ) * 190;
-    }
-
-
     function x(index) {
 
-        if (
-            sorted.length === 1
-        ) {
+        if (sorted.length === 1) {
             return 350;
         }
 
@@ -887,103 +777,214 @@ function updateGraph(sorted) {
     }
 
 
+    function y(value) {
+
+        return (
+            (top - value) /
+            (top - bottom)
+        ) * 190;
+    }
+
+
     /*
-     * Build separate positive and
-     * negative paths.
+     * Create ONE continuous curve.
      *
-     * The paths are not filled.
+     * The line is divided into green/red
+     * segments only when it crosses zero.
      */
 
-    let positive = "";
-    let negative = "";
+    let positivePath = "";
+    let negativePath = "";
 
 
-    sorted.forEach(
-        (transaction, index) => {
+    for (
+        let i = 0;
+        i < sorted.length - 1;
+        i++
+    ) {
 
-            const value =
-                transaction.balance;
+        const value1 =
+            sorted[i].balance;
 
-            const px =
-                x(index);
-
-            const py =
-                y(value);
+        const value2 =
+            sorted[i + 1].balance;
 
 
-            if (value >= 0) {
+        const x1 = x(i);
+        const y1 = y(value1);
 
-                positive +=
-                    positive === ""
-                        ? `M ${px} ${py}`
-                        : ` L ${px} ${py}`;
+        const x2 = x(i + 1);
+        const y2 = y(value2);
 
-            } else {
 
-                negative +=
-                    negative === ""
-                        ? `M ${px} ${py}`
-                        : ` L ${px} ${py}`;
-            }
+        /*
+         * Both points positive.
+         */
+        if (
+            value1 >= 0 &&
+            value2 >= 0
+        ) {
+
+            positivePath +=
+                positivePath === ""
+                    ? `M ${x1} ${y1} L ${x2} ${y2}`
+                    : ` M ${x1} ${y1} L ${x2} ${y2}`;
+
+            continue;
         }
+
+
+        /*
+         * Both points negative.
+         */
+        if (
+            value1 < 0 &&
+            value2 < 0
+        ) {
+
+            negativePath +=
+                negativePath === ""
+                    ? `M ${x1} ${y1} L ${x2} ${y2}`
+                    : ` M ${x1} ${y1} L ${x2} ${y2}`;
+
+            continue;
+        }
+
+
+        /*
+         * The balance crossed zero.
+         *
+         * Find the exact crossing point.
+         */
+
+        const fraction =
+            Math.abs(value1) /
+            (
+                Math.abs(value1) +
+                Math.abs(value2)
+            );
+
+
+        const crossingX =
+            x1 +
+            (x2 - x1) *
+            fraction;
+
+
+        const crossingY =
+            y(0);
+
+
+        /*
+         * Positive → negative.
+         */
+        if (value1 >= 0) {
+
+            positivePath +=
+                positivePath === ""
+                    ? `M ${x1} ${y1} L ${crossingX} ${crossingY}`
+                    : ` M ${x1} ${y1} L ${crossingX} ${crossingY}`;
+
+
+            negativePath +=
+                `M ${crossingX} ${crossingY} L ${x2} ${y2}`;
+
+        }
+
+
+        /*
+         * Negative → positive.
+         */
+        else {
+
+            negativePath +=
+                negativePath === ""
+                    ? `M ${x1} ${y1} L ${crossingX} ${crossingY}`
+                    : ` M ${x1} ${y1} L ${crossingX} ${crossingY}`;
+
+
+            positivePath +=
+                `M ${crossingX} ${crossingY} L ${x2} ${y2}`;
+        }
+    }
+
+
+    /*
+     * A single transaction needs a visible point.
+     */
+    if (sorted.length === 1) {
+
+        const px = x(0);
+        const py = y(sorted[0].balance);
+
+        if (sorted[0].balance >= 0) {
+
+            positivePath =
+                `M ${px} ${py}`;
+
+        } else {
+
+            negativePath =
+                `M ${px} ${py}`;
+        }
+    }
+
+
+    positiveGraph.setAttribute(
+        "d",
+        positivePath
     );
 
-
-    positivePath.setAttribute(
+    negativeGraph.setAttribute(
         "d",
-        positive
-    );
-
-    negativePath.setAttribute(
-        "d",
-        negative
+        negativePath
     );
 
 
     /*
-     * Scale labels.
+     * Add dots for every actual balance.
+     */
+    drawGraphDots(
+        sorted,
+        x,
+        y
+    );
+
+
+    /*
+     * Graph scale.
      */
 
     const niceTop =
-        Math.ceil(
-            top / 1000
-        ) * 1000;
-
-    const niceMiddle =
-        Math.round(
-            niceTop / 2
-        );
+        niceGraphNumber(top);
 
     const niceNegative =
-        Math.floor(
-            bottom / 1000
-        ) * 1000;
+        niceGraphNumber(bottom);
+
+    const niceMiddle =
+        niceTop / 2;
 
 
     document.getElementById(
         "scaleTop"
     ).textContent =
-        formatGraphNumber(
-            niceTop
-        );
+        formatGraphNumber(niceTop);
+
 
     document.getElementById(
         "scaleMiddle"
     ).textContent =
-        formatGraphNumber(
-            niceMiddle
-        );
+        formatGraphNumber(niceMiddle);
+
 
     document.getElementById(
         "scaleNegative"
     ).textContent =
-        formatGraphNumber(
-            niceNegative
-        );
+        formatGraphNumber(niceNegative);
 
 
     /*
-     * Show up to six dates underneath.
+     * Dates: oldest → newest.
      */
 
     const dateIndexes =
@@ -992,21 +993,140 @@ function updateGraph(sorted) {
         );
 
 
-    dateIndexes.forEach(
-        index => {
+    dateIndexes.forEach(index => {
 
-            const span =
-                document.createElement(
-                    "span"
+        const span =
+            document.createElement("span");
+
+        span.textContent =
+            formatDate(
+                sorted[index].date
+            );
+
+        dates.appendChild(span);
+    });
+}
+
+
+/* =====================================================
+   GRAPH DOTS
+   ===================================================== */
+
+function drawGraphDots(
+    sorted,
+    x,
+    y
+) {
+
+    const svg =
+        document.getElementById(
+            "balanceGraph"
+        );
+
+
+    svg
+        .querySelectorAll(
+            ".balance-dot"
+        )
+        .forEach(
+            dot => dot.remove()
+        );
+
+
+    sorted.forEach(
+        (transaction, index) => {
+
+            const circle =
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
                 );
 
-            span.textContent =
-                formatDate(
-                    sorted[index].date
-                );
 
-            dates.appendChild(span);
+            circle.classList.add(
+                "balance-dot"
+            );
+
+
+            circle.setAttribute(
+                "cx",
+                x(index)
+            );
+
+
+            circle.setAttribute(
+                "cy",
+                y(transaction.balance)
+            );
+
+
+            circle.setAttribute(
+                "r",
+                "3.5"
+            );
+
+
+            circle.setAttribute(
+                "fill",
+                transaction.balance < 0
+                    ? "#ff453a"
+                    : "#45d483"
+            );
+
+
+            circle.setAttribute(
+                "stroke",
+                "#171717"
+            );
+
+
+            circle.setAttribute(
+                "stroke-width",
+                "1.5"
+            );
+
+
+            svg.appendChild(circle);
         }
+    );
+}
+
+
+/* =====================================================
+   GRAPH SCALE HELPERS
+   ===================================================== */
+
+function niceGraphNumber(value) {
+
+    if (value === 0) {
+        return 0;
+    }
+
+
+    const sign =
+        value < 0
+            ? -1
+            : 1;
+
+
+    const absolute =
+        Math.abs(value);
+
+
+    if (absolute <= 1000) {
+
+        return (
+            Math.ceil(
+                absolute / 100
+            ) * 100 * sign
+        );
+    }
+
+
+    return (
+        Math.ceil(
+            absolute / 1000
+        ) * 1000 * sign
     );
 }
 
@@ -1016,42 +1136,52 @@ function formatGraphNumber(value) {
     const absolute =
         Math.abs(value);
 
-    if (
-        absolute >= 1000
-    ) {
+
+    if (absolute >= 1000) {
 
         const thousands =
             absolute / 1000;
 
-        return (
-            value < 0
-                ? "−"
-                : ""
-        ) +
-        thousands +
-        "k";
+
+        let text;
+
+
+        if (
+            Number.isInteger(thousands)
+        ) {
+
+            text =
+                thousands + "k";
+
+        } else {
+
+            text =
+                thousands.toFixed(1) + "k";
+        }
+
+
+        return value < 0
+            ? "−" + text
+            : text;
     }
+
 
     return String(value);
 }
 
 
-function getGraphDateIndexes(
-    length
-) {
+function getGraphDateIndexes(length) {
 
     if (length <= 1) {
         return [0];
     }
 
+
     if (length <= 6) {
 
         return Array.from(
-            {
-                length
-            },
-            (_, index) =>
-                index
+            { length },
+            (_, index) => index
         );
     }
 
@@ -1059,6 +1189,7 @@ function getGraphDateIndexes(
     const indexes = [];
 
     const count = 6;
+
 
     for (
         let i = 0;
@@ -1074,6 +1205,7 @@ function getGraphDateIndexes(
             )
         );
     }
+
 
     return [
         ...new Set(indexes)
@@ -1114,11 +1246,9 @@ function openAddTransaction() {
         today;
 
 
-    amountInput.value =
-        "";
+    amountInput.value = "";
 
-    amountInput.placeholder =
-        "−0";
+    amountInput.placeholder = "−0";
 
     amountInput.classList.add(
         "placeholder"
@@ -1127,22 +1257,18 @@ function openAddTransaction() {
 
     document.getElementById(
         "commentInput"
-    ).value =
-        "";
+    ).value = "";
 
 
     document.getElementById(
         "categoryInput"
-    ).value =
-        "";
+    ).value = "";
 
 
     setSign(-1);
 
 
-    modal.classList.add(
-        "open"
-    );
+    modal.classList.add("open");
 
 
     setTimeout(
@@ -1163,8 +1289,7 @@ function openEditTransaction(id) {
 
     const transaction =
         transactions.find(
-            item =>
-                item.id === id
+            item => item.id === id
         );
 
 
@@ -1229,9 +1354,7 @@ function openEditTransaction(id) {
     );
 
 
-    modal.classList.add(
-        "open"
-    );
+    modal.classList.add("open");
 }
 
 
@@ -1241,9 +1364,7 @@ function openEditTransaction(id) {
 
 function closeTransactionForm() {
 
-    modal.classList.remove(
-        "open"
-    );
+    modal.classList.remove("open");
 
     editingId = null;
 }
@@ -1267,10 +1388,7 @@ function saveTransaction() {
 
     const amount =
         Number(
-            amountText.replace(
-                /,/g,
-                ""
-            )
+            amountText.replace(/,/g, "")
         );
 
 
@@ -1311,9 +1429,7 @@ function saveTransaction() {
         amount * transactionSign;
 
 
-    if (
-        editingId === null
-    ) {
+    if (editingId === null) {
 
         transactions.push({
 
@@ -1321,13 +1437,11 @@ function saveTransaction() {
 
             date,
 
-            amount:
-                signedAmount,
+            amount: signedAmount,
 
             comment,
 
             category
-
         });
 
     } else {
@@ -1335,15 +1449,13 @@ function saveTransaction() {
         const transaction =
             transactions.find(
                 item =>
-                    item.id ===
-                    editingId
+                    item.id === editingId
             );
 
 
         if (transaction) {
 
-            transaction.date =
-                date;
+            transaction.date = date;
 
             transaction.amount =
                 signedAmount;
@@ -1383,8 +1495,7 @@ function deleteTransaction(id) {
 
     transactions =
         transactions.filter(
-            item =>
-                item.id !== id
+            item => item.id !== id
         );
 
 
@@ -1394,9 +1505,7 @@ function deleteTransaction(id) {
 
 function deleteEditingTransaction() {
 
-    if (
-        editingId === null
-    ) {
+    if (editingId === null) {
         return;
     }
 
@@ -1413,8 +1522,7 @@ function deleteEditingTransaction() {
     transactions =
         transactions.filter(
             item =>
-                item.id !==
-                editingId
+                item.id !== editingId
         );
 
 
@@ -1431,9 +1539,7 @@ function deleteEditingTransaction() {
 function addSwipeSupport(row) {
 
     let startX = 0;
-
     let currentX = 0;
-
     let dragging = false;
 
 
@@ -1447,15 +1553,13 @@ function addSwipeSupport(row) {
                 return;
             }
 
-            startX =
-                event.touches[0]
-                    .clientX;
 
-            currentX =
-                startX;
+            startX =
+                event.touches[0].clientX;
+
+            currentX = startX;
 
             dragging = true;
-
         },
         {
             passive: true
@@ -1473,17 +1577,14 @@ function addSwipeSupport(row) {
 
 
             currentX =
-                event.touches[0]
-                    .clientX;
+                event.touches[0].clientX;
 
 
             const distance =
                 currentX - startX;
 
 
-            if (
-                distance < 0
-            ) {
+            if (distance < 0) {
 
                 const amount =
                     Math.max(
@@ -1521,7 +1622,6 @@ function addSwipeSupport(row) {
                 row.style.transform =
                     `translateX(${amount}px)`;
             }
-
         },
         {
             passive: true
@@ -1549,23 +1649,16 @@ function addSwipeSupport(row) {
                 "transform .18s ease";
 
 
-            if (
-                distance < -40
-            ) {
+            if (distance < -40) {
 
-                closeAllSwipeRows(
-                    row
-                );
-
+                closeAllSwipeRows(row);
 
                 row.classList.add(
                     "swiped"
                 );
 
-
                 row.style.transform =
                     "translateX(-78px)";
-
 
                 return;
             }
@@ -1582,10 +1675,8 @@ function addSwipeSupport(row) {
                     "swiped"
                 );
 
-
                 row.style.transform =
                     "";
-
 
                 return;
             }
@@ -1600,15 +1691,12 @@ function addSwipeSupport(row) {
                 row.style.transform =
                     "";
             }
-
         }
     );
 }
 
 
-function closeAllSwipeRows(
-    except = null
-) {
+function closeAllSwipeRows(except = null) {
 
     document
         .querySelectorAll(
@@ -1616,9 +1704,7 @@ function closeAllSwipeRows(
         )
         .forEach(row => {
 
-            if (
-                row !== except
-            ) {
+            if (row !== except) {
 
                 row.classList.remove(
                     "swiped"
@@ -1647,16 +1733,13 @@ document.addEventListener(
 
 
         if (
-            openRow.contains(
-                event.target
-            )
+            openRow.contains(event.target)
         ) {
             return;
         }
 
 
         closeAllSwipeRows();
-
     },
     {
         passive: true
@@ -1681,8 +1764,7 @@ document
 
 
             menu.style.display =
-                menu.style.display ===
-                    "block"
+                menu.style.display === "block"
                     ? "none"
                     : "block";
         }
@@ -1690,9 +1772,7 @@ document
 
 
 document
-    .querySelectorAll(
-        "[data-theme]"
-    )
+    .querySelectorAll("[data-theme]")
     .forEach(button => {
 
         button.addEventListener(
@@ -1709,9 +1789,7 @@ document
 
 function setTheme(theme) {
 
-    if (
-        theme === "light"
-    ) {
+    if (theme === "light") {
 
         document.body.style.setProperty(
             "--bg",
@@ -1857,9 +1935,7 @@ document
 
 
 document
-    .getElementById(
-        "deleteEditButton"
-    )
+    .getElementById("deleteEditButton")
     .addEventListener(
         "click",
         deleteEditingTransaction
@@ -1873,3 +1949,4 @@ document
 renderSuggestions();
 
 renderTransactions();
+```
