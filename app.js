@@ -181,6 +181,25 @@ function escapeHtml(text) {
 }
 
 
+function focusAmount() {
+
+    setTimeout(function () {
+
+        amountInput.focus();
+
+        /*
+         * Do not select the whole field if there is
+         * already an amount. For a new transaction,
+         * the empty field is ready for typing.
+         */
+        if (amountInput.value) {
+            amountInput.select();
+        }
+
+    }, 100);
+}
+
+
 /* =========================================================
    SIGN BUTTONS
    ========================================================= */
@@ -1032,26 +1051,92 @@ if (zeroLine) {
 }
    
    
-   /*
-     * Scale.
-     */
-    document.getElementById(
-        "scaleTop"
-    ).textContent =
-        formatGraphScale(top);
+/*
+ * Y-axis labels
+ *
+ * These use exactly the same scale as
+ * the graph itself.
+ */
+
+const scaleTop =
+    document.getElementById("scaleTop");
+
+const scaleMiddle =
+    document.getElementById("scaleMiddle");
+
+const scaleZero =
+    document.querySelector(".scale-zero");
+
+const scaleNegative =
+    document.getElementById("scaleNegative");
 
 
-    document.getElementById(
-        "scaleMiddle"
-    ).textContent =
-        formatGraphScale(top / 2);
+/*
+ * Convert a graph value to a percentage
+ * of the graph height.
+ */
+function graphPercent(value) {
+
+    return (
+        (top - value) /
+        (top - bottom)
+    ) * 100;
+}
 
 
-    document.getElementById(
-        "scaleNegative"
-    ).textContent =
-        formatGraphScale(bottom);
+/*
+ * Top value
+ */
+scaleTop.textContent =
+    formatGraphScale(top);
 
+scaleTop.style.top =
+    graphPercent(top) + "%";
+
+scaleTop.style.transform =
+    "translateY(-50%)";
+
+
+/*
+ * Middle value
+ *
+ * The middle of the actual graph range,
+ * rather than simply top / 2.
+ */
+const middleValue =
+    (top + bottom) / 2;
+
+scaleMiddle.textContent =
+    formatGraphScale(middleValue);
+
+scaleMiddle.style.top =
+    graphPercent(middleValue) + "%";
+
+scaleMiddle.style.transform =
+    "translateY(-50%)";
+
+
+/*
+ * Zero
+ */
+scaleZero.style.top =
+    graphPercent(0) + "%";
+
+scaleZero.style.transform =
+    "translateY(-50%)";
+
+
+/*
+ * Bottom value
+ */
+scaleNegative.textContent =
+    formatGraphScale(bottom);
+
+scaleNegative.style.top =
+    graphPercent(bottom) + "%";
+
+scaleNegative.style.transform =
+    "translateY(-50%)";
 
     /*
      * Dates are explicitly oldest → newest.
@@ -1303,12 +1388,13 @@ function openAddTransaction() {
     }
 
 
-    setTimeout(
-        function () {
-            amountInput.focus();
-        },
-        100
-    );
+   focusAmount();
+ //   setTimeout(
+ //       function () {
+ //           amountInput.focus();
+ //       },
+ //       100
+ //   );
 }
 
 
@@ -1392,6 +1478,8 @@ function openEditTransaction(id) {
     if (modal) {
         modal.classList.add("open");
     }
+
+   focusAmount();
 }
 
 
