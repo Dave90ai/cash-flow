@@ -1,671 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<title>Cash Flow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<style>
-:root {
-    --bg: #000;
-    --card: #171717;
-    --field: #222;
-    --text: #f5f5f7;
-    --secondary: #999;
-    --border: #303030;
-    --button: #f5f5f7;
-    --buttonText: #000;
-    --green: #45d483;
-    --red: #ff453a;
-}
+    <meta name="theme-color" content="#000000">
 
-* {
-    box-sizing: border-box;
-}
+    <title>Cash Flow</title>
 
-html,
-body {
-    margin: 0;
-    min-height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        Helvetica,
-        Arial,
-        sans-serif;
-}
-
-button,
-input {
-    font-family: inherit;
-}
-
-button {
-    -webkit-tap-highlight-color: transparent;
-}
-
-.app {
-    width: 100%;
-    max-width: 760px;
-    margin: auto;
-    padding:
-        max(18px, env(safe-area-inset-top))
-        16px
-        max(90px, env(safe-area-inset-bottom));
-}
-
-/* HEADER */
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.account-name {
-    font-size: 25px;
-    font-weight: 700;
-}
-
-.menu-button {
-    width: 38px;
-    height: 38px;
-    border: 0;
-    border-radius: 50%;
-    background: #242424;
-    color: white;
-    font-size: 17px;
-}
-
-/* BALANCE */
-
-.balance-section {
-    text-align: center;
-    padding: 8px 0 7px;
-}
-
-.balance {
-    font-size: 39px;
-    line-height: 1.05;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.balance.negative {
-    color: var(--red);
-}
-
-.balance-label {
-    margin-top: 4px;
-    color: var(--secondary);
-    font-size: 12px;
-}
-
-/* GRAPH */
-
-.graph-card {
-    margin-top: 9px;
-    background: var(--card);
-    border-radius: 17px;
-    padding: 12px 10px 8px 4px;
-}
-
-.graph {
-    height: 190px;
-    display: grid;
-    grid-template-columns: 46px 1fr;
-}
-
-.graph-scale {
-    position: relative;
-    height: 100%;
-    color: var(--secondary);
-    font-size: 10px;
-}
-
-.scale-value {
-    position: absolute;
-    right: 6px;
-    transform: translateY(-50%);
-}
-
-.scale-top {
-    top: 10%;
-}
-
-.scale-middle {
-    top: 35%;
-}
-
-.scale-zero {
-    top: 60%;
-    color: var(--text);
-    font-weight: 600;
-}
-
-.scale-negative {
-    top: 84%;
-    color: var(--red);
-}
-
-.graph-area {
-    position: relative;
-}
-
-.zero-line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 60%;
-    border-top: 1px dashed #666;
-}
-
-.graph svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.graph-dates {
-    margin-left: 50px;
-    display: flex;
-    justify-content: space-between;
-    color: var(--secondary);
-    font-size: 10px;
-    padding-top: 5px;
-}
-
-/* TRANSACTIONS */
-
-.transactions {
-    margin-top: 17px;
-    overflow: hidden;
-}
-
-.transaction-wrap {
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border);
-}
-
-.transaction-delete {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 78px;
-    border: 0;
-    background: var(--red);
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.transaction {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 45px minmax(0, 1fr) auto auto;
-    gap: 7px;
-    align-items: center;
-    min-height: 34px;
-    padding: 3px 0;
-    background: var(--bg);
-    transform: translateX(0);
-    transition: transform 0.18s ease;
-    touch-action: pan-y;
-}
-
-.transaction-date {
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.transaction-comment {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.transaction-amount,
-.transaction-balance {
-    font-size: 15px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.transaction-balance {
-    min-width: 72px;
-    text-align: right;
-}
-
-.credit {
-    color: var(--green);
-}
-
-.debit,
-.negative-balance {
-    color: var(--red);
-}
-
-/* ADD BUTTON */
-
-.add-button {
-    position: fixed;
-    right: max(20px, calc((100vw - 760px) / 2 + 20px));
-    bottom: max(22px, env(safe-area-inset-bottom));
-    width: 57px;
-    height: 57px;
-    border: 0;
-    border-radius: 50%;
-    background: var(--button);
-    color: var(--buttonText);
-    font-size: 31px;
-    box-shadow: 0 5px 18px rgba(0,0,0,.35);
-    z-index: 20;
-}
-
-/* MODAL */
-
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.72);
-    z-index: 100;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.modal.open {
-    display: flex;
-}
-
-.form-card {
-    width: 100%;
-    max-width: 760px;
-    background: var(--card);
-    border-radius: 20px 20px 0 0;
-    padding:
-        10px
-        16px
-        max(16px, env(safe-area-inset-bottom));
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.drag-bar {
-    width: 38px;
-    height: 4px;
-    border-radius: 5px;
-    background: #555;
-    margin: 0 auto 10px;
-}
-
-.form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.form-title {
-    font-size: 21px;
-    font-weight: 700;
-}
-
-.close-button {
-    border: 0;
-    background: transparent;
-    color: var(--secondary);
-    font-size: 24px;
-}
-
-.field {
-    margin-bottom: 10px;
-}
-
-.field-label {
-    display: block;
-    margin-bottom: 4px;
-    color: var(--secondary);
-    font-size: 11px;
-}
-
-.date-input,
-.text-input {
-    width: 100%;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--field);
-    color: var(--text);
-    padding: 0 11px;
-    font-size: 16px;
-    outline: none;
-}
-
-/* AMOUNT */
-
-.amount-row {
-    display: grid;
-    grid-template-columns: 39px 39px minmax(0,1fr);
-    gap: 6px;
-}
-
-.sign-button {
-    height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--field);
-    color: var(--secondary);
-    font-size: 21px;
-    font-weight: 600;
-}
-
-.sign-button.selected {
-    background: var(--button);
-    color: var(--buttonText);
-    border-color: var(--button);
-}
-
-.amount-input {
-    width: 100%;
-    height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--field);
-    color: var(--text);
-    padding: 0 12px;
-    font-size: 21px;
-    font-weight: 700;
-    text-align: right;
-    outline: none;
-}
-
-.amount-input.placeholder {
-    color: #666;
-}
-
-.amount-hint {
-    margin-top: 3px;
-    color: var(--secondary);
-    font-size: 10px;
-}
-
-/* SUGGESTIONS */
-
-.suggestions {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-}
-
-.suggestions::-webkit-scrollbar {
-    display: none;
-}
-
-.suggestion {
-    flex: 0 0 auto;
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    background: transparent;
-    color: var(--secondary);
-    padding: 4px 8px;
-    font-size: 11px;
-    line-height: 1.1;
-}
-
-/* ACTIONS */
-
-.form-actions {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 8px;
-    margin-top: 13px;
-}
-
-.cancel-button,
-.save-button {
-    height: 45px;
-    border: 0;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.cancel-button {
-    background: #292929;
-    color: white;
-}
-
-.save-button {
-    background: var(--button);
-    color: var(--buttonText);
-}
-
-.delete-edit-button {
-    width: 100%;
-    height: 40px;
-    margin-top: 9px;
-    border: 0;
-    border-radius: 11px;
-    background: transparent;
-    color: var(--red);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-/* MENU */
-
-.theme-menu {
-    display: none;
-    position: absolute;
-    right: 16px;
-    top: 60px;
-    background: #202020;
-    border: 1px solid #353535;
-    border-radius: 12px;
-    padding: 6px;
-    z-index: 30;
-}
-
-.theme-menu button {
-    display: block;
-    width: 120px;
-    padding: 9px 12px;
-    border: 0;
-    background: transparent;
-    color: white;
-    text-align: left;
-    border-radius: 8px;
-}
-
-@media (min-width: 760px) {
-
-    .app {
-        padding-top: 32px;
-    }
-
-    .transaction {
-        grid-template-columns: 55px minmax(0,1fr) auto 95px;
-        gap: 10px;
-    }
-
-    .modal {
-        align-items: center;
-    }
-
-    .form-card {
-        margin: 20px;
-        border-radius: 20px;
-        max-height: 760px;
-    }
-}
-
-@media (max-width: 380px) {
-
-    .app {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-
-    .transaction {
-        grid-template-columns: 42px minmax(0,1fr) auto auto;
-        gap: 5px;
-    }
-
-    .transaction-comment,
-    .transaction-amount,
-    .transaction-balance {
-        font-size: 13px;
-    }
-
-    .transaction-balance {
-        min-width: 62px;
-    }
-
-    .balance {
-        font-size: 34px;
-    }
-
-    .form-card {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-}
-</style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="app">
 
-<header class="header">
+    <header class="header">
 
-    <div class="account-name">Checking</div>
+        <div class="account-name">
+            Checking
+        </div>
 
-    <button
-        class="menu-button"
-        onclick="toggleThemeMenu()">
-        •••
-    </button>
+        <button
+            class="menu-button"
+            id="menuButton">
+            •••
+        </button>
 
-    <div
-        class="theme-menu"
-        id="themeMenu">
+        <div
+            class="theme-menu"
+            id="themeMenu">
 
-        <button onclick="setTheme('dark')">Dark</button>
-        <button onclick="setTheme('light')">Light</button>
+            <button data-theme="dark">
+                Dark
+            </button>
 
-    </div>
-
-</header>
-
-
-<section class="balance-section">
-
-    <div class="balance" id="currentBalance">
-        0
-    </div>
-
-    <div class="balance-label">
-        current balance
-    </div>
-
-</section>
-
-
-<section class="graph-card">
-
-    <div class="graph">
-
-        <div class="graph-scale">
-
-            <span class="scale-value scale-top">
-                20k
-            </span>
-
-            <span class="scale-value scale-middle">
-                10k
-            </span>
-
-            <span class="scale-value scale-zero">
-                0
-            </span>
-
-            <span class="scale-value scale-negative">
-                −10k
-            </span>
+            <button data-theme="light">
+                Light
+            </button>
 
         </div>
 
-        <div class="graph-area">
+    </header>
 
-            <div class="zero-line"></div>
 
-            <svg
-                viewBox="0 0 700 190"
-                preserveAspectRatio="none">
+    <section class="balance-section">
 
-                <path
-                    id="greenGraph"
-                    d=""
-                    fill="none"
-                    stroke="#45d483"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
+        <div
+            class="balance"
+            id="currentBalance">
+            0
+        </div>
 
-                <path
-                    id="redGraph"
-                    d=""
-                    fill="none"
-                    stroke="#ff453a"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
+        <div class="balance-label">
+            current balance
+        </div>
 
-            </svg>
+    </section>
+
+
+    <section class="graph-card">
+
+        <div class="graph">
+
+            <div class="graph-scale">
+
+                <span
+                    class="scale-value scale-top"
+                    id="scaleTop">
+                    20k
+                </span>
+
+                <span
+                    class="scale-value scale-middle"
+                    id="scaleMiddle">
+                    10k
+                </span>
+
+                <span
+                    class="scale-value scale-zero">
+                    0
+                </span>
+
+                <span
+                    class="scale-value scale-negative"
+                    id="scaleNegative">
+                    −10k
+                </span>
+
+            </div>
+
+            <div class="graph-area">
+
+                <div class="zero-line"></div>
+
+                <svg
+                    id="balanceGraph"
+                    viewBox="0 0 700 190"
+                    preserveAspectRatio="none">
+
+                    <path
+                        id="positiveGraph"
+                        fill="none"
+                        stroke="#45d483"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                    </path>
+
+                    <path
+                        id="negativeGraph"
+                        fill="none"
+                        stroke="#ff453a"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                    </path>
+
+                </svg>
+
+            </div>
 
         </div>
 
-    </div>
+        <div
+            class="graph-dates"
+            id="graphDates">
+        </div>
 
-    <div
-        class="graph-dates"
-        id="graphDates">
-    </div>
-
-</section>
+    </section>
 
 
-<section
-    class="transactions"
-    id="transactionList">
-</section>
+    <section
+        class="transactions"
+        id="transactionList">
+    </section>
 
 </div>
 
 
 <button
     class="add-button"
-    onclick="openAddTransaction()">
+    id="addButton">
     +
 </button>
 
+
+<!-- ADD / EDIT TRANSACTION -->
 
 <div
     class="modal"
@@ -685,7 +167,7 @@ button {
 
             <button
                 class="close-button"
-                onclick="closeTransactionForm()">
+                id="closeButton">
                 ×
             </button>
 
@@ -716,15 +198,13 @@ button {
 
                 <button
                     id="minusButton"
-                    class="sign-button selected"
-                    onclick="setSign(-1)">
+                    class="sign-button selected">
                     −
                 </button>
 
                 <button
                     id="plusButton"
-                    class="sign-button"
-                    onclick="setSign(1)">
+                    class="sign-button">
                     +
                 </button>
 
@@ -738,14 +218,14 @@ button {
 
             </div>
 
-            <div class="amount-hint">
-                Debit is selected by default
+            <div
+                class="amount-hint"
+                id="amountHint">
+                Debit selected
             </div>
 
         </div>
 
-
-        <!-- COMMENT -->
 
         <div class="field">
 
@@ -769,8 +249,6 @@ button {
 
         </div>
 
-
-        <!-- CATEGORY -->
 
         <div class="field">
 
@@ -799,13 +277,13 @@ button {
 
             <button
                 class="cancel-button"
-                onclick="closeTransactionForm()">
+                id="cancelButton">
                 Cancel
             </button>
 
             <button
                 class="save-button"
-                onclick="saveTransaction()">
+                id="saveButton">
                 Save
             </button>
 
@@ -814,9 +292,7 @@ button {
 
         <button
             id="deleteEditButton"
-            class="delete-edit-button"
-            onclick="deleteEditingTransaction()"
-            style="display:none">
+            class="delete-edit-button">
             Delete transaction
         </button>
 
@@ -825,1374 +301,7 @@ button {
 </div>
 
 
-<script>
-
-/* =====================================================
-   DEMO DATA
-   ===================================================== */
-
-let transactions = [
-    {
-        id: 1,
-        date: "2026-09-29",
-        amount: -12000,
-        category: "",
-        comment: "Large payment"
-    },
-    {
-        id: 2,
-        date: "2026-09-02",
-        amount: 8000,
-        category: "Salary",
-        comment: "Monthly salary"
-    },
-    {
-        id: 3,
-        date: "2026-08-20",
-        amount: -1200,
-        category: "Credit Card",
-        comment: "Credit card"
-    },
-    {
-        id: 4,
-        date: "2026-08-20",
-        amount: -3500,
-        category: "Rent",
-        comment: "Rent"
-    },
-    {
-        id: 5,
-        date: "2026-08-15",
-        amount: 8000,
-        category: "Salary",
-        comment: "Monthly salary"
-    },
-    {
-        id: 6,
-        date: "2026-08-12",
-        amount: -450,
-        category: "Utilities",
-        comment: "Electricity"
-    },
-    {
-        id: 7,
-        date: "2026-08-10",
-        amount: -350,
-        category: "Food",
-        comment: "Supermarket"
-    },
-    {
-        id: 8,
-        date: "2026-08-10",
-        amount: 8000,
-        category: "Salary",
-        comment: "Monthly salary"
-    }
-];
-
-let transactionSign = -1;
-let editingId = null;
-let nextId = 100;
-
-
-/* =====================================================
-   SUGGESTIONS
-   ===================================================== */
-
-const debitCategories = [
-    "Credit Card",
-    "Rent",
-    "Electricity",
-    "Food",
-    "Insurance",
-    "Tax",
-    "Utilities",
-    "Other"
-];
-
-const debitComments = [
-    "Credit card estimate",
-    "Rent",
-    "Electricity bill",
-    "Supermarket",
-    "Insurance",
-    "Tax payment",
-    "Monthly expenses",
-    "Other"
-];
-
-const creditCategories = [
-    "Salary",
-    "Refund",
-    "Interest",
-    "Transfer",
-    "Bonus",
-    "Other"
-];
-
-const creditComments = [
-    "Monthly salary",
-    "Refund",
-    "Interest",
-    "Transfer",
-    "Bonus",
-    "Other"
-];
-
-
-/* =====================================================
-   SIGN
-   ===================================================== */
-
-function setSign(sign) {
-
-    transactionSign = sign;
-
-    document
-        .getElementById("minusButton")
-        .classList.toggle(
-            "selected",
-            sign === -1
-        );
-
-    document
-        .getElementById("plusButton")
-        .classList.toggle(
-            "selected",
-            sign === 1
-        );
-
-    renderSuggestions();
-
-    updateAmountPlaceholder();
-
-    updateAmountDisplay();
-}
-
-
-function updateAmountPlaceholder() {
-
-    const input =
-        document.getElementById("amountInput");
-
-    if (!input.value) {
-
-        input.placeholder =
-            transactionSign === -1
-                ? "−0"
-                : "+0";
-
-        input.classList.add("placeholder");
-    }
-}
-
-
-/* =====================================================
-   AMOUNT
-   ===================================================== */
-
-const amountInput =
-    document.getElementById("amountInput");
-
-
-amountInput.addEventListener(
-    "input",
-    function () {
-
-        let value =
-            this.value.replace(/[^\d.]/g, "");
-
-        const parts =
-            value.split(".");
-
-        if (parts.length > 2) {
-            value =
-                parts[0] +
-                "." +
-                parts.slice(1).join("");
-        }
-
-        if (!value) {
-
-            this.value = "";
-
-            this.classList.add(
-                "placeholder"
-            );
-
-            return;
-        }
-
-        const number = Number(value);
-
-        if (!Number.isFinite(number)) {
-            return;
-        }
-
-        /*
-         * Formatting while typing.
-         *
-         * Example:
-         * 1
-         * 12
-         * 123
-         * 1,234
-         * 12,345
-         */
-
-        this.value =
-            number.toLocaleString(
-                "en-US",
-                {
-                    maximumFractionDigits: 2
-                }
-            );
-
-        this.classList.remove(
-            "placeholder"
-        );
-    }
-);
-
-
-amountInput.addEventListener(
-    "focus",
-    function () {
-
-        /*
-         * Select the formatted value so
-         * typing replaces it.
-         */
-
-        if (this.value) {
-            this.select();
-        }
-    }
-);
-
-
-amountInput.addEventListener(
-    "blur",
-    function () {
-
-        if (!this.value) {
-
-            this.classList.add(
-                "placeholder"
-            );
-
-            return;
-        }
-
-        const number =
-            Number(
-                this.value.replace(/,/g, "")
-            );
-
-        if (Number.isFinite(number)) {
-
-            this.value =
-                number.toLocaleString(
-                    "en-US",
-                    {
-                        maximumFractionDigits: 2
-                    }
-                );
-        }
-    }
-);
-
-
-/*
- * Show the sign next to the amount
- * when the field is not being edited.
- *
- * While editing, the sign buttons are
- * easier to use and the field remains
- * numeric.
- */
-
-function updateAmountDisplay() {
-
-    const input =
-        document.getElementById("amountInput");
-
-    if (!input.value) {
-        return;
-    }
-
-    const number =
-        Number(
-            input.value.replace(/,/g, "")
-        );
-
-    if (!Number.isFinite(number)) {
-        return;
-    }
-
-    /*
-     * We keep the actual input without
-     * a sign so the iPhone numeric keyboard
-     * remains easy to use.
-     *
-     * The selected +/- button provides
-     * the sign.
-     */
-}
-
-
-/* =====================================================
-   SUGGESTIONS
-   ===================================================== */
-
-function renderSuggestions() {
-
-    const categories =
-        transactionSign === -1
-            ? debitCategories
-            : creditCategories;
-
-    const comments =
-        transactionSign === -1
-            ? debitComments
-            : creditComments;
-
-    renderSuggestionList(
-        "categorySuggestions",
-        categories,
-        value => {
-
-            document
-                .getElementById("categoryInput")
-                .value = value;
-        }
-    );
-
-    renderSuggestionList(
-        "commentSuggestions",
-        comments,
-        value => {
-
-            document
-                .getElementById("commentInput")
-                .value = value;
-        }
-    );
-}
-
-
-function renderSuggestionList(
-    elementId,
-    values,
-    callback
-) {
-
-    const box =
-        document.getElementById(
-            elementId
-        );
-
-    box.innerHTML = "";
-
-    values.forEach(value => {
-
-        const button =
-            document.createElement("button");
-
-        button.type = "button";
-        button.className = "suggestion";
-        button.textContent = value;
-
-        button.onclick =
-            () => callback(value);
-
-        box.appendChild(button);
-    });
-}
-
-
-/* =====================================================
-   ADD
-   ===================================================== */
-
-function openAddTransaction() {
-
-    editingId = null;
-
-    document
-        .getElementById("formTitle")
-        .textContent =
-        "Add Transaction";
-
-    document
-        .getElementById("deleteEditButton")
-        .style.display =
-        "none";
-
-    const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
-
-    document
-        .getElementById("dateInput")
-        .value = today;
-
-    document
-        .getElementById("amountInput")
-        .value = "";
-
-    document
-        .getElementById("amountInput")
-        .placeholder = "−0";
-
-    document
-        .getElementById("amountInput")
-        .classList.add(
-            "placeholder"
-        );
-
-    document
-        .getElementById("categoryInput")
-        .value = "";
-
-    document
-        .getElementById("commentInput")
-        .value = "";
-
-    setSign(-1);
-
-    document
-        .getElementById("transactionModal")
-        .classList.add("open");
-
-    setTimeout(() => {
-
-        document
-            .getElementById("amountInput")
-            .focus();
-
-    }, 150);
-}
-
-
-/* =====================================================
-   EDIT
-   ===================================================== */
-
-function openEditTransaction(id) {
-
-    closeAllSwipeRows();
-
-    const transaction =
-        transactions.find(
-            item => item.id === id
-        );
-
-    if (!transaction) {
-        return;
-    }
-
-    editingId = id;
-
-    document
-        .getElementById("formTitle")
-        .textContent =
-        "Edit Transaction";
-
-    document
-        .getElementById("deleteEditButton")
-        .style.display =
-        "block";
-
-    document
-        .getElementById("dateInput")
-        .value =
-        transaction.date;
-
-    document
-        .getElementById("amountInput")
-        .value =
-        Math.abs(
-            transaction.amount
-        ).toLocaleString(
-            "en-US",
-            {
-                maximumFractionDigits: 2
-            }
-        );
-
-    document
-        .getElementById("amountInput")
-        .classList.remove(
-            "placeholder"
-        );
-
-    document
-        .getElementById("categoryInput")
-        .value =
-        transaction.category || "";
-
-    document
-        .getElementById("commentInput")
-        .value =
-        transaction.comment || "";
-
-    setSign(
-        transaction.amount < 0
-            ? -1
-            : 1
-    );
-
-    document
-        .getElementById("transactionModal")
-        .classList.add("open");
-}
-
-
-/* =====================================================
-   CLOSE FORM
-   ===================================================== */
-
-function closeTransactionForm() {
-
-    document
-        .getElementById("transactionModal")
-        .classList.remove(
-            "open"
-        );
-
-    editingId = null;
-}
-
-
-/* =====================================================
-   SAVE
-   ===================================================== */
-
-function saveTransaction() {
-
-    const date =
-        document
-            .getElementById("dateInput")
-            .value;
-
-    const amountText =
-        document
-            .getElementById("amountInput")
-            .value;
-
-    const amount =
-        Number(
-            amountText.replace(/,/g, "")
-        );
-
-    const comment =
-        document
-            .getElementById("commentInput")
-            .value
-            .trim();
-
-    const category =
-        document
-            .getElementById("categoryInput")
-            .value
-            .trim();
-
-    if (!date) {
-        return;
-    }
-
-    if (
-        !Number.isFinite(amount) ||
-        amount <= 0
-    ) {
-
-        document
-            .getElementById("amountInput")
-            .focus();
-
-        return;
-    }
-
-    const signedAmount =
-        amount * transactionSign;
-
-
-    if (editingId === null) {
-
-        transactions.push({
-
-            id: nextId++,
-            date: date,
-            amount: signedAmount,
-            comment: comment,
-            category: category
-
-        });
-
-    } else {
-
-        const transaction =
-            transactions.find(
-                item =>
-                    item.id === editingId
-            );
-
-        if (transaction) {
-
-            transaction.date =
-                date;
-
-            transaction.amount =
-                signedAmount;
-
-            transaction.comment =
-                comment;
-
-            transaction.category =
-                category;
-        }
-    }
-
-    closeTransactionForm();
-
-    renderTransactions();
-}
-
-
-/* =====================================================
-   DELETE FROM EDIT
-   ===================================================== */
-
-function deleteEditingTransaction() {
-
-    if (editingId === null) {
-        return;
-    }
-
-    if (
-        !confirm(
-            "Delete this transaction?"
-        )
-    ) {
-        return;
-    }
-
-    transactions =
-        transactions.filter(
-            item =>
-                item.id !== editingId
-        );
-
-    closeTransactionForm();
-
-    renderTransactions();
-}
-
-
-/* =====================================================
-   DELETE FROM SWIPE
-   ===================================================== */
-
-function deleteTransaction(id) {
-
-    if (
-        !confirm(
-            "Delete this transaction?"
-        )
-    ) {
-
-        closeAllSwipeRows();
-
-        return;
-    }
-
-    transactions =
-        transactions.filter(
-            item =>
-                item.id !== id
-        );
-
-    renderTransactions();
-}
-
-
-/* =====================================================
-   BALANCES
-   ===================================================== */
-
-function calculateBalances() {
-
-    const sorted =
-        [...transactions].sort(
-            (a, b) => {
-
-                const dateCompare =
-                    a.date.localeCompare(
-                        b.date
-                    );
-
-                if (dateCompare !== 0) {
-                    return dateCompare;
-                }
-
-                /*
-                 * On the same date,
-                 * credits appear before debits.
-                 */
-
-                if (
-                    a.amount >= 0 &&
-                    b.amount < 0
-                ) {
-                    return -1;
-                }
-
-                if (
-                    a.amount < 0 &&
-                    b.amount >= 0
-                ) {
-                    return 1;
-                }
-
-                return a.id - b.id;
-            }
-        );
-
-    let balance = 0;
-
-    sorted.forEach(transaction => {
-
-        balance +=
-            transaction.amount;
-
-        transaction.balance =
-            balance;
-    });
-
-    return sorted;
-}
-
-
-/* =====================================================
-   FORMATTING
-   ===================================================== */
-
-function formatAmount(value) {
-
-    const number =
-        Math.abs(value)
-            .toLocaleString(
-                "en-US"
-            );
-
-    return value < 0
-        ? "−" + number
-        : "+" + number;
-}
-
-
-function formatBalance(value) {
-
-    const number =
-        Math.abs(value)
-            .toLocaleString(
-                "en-US"
-            );
-
-    return value < 0
-        ? "−" + number
-        : number;
-}
-
-
-function formatDate(date) {
-
-    const parts =
-        date.split("-");
-
-    return (
-        parts[2] +
-        "/" +
-        parts[1]
-    );
-}
-
-
-function escapeHtml(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent = text;
-
-    return div.innerHTML;
-}
-
-
-/* =====================================================
-   TRANSACTIONS
-   ===================================================== */
-
-function renderTransactions() {
-
-    const list =
-        document.getElementById(
-            "transactionList"
-        );
-
-    list.innerHTML = "";
-
-    const sorted =
-        calculateBalances();
-
-    /*
-     * Newest first.
-     */
-
-    sorted.reverse();
-
-
-    sorted.forEach(transaction => {
-
-        const wrapper =
-            document.createElement(
-                "div"
-            );
-
-        wrapper.className =
-            "transaction-wrap";
-
-
-        const deleteButton =
-            document.createElement(
-                "button"
-            );
-
-        deleteButton.className =
-            "transaction-delete";
-
-        deleteButton.textContent =
-            "Delete";
-
-        deleteButton.onclick =
-            event => {
-
-                event.stopPropagation();
-
-                deleteTransaction(
-                    transaction.id
-                );
-            };
-
-
-        const row =
-            document.createElement(
-                "div"
-            );
-
-        row.className =
-            "transaction";
-
-
-        const amountClass =
-            transaction.amount < 0
-                ? "transaction-amount debit"
-                : "transaction-amount credit";
-
-
-        const balanceClass =
-            transaction.balance < 0
-                ? "transaction-balance negative-balance"
-                : "transaction-balance";
-
-
-        row.innerHTML = `
-
-            <div class="transaction-date">
-                ${formatDate(
-                    transaction.date
-                )}
-            </div>
-
-            <div class="transaction-comment">
-                ${escapeHtml(
-                    transaction.comment || ""
-                )}
-            </div>
-
-            <div class="${amountClass}">
-                ${formatAmount(
-                    transaction.amount
-                )}
-            </div>
-
-            <div class="${balanceClass}">
-                ${formatBalance(
-                    transaction.balance
-                )}
-            </div>
-        `;
-
-
-        row.onclick = () => {
-
-            /*
-             * If Delete is currently revealed,
-             * tapping the row closes it instead
-             * of opening Edit.
-             */
-
-            if (
-                row.classList.contains(
-                    "swiped"
-                )
-            ) {
-
-                row.classList.remove(
-                    "swiped"
-                );
-
-                row.style.transform = "";
-
-                return;
-            }
-
-            openEditTransaction(
-                transaction.id
-            );
-        };
-
-
-        addSwipeSupport(
-            row
-        );
-
-
-        wrapper.appendChild(
-            deleteButton
-        );
-
-        wrapper.appendChild(
-            row
-        );
-
-        list.appendChild(
-            wrapper
-        );
-    });
-
-
-    updateCurrentBalance();
-
-    updateGraph(
-        sorted
-    );
-}
-
-
-/* =====================================================
-   CURRENT BALANCE
-   ===================================================== */
-
-function updateCurrentBalance() {
-
-    const sorted =
-        calculateBalances();
-
-    const balanceElement =
-        document.getElementById(
-            "currentBalance"
-        );
-
-    if (!sorted.length) {
-
-        balanceElement.textContent =
-            "0";
-
-        balanceElement.classList.remove(
-            "negative"
-        );
-
-        return;
-    }
-
-    const current =
-        sorted[
-            sorted.length - 1
-        ].balance;
-
-    balanceElement.textContent =
-        formatBalance(current);
-
-    balanceElement.classList.toggle(
-        "negative",
-        current < 0
-    );
-}
-
-
-/* =====================================================
-   SWIPE
-   ===================================================== */
-
-function addSwipeSupport(row) {
-
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
-
-
-    row.addEventListener(
-        "touchstart",
-        event => {
-
-            if (
-                event.touches.length !== 1
-            ) {
-                return;
-            }
-
-            startX =
-                event.touches[0].clientX;
-
-            currentX =
-                startX;
-
-            dragging = true;
-
-        },
-        {
-            passive: true
-        }
-    );
-
-
-    row.addEventListener(
-        "touchmove",
-        event => {
-
-            if (!dragging) {
-                return;
-            }
-
-            currentX =
-                event.touches[0].clientX;
-
-            const distance =
-                currentX - startX;
-
-            /*
-             * Left swipe.
-             */
-
-            if (distance < 0) {
-
-                const amount =
-                    Math.max(
-                        -78,
-                        distance
-                    );
-
-                row.style.transition =
-                    "none";
-
-                row.style.transform =
-                    `translateX(${amount}px)`;
-            }
-
-            /*
-             * Right swipe when
-             * Delete is already open.
-             */
-
-            else if (
-                row.classList.contains(
-                    "swiped"
-                )
-            ) {
-
-                const amount =
-                    Math.min(
-                        0,
-                        -78 + distance
-                    );
-
-                row.style.transition =
-                    "none";
-
-                row.style.transform =
-                    `translateX(${amount}px)`;
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
-
-
-    row.addEventListener(
-        "touchend",
-        () => {
-
-            if (!dragging) {
-                return;
-            }
-
-            dragging = false;
-
-            const distance =
-                currentX - startX;
-
-            row.style.transition =
-                "transform .18s ease";
-
-
-            /*
-             * Swipe left:
-             * reveal Delete.
-             */
-
-            if (distance < -40) {
-
-                closeAllSwipeRows(
-                    row
-                );
-
-                row.classList.add(
-                    "swiped"
-                );
-
-                row.style.transform =
-                    "translateX(-78px)";
-
-                return;
-            }
-
-
-            /*
-             * Swipe right:
-             * close Delete.
-             */
-
-            if (
-                row.classList.contains(
-                    "swiped"
-                ) &&
-                distance > 25
-            ) {
-
-                row.classList.remove(
-                    "swiped"
-                );
-
-                row.style.transform =
-                    "";
-
-                return;
-            }
-
-
-            /*
-             * Small movement.
-             */
-
-            if (
-                !row.classList.contains(
-                    "swiped"
-                )
-            ) {
-
-                row.style.transform =
-                    "";
-            }
-
-        }
-    );
-}
-
-
-function closeAllSwipeRows(
-    except = null
-) {
-
-    document
-        .querySelectorAll(
-            ".transaction.swiped"
-        )
-        .forEach(row => {
-
-            if (row !== except) {
-
-                row.classList.remove(
-                    "swiped"
-                );
-
-                row.style.transform =
-                    "";
-            }
-        });
-}
-
-
-/*
- * Tapping anywhere outside the open
- * transaction closes the Delete action.
- */
-
-document.addEventListener(
-    "touchstart",
-    event => {
-
-        const openRow =
-            document.querySelector(
-                ".transaction.swiped"
-            );
-
-        if (!openRow) {
-            return;
-        }
-
-        if (
-            openRow.contains(
-                event.target
-            )
-        ) {
-            return;
-        }
-
-        closeAllSwipeRows();
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =====================================================
-   THEME
-   ===================================================== */
-
-function toggleThemeMenu() {
-
-    const menu =
-        document.getElementById(
-            "themeMenu"
-        );
-
-    menu.style.display =
-        menu.style.display === "block"
-            ? "none"
-            : "block";
-}
-
-
-function setTheme(theme) {
-
-    if (theme === "light") {
-
-        document.body.style.setProperty(
-            "--bg",
-            "#f5f5f7"
-        );
-
-        document.body.style.setProperty(
-            "--card",
-            "#fff"
-        );
-
-        document.body.style.setProperty(
-            "--field",
-            "#f0f0f2"
-        );
-
-        document.body.style.setProperty(
-            "--text",
-            "#1d1d1f"
-        );
-
-        document.body.style.setProperty(
-            "--secondary",
-            "#777"
-        );
-
-        document.body.style.setProperty(
-            "--border",
-            "#dedee2"
-        );
-
-        document.body.style.setProperty(
-            "--button",
-            "#111"
-        );
-
-        document.body.style.setProperty(
-            "--buttonText",
-            "#fff"
-        );
-
-    } else {
-
-        document.body.style.setProperty(
-            "--bg",
-            "#000"
-        );
-
-        document.body.style.setProperty(
-            "--card",
-            "#171717"
-        );
-
-        document.body.style.setProperty(
-            "--field",
-            "#222"
-        );
-
-        document.body.style.setProperty(
-            "--text",
-            "#f5f5f7"
-        );
-
-        document.body.style.setProperty(
-            "--secondary",
-            "#999"
-        );
-
-        document.body.style.setProperty(
-            "--border",
-            "#303030"
-        );
-
-        document.body.style.setProperty(
-            "--button",
-            "#f5f5f7"
-        );
-
-        document.body.style.setProperty(
-            "--buttonText",
-            "#000"
-        );
-    }
-
-    document.getElementById(
-        "themeMenu"
-    ).style.display = "none";
-}
-
-
-/* =====================================================
-   INITIALIZE
-   ===================================================== */
-
-renderSuggestions();
-renderTransactions();
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
