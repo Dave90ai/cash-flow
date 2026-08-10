@@ -646,17 +646,35 @@ function renderTransactions() {
                 "Delete";
 
 
+       //     deleteButton.addEventListener(
+       //         "click",
+       //         function (event) {
+       //
+       //             event.stopPropagation();
+       //
+       //             deleteTransaction(
+       //                 transaction.id
+       //             );
+       //         }
+       //     );
+           function deleteThisTransaction(event) {
+            
+                event.preventDefault();
+                event.stopPropagation();
+            
+                deleteTransaction(transaction.id);
+            }
+            
             deleteButton.addEventListener(
                 "click",
-                function (event) {
-
-                    event.stopPropagation();
-
-                    deleteTransaction(
-                        transaction.id
-                    );
-                }
+                deleteThisTransaction
             );
+            
+            deleteButton.addEventListener(
+                "touchend",
+                deleteThisTransaction,
+                { passive: false }
+            ); 
 
 
             const row =
@@ -835,19 +853,61 @@ function updateGraph(sorted) {
     }
 
 
+    /* =====================================================
+       CREATE ONE GRAPH POINT PER DATE
+
+       The last transaction of each date contains
+       the end-of-day balance.
+       ===================================================== */
+
+    const dailyData = [];
+
+    let currentDate = null;
+
+    sorted.forEach(
+        function (transaction) {
+
+            if (
+                currentDate !== transaction.date
+            ) {
+
+                currentDate =
+                    transaction.date;
+
+                dailyData.push({
+                    date: transaction.date,
+                    balance: transaction.balance
+                });
+
+            } else {
+
+                /*
+                 * Same date:
+                 * replace with the latest balance.
+                 */
+                dailyData[
+                    dailyData.length - 1
+                ].balance =
+                    transaction.balance;
+            }
+        }
+    );
+
+
     const values =
-        sorted.map(
-            transaction =>
-                transaction.balance
+        dailyData.map(
+            item => item.balance
         );
 
 
+    /*
+     * Graph range.
+     */
     const highest =
         Math.max(
             0,
             ...values
         );
-
 
     const lowest =
         Math.min(
@@ -875,19 +935,28 @@ function updateGraph(sorted) {
         lowest - padding;
 
 
+    /*
+     * X position.
+     *
+     * First date = left
+     * Last date  = right
+     */
     function x(index) {
 
-        if (sorted.length === 1) {
+        if (dailyData.length === 1) {
             return 350;
         }
 
         return (
             index /
-            (sorted.length - 1)
+            (dailyData.length - 1)
         ) * 700;
     }
 
 
+    /*
+     * Y position.
+     */
     function y(value) {
 
         return (
@@ -897,21 +966,24 @@ function updateGraph(sorted) {
     }
 
 
+    /*
+     * Build green/red graph paths.
+     */
     let positivePath = "";
     let negativePath = "";
 
 
     for (
         let i = 0;
-        i < sorted.length - 1;
+        i < dailyData.length - 1;
         i++
     ) {
 
         const v1 =
-            sorted[i].balance;
+            dailyData[i].balance;
 
         const v2 =
-            sorted[i + 1].balance;
+            dailyData[i + 1].balance;
 
 
         const x1 = x(i);
@@ -922,7 +994,7 @@ function updateGraph(sorted) {
 
 
         /*
-         * Entire segment is green.
+         * Both positive.
          */
         if (
             v1 >= 0 &&
@@ -937,7 +1009,7 @@ function updateGraph(sorted) {
 
 
         /*
-         * Entire segment is red.
+         * Both negative.
          */
         if (
             v1 < 0 &&
@@ -952,9 +1024,8 @@ function updateGraph(sorted) {
 
 
         /*
-         * Segment crosses zero.
+         * The line crosses zero.
          */
-
         const fraction =
             Math.abs(v1) /
             (
@@ -993,14 +1064,19 @@ function updateGraph(sorted) {
 
 
     /*
-     * One transaction.
+     * One date only.
      */
-    if (sorted.length === 1) {
+    if (dailyData.length === 1) {
 
         const px = x(0);
-        const py = y(sorted[0].balance);
+        const py = y(
+            dailyData[0].balance
+        );
 
-        if (sorted[0].balance >= 0) {
+
+        if (
+            dailyData[0].balance >= 0
+        ) {
 
             positivePath =
                 `M ${px} ${py}`;
@@ -1024,137 +1100,201 @@ function updateGraph(sorted) {
     );
 
 
-    /*
-     * Draw the balance dots.
-     */
-    drawBalanceDots(
-        sorted,
-        x,
-        y
+    /* =====================================================
+       ZERO LINE
+       ===================================================== */
+
+    const zeroLine =
+        document.querySelector(
+            ".zero-line"
+        );
+
+
+    function graphPercent(value) {
+
+        return (
+            (top - value) /
+            (top - bottom)
+        ) * 100;
+    }
+
+
+    if (zeroLine) {
+
+        zeroLine.style.top =
+            graphPercent(0) + "%";
+    }
+
+
+    /* =====================================================
+       Y AXIS
+       ===================================================== */
+
+    const scaleTop =
+        document.getElementById(
+            "scaleTop"
+        );
+
+    const scaleMiddle =
+        document.getElementById(
+            "scaleMiddle"
+        );
+
+    const scaleZero =
+        document.querySelector(
+            ".scale-zero"
+        );
+
+    const scaleNegative =
+        document.getElementById(
+            "scaleNegative"
+        );
+
+
+    const middleValue =
+        (top + bottom) / 2;
+
+
+    scaleTop.textContent =
+        formatGraphScale(top);
+
+    scaleMiddle.textContent =
+        formatGraphScale(middleValue);
+
+    scaleZero.textContent =
+        "0";
+
+    scaleNegative.textContent =
+        formatGraphScale(bottom);
+
+
+    scaleTop.style.top =
+        graphPercent(top) + "%";
+
+    scaleMiddle.style.top =
+        graphPercent(middleValue) + "%";
+
+    scaleZero.style.top =
+        graphPercent(0) + "%";
+
+    scaleNegative.style.top =
+        graphPercent(bottom) + "%";
+
+
+    scaleTop.style.transform =
+        "translateY(-50%)";
+
+    scaleMiddle.style.transform =
+        "translateY(-50%)";
+
+    scaleZero.style.transform =
+        "translateY(-50%)";
+
+    scaleNegative.style.transform =
+        "translateY(-50%)";
+
+
+    /* =====================================================
+       DOTS
+
+       Exactly one dot for every graph date.
+       ===================================================== */
+
+    dailyData.forEach(
+        function (item, index) {
+
+            const circle =
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
+                );
+
+
+            circle.classList.add(
+                "balance-dot"
+            );
+
+
+            circle.setAttribute(
+                "cx",
+                x(index)
+            );
+
+
+            circle.setAttribute(
+                "cy",
+                y(item.balance)
+            );
+
+
+            circle.setAttribute(
+                "r",
+                "3.5"
+            );
+
+
+            circle.setAttribute(
+                "fill",
+                item.balance < 0
+                    ? "#ff453a"
+                    : "#45d483"
+            );
+
+
+            circle.setAttribute(
+                "stroke",
+                "#171717"
+            );
+
+
+            circle.setAttribute(
+                "stroke-width",
+                "1.5"
+            );
+
+
+            document
+                .getElementById(
+                    "balanceGraph"
+                )
+                .appendChild(circle);
+        }
     );
 
 
-/*
- * Position the zero line according to the
- * actual graph scale.
- */
-const zeroLine =
-    document.querySelector(".zero-line");
+    /* =====================================================
+       X AXIS DATES
 
-if (zeroLine) {
+       Put each date at exactly the same X position
+       as its graph point.
+       ===================================================== */
 
-    const zeroPosition =
-        (top / (top - bottom)) * 100;
-
-    zeroLine.style.top =
-        zeroPosition + "%";
-}
-   
-   
-/*
- * Y-axis labels
- *
- * These use exactly the same scale as
- * the graph itself.
- */
-
-const scaleTop =
-    document.getElementById("scaleTop");
-
-const scaleMiddle =
-    document.getElementById("scaleMiddle");
-
-const scaleZero =
-    document.querySelector(".scale-zero");
-
-const scaleNegative =
-    document.getElementById("scaleNegative");
-
-
-/*
- * Convert a graph value to a percentage
- * of the graph height.
- */
-function graphPercent(value) {
-
-    return (
-        (top - value) /
-        (top - bottom)
-    ) * 100;
-}
-
-
-/*
- * Top value
- */
-scaleTop.textContent =
-    formatGraphScale(top);
-
-scaleTop.style.top =
-    graphPercent(top) + "%";
-
-scaleTop.style.transform =
-    "translateY(-50%)";
-
-
-/*
- * Middle value
- *
- * The middle of the actual graph range,
- * rather than simply top / 2.
- */
-const middleValue =
-    (top + bottom) / 2;
-
-scaleMiddle.textContent =
-    formatGraphScale(middleValue);
-
-scaleMiddle.style.top =
-    graphPercent(middleValue) + "%";
-
-scaleMiddle.style.transform =
-    "translateY(-50%)";
-
-
-/*
- * Zero
- */
-scaleZero.style.top =
-    graphPercent(0) + "%";
-
-scaleZero.style.transform =
-    "translateY(-50%)";
-
-
-/*
- * Bottom value
- */
-scaleNegative.textContent =
-    formatGraphScale(bottom);
-
-scaleNegative.style.top =
-    graphPercent(bottom) + "%";
-
-scaleNegative.style.transform =
-    "translateY(-50%)";
-
-    /*
-     * Dates are explicitly oldest → newest.
-     */
-    const indexes =
-        getDateIndexes(sorted.length);
-
-
-    indexes.forEach(
-        function (index) {
+    dailyData.forEach(
+        function (item, index) {
 
             const span =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
+
 
             span.textContent =
-                formatDate(
-                    sorted[index].date
-                );
+                formatDate(item.date);
+
+
+            span.style.position =
+                "absolute";
+
+
+            span.style.left =
+                (
+                    x(index) / 700 * 100
+                ) + "%";
+
+
+            span.style.transform =
+                "translateX(-50%)";
+
 
             dates.appendChild(span);
         }
