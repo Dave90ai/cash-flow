@@ -1262,43 +1262,40 @@ function updateGraph(sorted) {
     );
 
 
-    /* =====================================================
-       X AXIS DATES
+/* =====================================================
+   X AXIS DATES
 
-       Put each date at exactly the same X position
-       as its graph point.
-       ===================================================== */
+   Use the actual graph area width so the dates
+   line up with the SVG dots.
+   ===================================================== */
 
-    dailyData.forEach(
-        function (item, index) {
+const graphArea =
+    document.querySelector(".graph-area");
 
-            const span =
-                document.createElement(
-                    "span"
-                );
+dailyData.forEach(
+    function (item, index) {
 
+        const span =
+            document.createElement("span");
 
-            span.textContent =
-                formatDate(item.date);
+        span.textContent =
+            formatDate(item.date);
 
+        span.className =
+            "graph-date";
 
-            span.style.position =
-                "absolute";
+        /*
+         * Position according to the same percentage
+         * used for the SVG X coordinate.
+         */
+        span.style.left =
+            (
+                x(index) / 700 * 100
+            ) + "%";
 
-
-            span.style.left =
-                (
-                    x(index) / 700 * 100
-                ) + "%";
-
-
-            span.style.transform =
-                "translateX(-50%)";
-
-
-            dates.appendChild(span);
-        }
-    );
+        dates.appendChild(span);
+    }
+);
 }
 
 
