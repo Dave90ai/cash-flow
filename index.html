@@ -11,9 +11,10 @@
         :root {
             --bg: #000000;
             --card: #171717;
+            --field: #222222;
             --text: #f5f5f7;
             --secondary: #a1a1a6;
-            --border: #292929;
+            --border: #303030;
             --button: #f5f5f7;
             --button-text: #000000;
             --green: #45d483;
@@ -40,6 +41,12 @@
             min-height: 100vh;
         }
 
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
         .app {
             width: 100%;
             max-width: 760px;
@@ -50,14 +57,15 @@
                 max(28px, env(safe-area-inset-bottom));
         }
 
-        /* Header */
+        /* =========================
+           HEADER
+           ========================= */
 
         .header {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2px;
         }
 
         .account-name {
@@ -77,7 +85,9 @@
             cursor: pointer;
         }
 
-        /* Balance */
+        /* =========================
+           BALANCE
+           ========================= */
 
         .balance-section {
             text-align: center;
@@ -101,7 +111,9 @@
             font-size: 12px;
         }
 
-        /* Graph */
+        /* =========================
+           GRAPH
+           ========================= */
 
         .graph-card {
             margin-top: 9px;
@@ -179,7 +191,9 @@
             padding: 5px 1px 0;
         }
 
-        /* Transactions */
+        /* =========================
+           TRANSACTIONS
+           ========================= */
 
         .transactions {
             margin-top: 17px;
@@ -230,15 +244,14 @@
             color: var(--green);
         }
 
-        .debit {
-            color: var(--red);
-        }
-
+        .debit,
         .negative-balance {
             color: var(--red);
         }
 
-        /* Add button */
+        /* =========================
+           ADD BUTTON
+           ========================= */
 
         .add-button {
             position: fixed;
@@ -262,32 +275,223 @@
             cursor: pointer;
         }
 
-        .add-button:active {
-            transform: scale(.95);
+        /* =========================
+           MODAL
+           ========================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0,0,0,.72);
+
+            z-index: 100;
+
+            align-items: flex-end;
+            justify-content: center;
         }
 
-        /* Theme menu */
+        .modal.open {
+            display: flex;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 760px;
+
+            background: var(--card);
+
+            border-radius: 22px 22px 0 0;
+
+            padding:
+                14px
+                18px
+                max(22px, env(safe-area-inset-bottom));
+
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        .drag-bar {
+            width: 42px;
+            height: 5px;
+            border-radius: 5px;
+            background: #555;
+            margin: 0 auto 16px;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .form-title {
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .close-button {
+            border: 0;
+            background: transparent;
+            color: var(--secondary);
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           FORM FIELDS
+           ========================= */
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--secondary);
+            font-size: 12px;
+        }
+
+        .date-input,
+        .amount-input,
+        .text-input,
+        .select-input {
+            width: 100%;
+            height: 50px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background: var(--field);
+            color: var(--text);
+
+            padding: 0 14px;
+
+            font-size: 17px;
+            outline: none;
+        }
+
+        .date-input:focus,
+        .amount-input:focus,
+        .text-input:focus {
+            border-color: #777;
+        }
+
+        .amount-input {
+            height: 62px;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .amount-hint {
+            margin-top: 5px;
+            color: var(--secondary);
+            font-size: 11px;
+        }
+
+        /* =========================
+           SUGGESTIONS
+           ========================= */
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 8px;
+        }
+
+        .suggestion {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--secondary);
+
+            padding: 7px 11px;
+
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .suggestion:active {
+            background: #303030;
+            color: var(--text);
+        }
+
+        /* =========================
+           FORM ACTIONS
+           ========================= */
+
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 10px;
+            margin-top: 23px;
+        }
+
+        .cancel-button,
+        .save-button {
+            height: 52px;
+            border-radius: 14px;
+            border: 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background: #292929;
+            color: var(--text);
+        }
+
+        .save-button {
+            background: var(--button);
+            color: var(--button-text);
+        }
+
+        .save-button:disabled {
+            opacity: .35;
+            cursor: default;
+        }
+
+        /* =========================
+           THEME MENU
+           ========================= */
 
         .theme-menu {
             display: none;
+
             position: absolute;
             top: 45px;
             right: 0;
+
             background: #202020;
             border: 1px solid #353535;
             border-radius: 12px;
+
             padding: 6px;
+
             z-index: 10;
         }
 
         .theme-menu button {
             display: block;
+
             width: 120px;
+
             padding: 9px 12px;
+
             border: 0;
             border-radius: 8px;
+
             background: transparent;
             color: white;
+
             text-align: left;
             font-size: 14px;
         }
@@ -296,14 +500,17 @@
             background: #303030;
         }
 
-        /* Light theme */
+        /* =========================
+           LIGHT THEME
+           ========================= */
 
         body.light {
             --bg: #f5f5f7;
             --card: #ffffff;
+            --field: #f0f0f2;
             --text: #1d1d1f;
             --secondary: #77777c;
-            --border: #e1e1e3;
+            --border: #dedee2;
             --button: #111111;
             --button-text: #ffffff;
             --green: #16834a;
@@ -316,9 +523,29 @@
             color: #1d1d1f;
         }
 
-        /* Desktop */
+        body.light .cancel-button {
+            background: #e5e5e7;
+        }
+
+        body.light .theme-menu {
+            background: white;
+            border-color: #ddd;
+        }
+
+        body.light .theme-menu button {
+            color: #222;
+        }
+
+        body.light .theme-menu button:hover {
+            background: #eee;
+        }
+
+        /* =========================
+           DESKTOP
+           ========================= */
 
         @media (min-width: 760px) {
+
             .app {
                 padding-top: 32px;
             }
@@ -333,11 +560,24 @@
             .transaction-balance {
                 font-size: 16px;
             }
+
+            .modal {
+                align-items: center;
+            }
+
+            .form-card {
+                border-radius: 20px;
+                margin: 20px;
+                max-height: 800px;
+            }
         }
 
-        /* Small phones */
+        /* =========================
+           SMALL PHONES
+           ========================= */
 
         @media (max-width: 380px) {
+
             .app {
                 padding-left: 12px;
                 padding-right: 12px;
@@ -370,6 +610,7 @@
 <div class="app">
 
     <header class="header">
+
         <div class="account-name">Checking</div>
 
         <button class="menu-button"
@@ -382,12 +623,15 @@
             <button onclick="setTheme('dark')">Dark</button>
             <button onclick="setTheme('light')">Light</button>
         </div>
+
     </header>
 
     <section class="balance-section">
-        <div class="balance">-1,500</div>
+        <div class="balance" id="currentBalance">−1,500</div>
         <div class="balance-label">current balance</div>
     </section>
+
+    <!-- Graph prototype -->
 
     <section class="graph-card">
 
@@ -405,10 +649,8 @@
                 <div class="zero-line"></div>
 
                 <svg viewBox="0 0 700 190"
-                     preserveAspectRatio="none"
-                     aria-label="Balance graph">
+                     preserveAspectRatio="none">
 
-                    <!-- Green section -->
                     <path
                         d="M0,82
                            L55,76
@@ -428,7 +670,6 @@
                         stroke-linecap="round"
                         stroke-linejoin="round" />
 
-                    <!-- Red section after crossing zero -->
                     <path
                         d="M565,63
                            L585,78
@@ -458,103 +699,697 @@
 
     </section>
 
-    <section class="transactions">
+    <!-- Transactions -->
 
-        <!-- Newest first -->
-
-        <div class="transaction">
-            <div class="transaction-date">29/09</div>
-            <div class="transaction-comment">Large payment</div>
-            <div class="transaction-amount debit">−12,000</div>
-            <div class="transaction-balance negative-balance">−1,500</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">02/09</div>
-            <div class="transaction-comment">Salary</div>
-            <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">10,500</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">20/08</div>
-            <div class="transaction-comment">Credit card</div>
-            <div class="transaction-amount debit">−1,200</div>
-            <div class="transaction-balance">2,500</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">20/08</div>
-            <div class="transaction-comment">Rent</div>
-            <div class="transaction-amount debit">−3,500</div>
-            <div class="transaction-balance">3,700</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">15/08</div>
-            <div class="transaction-comment">Salary</div>
-            <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">7,200</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">12/08</div>
-            <div class="transaction-comment">Electricity</div>
-            <div class="transaction-amount debit">−450</div>
-            <div class="transaction-balance">−800</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">10/08</div>
-            <div class="transaction-comment">Supermarket</div>
-            <div class="transaction-amount debit">−350</div>
-            <div class="transaction-balance">−350</div>
-        </div>
-
-        <div class="transaction">
-            <div class="transaction-date">10/08</div>
-            <div class="transaction-comment">Salary</div>
-            <div class="transaction-amount credit">+8,000</div>
-            <div class="transaction-balance">8,000</div>
-        </div>
-
-    </section>
+    <section class="transactions" id="transactionList"></section>
 
 </div>
 
-<button class="add-button" aria-label="Add transaction">+</button>
+<button class="add-button"
+        onclick="openAddTransaction()"
+        aria-label="Add transaction">
+    +
+</button>
+
+
+<!-- =========================
+     ADD TRANSACTION MODAL
+     ========================= -->
+
+<div class="modal" id="transactionModal">
+
+    <div class="form-card">
+
+        <div class="drag-bar"></div>
+
+        <div class="form-header">
+            <div class="form-title">Add Transaction</div>
+
+            <button class="close-button"
+                    onclick="closeAddTransaction()">
+                ×
+            </button>
+        </div>
+
+
+        <!-- Date -->
+
+        <div class="field">
+
+            <label class="field-label" for="dateInput">
+                Date
+            </label>
+
+            <input
+                id="dateInput"
+                class="date-input"
+                type="date">
+
+        </div>
+
+
+        <!-- Amount -->
+
+        <div class="field">
+
+            <label class="field-label" for="amountInput">
+                Amount
+            </label>
+
+            <input
+                id="amountInput"
+                class="amount-input"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                placeholder="+0">
+
+            <div class="amount-hint">
+                Use + for income and − for debit
+            </div>
+
+        </div>
+
+
+        <!-- Category -->
+
+        <div class="field">
+
+            <label class="field-label" for="categoryInput">
+                Category
+            </label>
+
+            <input
+                id="categoryInput"
+                class="text-input"
+                type="text"
+                autocomplete="off"
+                placeholder="Optional">
+
+            <div class="suggestions">
+
+                <button class="suggestion"
+                        onclick="chooseCategory('Salary')">
+                    Salary
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseCategory('Rent')">
+                    Rent
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseCategory('Utilities')">
+                    Utilities
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseCategory('Food')">
+                    Food
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseCategory('Credit Card')">
+                    Credit Card
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Comment -->
+
+        <div class="field">
+
+            <label class="field-label" for="commentInput">
+                Comment
+            </label>
+
+            <input
+                id="commentInput"
+                class="text-input"
+                type="text"
+                autocomplete="off"
+                placeholder="Optional">
+
+            <div class="suggestions">
+
+                <button class="suggestion"
+                        onclick="chooseComment('Monthly salary')">
+                    Monthly salary
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseComment('Electricity bill')">
+                    Electricity bill
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseComment('Credit card estimate')">
+                    Credit card estimate
+                </button>
+
+                <button class="suggestion"
+                        onclick="chooseComment('Rent')">
+                    Rent
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button class="cancel-button"
+                    onclick="closeAddTransaction()">
+                Cancel
+            </button>
+
+            <button class="save-button"
+                    id="saveButton"
+                    onclick="addTransaction()"
+                    disabled>
+                Add
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
-    function toggleThemeMenu() {
-        const menu = document.getElementById("themeMenu");
 
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-        } else {
-            menu.style.display = "block";
+    /* =========================
+       DEMO DATA
+       ========================= */
+
+    let transactions = [
+
+        {
+            date: "2026-09-29",
+            amount: -12000,
+            category: "",
+            comment: "Large payment"
+        },
+
+        {
+            date: "2026-09-02",
+            amount: 8000,
+            category: "Salary",
+            comment: "Monthly salary"
+        },
+
+        {
+            date: "2026-08-20",
+            amount: -1200,
+            category: "Credit Card",
+            comment: "Credit card"
+        },
+
+        {
+            date: "2026-08-20",
+            amount: -3500,
+            category: "Rent",
+            comment: "Rent"
+        },
+
+        {
+            date: "2026-08-15",
+            amount: 8000,
+            category: "Salary",
+            comment: "Monthly salary"
+        },
+
+        {
+            date: "2026-08-12",
+            amount: -450,
+            category: "Utilities",
+            comment: "Electricity"
+        },
+
+        {
+            date: "2026-08-10",
+            amount: -350,
+            category: "Food",
+            comment: "Supermarket"
+        },
+
+        {
+            date: "2026-08-10",
+            amount: 8000,
+            category: "Salary",
+            comment: "Monthly salary"
         }
+
+    ];
+
+
+    /* =========================
+       FORMATTERS
+       ========================= */
+
+    function formatAmount(value) {
+
+        const absolute = Math.abs(value);
+
+        const formatted = absolute.toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+        if (value < 0) {
+            return "−" + formatted;
+        }
+
+        return "+" + formatted;
     }
+
+
+    function formatBalance(value) {
+
+        const absolute = Math.abs(value);
+
+        const formatted = absolute.toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+        if (value < 0) {
+            return "−" + formatted;
+        }
+
+        return formatted;
+    }
+
+
+    function formatDate(dateString) {
+
+        const parts = dateString.split("-");
+
+        return parts[2] + "/" + parts[1];
+
+    }
+
+
+    /* =========================
+       CALCULATE BALANCES
+       ========================= */
+
+    function calculateBalances() {
+
+        /*
+         * Temporary demo calculation.
+         *
+         * Later this will be replaced by the
+         * real adjustment/balance engine.
+         */
+
+        const sorted = [...transactions].sort(
+            (a, b) => a.date.localeCompare(b.date)
+        );
+
+        let balance = 0;
+
+        for (const transaction of sorted) {
+
+            balance += transaction.amount;
+
+            transaction.balance = balance;
+
+        }
+
+        return sorted;
+
+    }
+
+
+    /* =========================
+       DISPLAY TRANSACTIONS
+       ========================= */
+
+    function renderTransactions() {
+
+        const list =
+            document.getElementById("transactionList");
+
+        list.innerHTML = "";
+
+        const sorted = calculateBalances();
+
+        /*
+         * Newest first.
+         */
+
+        sorted.reverse();
+
+        for (const transaction of sorted) {
+
+            const row =
+                document.createElement("div");
+
+            row.className = "transaction";
+
+            const balanceClass =
+                transaction.balance < 0
+                    ? "transaction-balance negative-balance"
+                    : "transaction-balance";
+
+            const amountClass =
+                transaction.amount < 0
+                    ? "transaction-amount debit"
+                    : "transaction-amount credit";
+
+            row.innerHTML = `
+                <div class="transaction-date">
+                    ${formatDate(transaction.date)}
+                </div>
+
+                <div class="transaction-comment">
+                    ${escapeHtml(
+                        transaction.comment || ""
+                    )}
+                </div>
+
+                <div class="${amountClass}">
+                    ${formatAmount(transaction.amount)}
+                </div>
+
+                <div class="${balanceClass}">
+                    ${formatBalance(transaction.balance)}
+                </div>
+            `;
+
+            list.appendChild(row);
+        }
+
+        /*
+         * Current balance is the balance
+         * after the newest transaction.
+         */
+
+        if (sorted.length > 0) {
+
+            const current =
+                sorted[0].balance;
+
+            const balanceElement =
+                document.getElementById(
+                    "currentBalance"
+                );
+
+            balanceElement.textContent =
+                formatBalance(current);
+
+            if (current < 0) {
+                balanceElement.classList.add(
+                    "negative"
+                );
+            } else {
+                balanceElement.classList.remove(
+                    "negative"
+                );
+            }
+        }
+
+    }
+
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* =========================
+       ADD TRANSACTION
+       ========================= */
+
+    function openAddTransaction() {
+
+        const modal =
+            document.getElementById(
+                "transactionModal"
+            );
+
+        const date =
+            document.getElementById(
+                "dateInput"
+            );
+
+        const amount =
+            document.getElementById(
+                "amountInput"
+            );
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+        date.value = today;
+
+        amount.value = "";
+
+        document.getElementById(
+            "categoryInput"
+        ).value = "";
+
+        document.getElementById(
+            "commentInput"
+        ).value = "";
+
+        updateSaveButton();
+
+        modal.classList.add("open");
+
+        /*
+         * Amount is the field we expect
+         * to be entered most often.
+         */
+
+        setTimeout(() => {
+            amount.focus();
+        }, 150);
+
+    }
+
+
+    function closeAddTransaction() {
+
+        document
+            .getElementById("transactionModal")
+            .classList.remove("open");
+
+    }
+
+
+    function chooseCategory(value) {
+
+        document.getElementById(
+            "categoryInput"
+        ).value = value;
+
+    }
+
+
+    function chooseComment(value) {
+
+        document.getElementById(
+            "commentInput"
+        ).value = value;
+
+    }
+
+
+    function updateSaveButton() {
+
+        const amount =
+            document.getElementById(
+                "amountInput"
+            ).value.trim();
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+        saveButton.disabled =
+            amount === "" ||
+            amount === "+" ||
+            amount === "-";
+
+    }
+
+
+    function addTransaction() {
+
+        const date =
+            document.getElementById(
+                "dateInput"
+            ).value;
+
+        let amountText =
+            document.getElementById(
+                "amountInput"
+            ).value
+            .trim()
+            .replace(/,/g, "");
+
+
+        const category =
+            document.getElementById(
+                "categoryInput"
+            ).value
+            .trim();
+
+        const comment =
+            document.getElementById(
+                "commentInput"
+            ).value
+            .trim();
+
+
+        if (!date) {
+            return;
+        }
+
+
+        /*
+         * Convert the typed amount to a number.
+         */
+
+        const amount =
+            Number(amountText);
+
+
+        if (!Number.isFinite(amount) ||
+            amount === 0) {
+
+            return;
+
+        }
+
+
+        transactions.push({
+
+            date: date,
+
+            amount: amount,
+
+            category: category,
+
+            comment: comment
+
+        });
+
+
+        renderTransactions();
+
+        closeAddTransaction();
+
+    }
+
+
+    /* =========================
+       THEME
+       ========================= */
+
+    function toggleThemeMenu() {
+
+        const menu =
+            document.getElementById(
+                "themeMenu"
+            );
+
+        menu.style.display =
+            menu.style.display === "block"
+                ? "none"
+                : "block";
+
+    }
+
 
     function setTheme(theme) {
+
         if (theme === "light") {
-            document.body.classList.add("light");
-            localStorage.setItem("cashFlowTheme", "light");
+
+            document.body.classList.add(
+                "light"
+            );
+
+            localStorage.setItem(
+                "cashFlowTheme",
+                "light"
+            );
+
         } else {
-            document.body.classList.remove("light");
-            localStorage.setItem("cashFlowTheme", "dark");
+
+            document.body.classList.remove(
+                "light"
+            );
+
+            localStorage.setItem(
+                "cashFlowTheme",
+                "dark"
+            );
+
         }
 
-        document.getElementById("themeMenu").style.display = "none";
+        document.getElementById(
+            "themeMenu"
+        ).style.display = "none";
+
     }
 
-    const savedTheme = localStorage.getItem("cashFlowTheme");
+
+    /* =========================
+       INPUT EVENTS
+       ========================= */
+
+    document
+        .getElementById("amountInput")
+        .addEventListener(
+            "input",
+            updateSaveButton
+        );
+
+
+    /* =========================
+       INITIALIZE
+       ========================= */
+
+    const savedTheme =
+        localStorage.getItem(
+            "cashFlowTheme"
+        );
 
     if (savedTheme === "light") {
-        document.body.classList.add("light");
+
+        document.body.classList.add(
+            "light"
+        );
+
     }
+
+
+    renderTransactions();
+
 </script>
 
 </body>
 </html>
 ```
-
