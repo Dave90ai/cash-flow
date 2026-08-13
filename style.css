@@ -1051,3 +1051,174 @@ button {
     }
 
 }
+
+/* =====================================================
+   STEP 2 - ACCOUNT ACTIONS
+   ===================================================== */
+
+.account-action-bar {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 7px;
+
+    margin-top: 7px;
+    margin-bottom: 5px;
+}
+
+
+.account-action-button {
+    height: 34px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: var(--field);
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.account-action-button:active {
+    transform: scale(.98);
+}
+
+
+.account-action-button.adjust-action {
+    color: #ffd60a;
+}
+
+
+.action-plus {
+    font-size: 18px;
+    line-height: 0;
+    vertical-align: -1px;
+}
+
+
+/* =====================================================
+   STEP 2 - ADJUST ROW
+   ===================================================== */
+
+:root {
+    --adjust: #ffd60a;
+}
+
+
+.adjust-transaction {
+    background:
+        rgba(255, 214, 10, .055);
+
+    border-top:
+        1px solid rgba(255, 214, 10, .28);
+
+    border-bottom:
+        1px solid rgba(255, 214, 10, .28);
+}
+
+
+.adjust-transaction::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background: var(--adjust);
+}
+
+
+.adjust-label {
+    color: var(--adjust) !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: .25px;
+}
+
+
+.adjust-icon {
+    display: inline-block;
+
+    margin-right: 3px;
+
+    font-size: 13px;
+}
+
+
+.adjust-amount {
+    color: var(--adjust);
+
+    font-weight: 800 !important;
+}
+
+
+.adjust-balance {
+    color: var(--adjust);
+
+    font-weight: 800 !important;
+}
+
+
+/* =====================================================
+   STEP 2 - ADJUST FORM
+   ===================================================== */
+
+.adjust-balance-input {
+    color: var(--text);
+
+    text-align: right;
+}
+
+
+.adjust-explanation {
+    margin-top: -3px;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   STEP 2 - MOBILE
+   ===================================================== */
+
+@media (max-width: 520px) {
+
+    .account-action-button {
+        height: 33px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/* =====================================================
+   STEP 2 - DESKTOP
+   ===================================================== */
+
+@media (min-width: 760px) {
+
+    .account-action-bar {
+        max-width: 500px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
