@@ -785,3 +785,269 @@ button {
     transform: translateX(-50%);
     white-space: nowrap;
 }
+
+/* =====================================================
+   STEP 1 - ACCOUNT NAVIGATION
+   ===================================================== */
+
+.account-name {
+    min-width: 0;
+    flex: 1;
+    margin-right: 8px;
+}
+
+
+.account-tabs {
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+
+.account-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+
+.account-tab {
+    flex: 0 0 auto;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: var(--secondary);
+
+    padding: 7px 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+
+.account-tab.active {
+    background: var(--button);
+    color: var(--button-text);
+}
+
+
+.account-tab.all-tab {
+    font-weight: 700;
+}
+
+
+.account-edit-button {
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+
+    margin-left: 4px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--field);
+
+    color: var(--secondary);
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   STEP 1 - ALL ACCOUNTS
+   ===================================================== */
+
+.all-accounts-screen {
+    margin-top: 18px;
+}
+
+
+.all-accounts-title {
+    margin-bottom: 12px;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+.accounts-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+}
+
+
+.account-card {
+    width: 100%;
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    background: var(--card);
+    color: var(--text);
+
+    padding: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.account-card:active {
+    transform: scale(.99);
+}
+
+
+.account-card-name {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+.account-card-balance {
+    margin-top: 7px;
+
+    font-size: 25px;
+    line-height: 1.05;
+
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+
+.account-card-balance.negative {
+    color: var(--red);
+}
+
+
+.account-card-label {
+    margin-top: 3px;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+}
+
+
+.mini-graph {
+    width: 100%;
+
+    height: 72px;
+
+    margin-top: 12px;
+
+    overflow: hidden;
+}
+
+
+.mini-graph svg {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.mini-graph-empty {
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px dashed var(--border);
+    border-radius: 9px;
+
+    color: var(--secondary);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   STEP 1 - MOBILE
+   ===================================================== */
+
+@media (max-width: 520px) {
+
+    .account-tab {
+        padding-left: 6px;
+        padding-right: 6px;
+
+        font-size: 12px;
+    }
+
+
+    .accounts-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .account-card {
+        padding: 13px;
+    }
+
+
+    .mini-graph {
+        height: 65px;
+    }
+
+}
+
+
+/* =====================================================
+   STEP 1 - DESKTOP
+   ===================================================== */
+
+@media (min-width: 760px) {
+
+    .account-tabs {
+        overflow-x: visible;
+    }
+
+
+    .account-tab {
+        font-size: 14px;
+
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+
+    .accounts-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
