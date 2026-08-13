@@ -499,55 +499,50 @@ function switchAccount(accountId) {
      * Save whatever account was active
      * before switching.
      */
-
     syncCurrentTransactions();
 
-
-    currentAccountId =
-        accountId;
-
+    currentAccountId = accountId;
     allAccountsMode = false;
 
-
-    const account =
-        getCurrentAccount();
-
+    const account = getCurrentAccount();
 
     if (!account) {
         return;
     }
 
+    /*
+     * Connect the original application's
+     * transaction array to the selected account.
+     */
+    transactions = account.transactions;
 
     /*
-     * The original application uses
-     * the global "transactions" array.
-     *
-     * For now we connect that array to
-     * the selected account.
+     * Hide the All Accounts screen.
      */
+    const allScreen =
+        document.getElementById(
+            "allAccountsScreen"
+        );
 
-    transactions =
-        account.transactions;
-
+    if (allScreen) {
+        allScreen.style.display = "none";
+    }
 
     renderAccountTabs();
 
-
     saveAccountData();
 
+    setMainScreenVisible(true);
 
     renderTransactions();
 
-
     /*
-     * Make sure the Add button is visible.
+     * Always return to the top so the
+     * account names, balance and graph
+     * are immediately visible.
      */
-
-    setMainScreenVisible(
-        true
-    );
+    window.scrollTo(0, 0);
 }
-
 
 function syncCurrentTransactions() {
 
@@ -642,24 +637,35 @@ function showAllAccounts() {
 
     syncCurrentTransactions();
 
-
     allAccountsMode = true;
 
-
-    setMainScreenVisible(
-        false
-    );
-
+    setMainScreenVisible(false);
 
     renderAccountTabs();
 
-
     renderAllAccountsScreen();
 
+    /*
+     * Make sure the All Accounts screen
+     * is visible.
+     */
+    const allScreen =
+        document.getElementById(
+            "allAccountsScreen"
+        );
+
+    if (allScreen) {
+        allScreen.style.display = "";
+    }
 
     saveAccountData();
-}
 
+    /*
+     * Start at the top of the All Accounts
+     * view as well.
+     */
+    window.scrollTo(0, 0);
+}
 
 /* =========================================================
    ALL ACCOUNTS SCREEN
@@ -1307,18 +1313,26 @@ function installTransactionSync() {
         renderTransactions;
 
 
-    renderTransactions =
-        function () {
+renderTransactions =
+    function () {
 
-            syncCurrentTransactions();
+        syncCurrentTransactions();
 
-            saveAccountData();
+        saveAccountData();
 
-            originalRender();
+        originalRender();
 
-            renderAccountTabs();
+        renderAccountTabs();
 
-        };
+        /*
+         * After adding, editing or deleting
+         * a transaction, return to the top.
+         */
+        if (!allAccountsMode) {
+            window.scrollTo(0, 0);
+        }
+
+    };
 }
 
 
