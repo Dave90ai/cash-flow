@@ -161,19 +161,28 @@ function sortDisplayTransactions(
             }
 
 
-            function displayRank(
-                transaction
-            ) {
+function displayRank(
+    transaction
+) {
 
-                if (isAdjust(transaction)) {
-                    return 2;
-                }
+    /*
+     * Display order within the same date:
+     *
+     * Adjust   = top
+     * Debit    = middle
+     * Credit   = bottom
+     *
+     * This is the reverse of the chronological
+     * calculation order.
+     */
+    if (isAdjust(transaction)) {
+        return 0;
+    }
 
-                return transaction.amount >= 0
-                    ? 0
-                    : 1;
-            }
-
+    return transaction.amount >= 0
+        ? 2
+        : 1;
+}
 
             const rankA =
                 displayRank(a);
