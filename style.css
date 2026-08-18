@@ -1222,3 +1222,49 @@ button {
     }
 
 }
+
+/* =====================================================
+   STARTING BALANCE
+   ===================================================== */
+
+.starting-balance-wrap {
+    border-top: 1px solid var(--border);
+    margin-top: 2px;
+}
+
+.starting-balance-row {
+    background: var(--bg);
+    color: var(--secondary);
+    cursor: pointer;
+}
+
+.starting-balance-row:hover {
+    background: var(--field);
+}
+
+.starting-balance-label {
+    color: #6fb7ff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.starting-balance-amount {
+    color: #6fb7ff;
+}
+
+.starting-balance-value {
+    color: #6fb7ff;
+}
+
+.starting-balance-explanation {
+    margin-top: 5px;
+    margin-bottom: 4px;
+
+    color: var(--secondary);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.adjust-amount-row {
+    margin-top: 0;
+}
