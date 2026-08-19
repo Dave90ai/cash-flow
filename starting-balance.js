@@ -1196,7 +1196,7 @@ const startingBalanceObserver =
     new MutationObserver(
         function () {
 
-            addAdjustSignButtonsIfNeeded();
+            createAdjustSignButtons();
 
         }
     );
@@ -1221,10 +1221,22 @@ createStartingBalanceModal();
 
 
 /*
- * accounts.js has already performed its first render
- * by the time this file is loaded.
+ * The other application files perform several
+ * renderTransactions() replacements during startup.
  *
- * Therefore explicitly render again now.
+ * Give the application one final render after all
+ * Starting Balance functionality has been installed.
  */
-renderTransactions();
+setTimeout(
+    function () {
 
+        if (
+            typeof renderTransactions ===
+            "function"
+        ) {
+            renderTransactions();
+        }
+
+    },
+    0
+);
