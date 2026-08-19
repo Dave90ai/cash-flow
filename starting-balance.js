@@ -29,15 +29,9 @@ function getStartingBalance(account) {
 
 
 /* =========================================================
-   MIGRATION
+   INITIALIZE / MIGRATE ACCOUNTS
    ========================================================= */
 
-/*
- * Accounts created before Starting Balance existed
- * don't have a startingBalance property.
- *
- * Add it without changing any existing balances.
- */
 function initializeStartingBalances() {
 
     if (!Array.isArray(accounts)) {
@@ -76,14 +70,13 @@ function initializeStartingBalances() {
    ========================================================= */
 
 /*
- * Replace the Adjust version of the chronological
- * calculation so the account starts from its
- * Starting Balance.
+ * Start the account from Starting Balance.
  *
  * Calculation order remains:
  *
  * Credit → Debit → Adjust
  */
+
 getChronologicalTransactions =
     function () {
 
@@ -105,9 +98,6 @@ getChronologicalTransactions =
                     isAdjust(transaction)
                 ) {
 
-                    /*
-                     * Adjust sets the balance.
-                     */
                     balance =
                         getAdjustBalance(
                             transaction
@@ -123,6 +113,7 @@ getChronologicalTransactions =
 
                 transaction.balance =
                     balance;
+
             }
         );
 
@@ -252,92 +243,6 @@ getAccountDailyBalances =
 
 
 /* =========================================================
-   MAIN BALANCE DISPLAY
-   ========================================================= */
-
-/*
- * If there are no transactions, the original application
- * displays zero.
- *
- * With Starting Balance, the account should display the
- * Starting Balance instead.
- */
-updateCurrentBalance =
-    function () {
-
-        const balanceElement =
-            document.getElementById(
-                "currentBalance"
-            );
-
-        const label =
-            document.querySelector(
-                ".balance-label"
-            );
-
-        if (
-            !balanceElement ||
-            !label
-        ) {
-            return;
-        }
-
-        const sorted =
-            getChronologicalTransactions();
-
-
-        if (!sorted.length) {
-
-            const account =
-                getCurrentAccount();
-
-            const startingBalance =
-                getStartingBalance(
-                    account
-                );
-
-            balanceElement.textContent =
-                formatBalance(
-                    startingBalance
-                );
-
-            balanceElement.classList.toggle(
-                "negative",
-                startingBalance < 0
-            );
-
-            label.textContent =
-                "starting balance";
-
-            return;
-        }
-
-
-        const last =
-            sorted[
-                sorted.length - 1
-            ];
-
-
-        balanceElement.textContent =
-            formatBalance(
-                last.balance
-            );
-
-        balanceElement.classList.toggle(
-            "negative",
-            last.balance < 0
-        );
-
-        label.textContent =
-            "balance for " +
-            formatDate(
-                last.date
-            );
-    };
-
-
-/* =========================================================
    STARTING BALANCE MODAL
    ========================================================= */
 
@@ -350,7 +255,6 @@ function createStartingBalanceModal() {
     ) {
         return;
     }
-
 
     const modal =
         document.createElement(
@@ -421,7 +325,7 @@ function createStartingBalanceModal() {
                 <div
                     class="amount-hint"
                     id="startingBalanceHint">
-                    Starting balance
+                    Positive starting balance
                 </div>
 
             </div>
@@ -495,11 +399,7 @@ function createStartingBalanceModal() {
         .addEventListener(
             "click",
             function () {
-
-                setStartingBalanceSign(
-                    -1
-                );
-
+                setStartingBalanceSign(-1);
             }
         );
 
@@ -511,11 +411,7 @@ function createStartingBalanceModal() {
         .addEventListener(
             "click",
             function () {
-
-                setStartingBalanceSign(
-                    1
-                );
-
+                setStartingBalanceSign(1);
             }
         );
 
@@ -531,11 +427,10 @@ function createStartingBalanceModal() {
         function () {
 
             let value =
-                this.value
-                    .replace(
-                        /[^\d.-]/g,
-                        ""
-                    );
+                this.value.replace(
+                    /[^\d.-]/g,
+                    ""
+                );
 
 
             value =
@@ -567,6 +462,7 @@ function createStartingBalanceModal() {
 
 
             updateStartingBalanceSign();
+
         }
     );
 
@@ -593,11 +489,10 @@ function createStartingBalanceModal() {
 
             const value =
                 Number(
-                    this.value
-                        .replace(
-                            /,/g,
-                            ""
-                        )
+                    this.value.replace(
+                        /,/g,
+                        ""
+                    )
                 );
 
             if (
@@ -621,12 +516,11 @@ function createStartingBalanceModal() {
         "keydown",
         function (event) {
 
-            const open =
-                modal.classList.contains(
+            if (
+                !modal.classList.contains(
                     "open"
-                );
-
-            if (!open) {
+                )
+            ) {
                 return;
             }
 
@@ -658,39 +552,36 @@ function createStartingBalanceModal() {
 
 
             if (
-                document.activeElement ===
+                document.activeElement !==
                 input
             ) {
-
-                if (
-                    event.key === "-" ||
-                    event.code ===
-                        "NumpadSubtract"
-                ) {
-
-                    event.preventDefault();
-
-                    setStartingBalanceSign(
-                        -1
-                    );
-
-                    return;
-                }
+                return;
+            }
 
 
-                if (
-                    event.key === "+" ||
-                    event.code ===
-                        "NumpadAdd"
-                ) {
+            if (
+                event.key === "-" ||
+                event.code ===
+                    "NumpadSubtract"
+            ) {
 
-                    event.preventDefault();
+                event.preventDefault();
 
-                    setStartingBalanceSign(
-                        1
-                    );
+                setStartingBalanceSign(-1);
 
-                }
+                return;
+            }
+
+
+            if (
+                event.key === "+" ||
+                event.code ===
+                    "NumpadAdd"
+            ) {
+
+                event.preventDefault();
+
+                setStartingBalanceSign(1);
 
             }
 
@@ -734,16 +625,10 @@ function setStartingBalanceSign(
     }
 
 
-    if (sign === -1) {
-
-        input.value =
-            "-" + value;
-
-    } else {
-
-        input.value =
-            value;
-    }
+    input.value =
+        sign === -1
+            ? "-" + value
+            : value;
 
 
     updateStartingBalanceSign();
@@ -787,7 +672,8 @@ function updateStartingBalanceSign() {
 
 
     const negative =
-        input.value.trim()
+        input.value
+            .trim()
             .startsWith("-");
 
 
@@ -808,6 +694,7 @@ function updateStartingBalanceSign() {
             negative
                 ? "Negative starting balance"
                 : "Positive starting balance";
+
     }
 
 
@@ -824,7 +711,7 @@ function updateStartingBalanceSign() {
 
 
 /* =========================================================
-   OPEN / CLOSE STARTING BALANCE
+   OPEN / CLOSE
    ========================================================= */
 
 function openEditStartingBalance() {
@@ -892,7 +779,6 @@ function closeStartingBalanceForm() {
         );
 
     if (modal) {
-
         modal.classList.remove(
             "open"
         );
@@ -901,7 +787,7 @@ function closeStartingBalanceForm() {
 
 
 /* =========================================================
-   SAVE STARTING BALANCE
+   SAVE
    ========================================================= */
 
 function saveStartingBalance() {
@@ -949,12 +835,9 @@ function saveStartingBalance() {
 
     saveAccountData();
 
-
     closeStartingBalanceForm();
 
-
     renderTransactions();
-
 
     window.scrollTo(
         0,
@@ -1022,20 +905,17 @@ function renderStartingBalanceRow() {
         </div>
 
         <div
-            class="transaction-comment
-                   starting-balance-label">
+            class="transaction-comment starting-balance-label">
             STARTING BALANCE
         </div>
 
         <div
-            class="transaction-amount
-                   starting-balance-amount">
+            class="transaction-amount starting-balance-amount">
             ${formatBalance(value)}
         </div>
 
         <div
-            class="transaction-balance
-                   starting-balance-value">
+            class="transaction-balance starting-balance-value">
             ${formatBalance(value)}
         </div>
     `;
@@ -1044,9 +924,7 @@ function renderStartingBalanceRow() {
     row.addEventListener(
         "click",
         function () {
-
             openEditStartingBalance();
-
         }
     );
 
@@ -1054,7 +932,6 @@ function renderStartingBalanceRow() {
     wrapper.appendChild(
         row
     );
-
 
     list.appendChild(
         wrapper
@@ -1066,20 +943,17 @@ function renderStartingBalanceRow() {
    RENDER WRAPPER
    ========================================================= */
 
-const renderBeforeStartingBalance =
+const originalRenderTransactionsForStartingBalance =
     renderTransactions;
 
 
 renderTransactions =
     function () {
 
-        renderBeforeStartingBalance();
-
+        originalRenderTransactionsForStartingBalance();
 
         if (!allAccountsMode) {
-
             renderStartingBalanceRow();
-
         }
 
     };
@@ -1089,7 +963,14 @@ renderTransactions =
    ADJUST +/- BUTTONS
    ========================================================= */
 
-function createAdjustSignButtons() {
+/*
+ * The Adjust modal is created dynamically by adjust.js.
+ *
+ * Therefore we watch for its input instead of trying
+ * to modify it before it exists.
+ */
+
+function addAdjustSignButtonsIfNeeded() {
 
     const input =
         document.getElementById(
@@ -1101,9 +982,6 @@ function createAdjustSignButtons() {
     }
 
 
-    /*
-     * Do not create them twice.
-     */
     if (
         document.getElementById(
             "adjustBalanceMinus"
@@ -1127,7 +1005,9 @@ function createAdjustSignButtons() {
             "button"
         );
 
-    minus.type = "button";
+    minus.type =
+        "button";
+
     minus.className =
         "sign-button";
 
@@ -1143,7 +1023,9 @@ function createAdjustSignButtons() {
             "button"
         );
 
-    plus.type = "button";
+    plus.type =
+        "button";
+
     plus.className =
         "sign-button";
 
@@ -1158,6 +1040,7 @@ function createAdjustSignButtons() {
         row,
         input
     );
+
 
     row.appendChild(
         minus
@@ -1175,9 +1058,7 @@ function createAdjustSignButtons() {
     minus.addEventListener(
         "click",
         function () {
-
             setAdjustSign(-1);
-
         }
     );
 
@@ -1185,9 +1066,7 @@ function createAdjustSignButtons() {
     plus.addEventListener(
         "click",
         function () {
-
             setAdjustSign(1);
-
         }
     );
 
@@ -1310,13 +1189,42 @@ function updateAdjustSignButtons() {
 
 
 /* =========================================================
-   START
+   WATCH FOR DYNAMIC ADJUST MODAL
+   ========================================================= */
+
+const startingBalanceObserver =
+    new MutationObserver(
+        function () {
+
+            addAdjustSignButtonsIfNeeded();
+
+        }
+    );
+
+
+startingBalanceObserver.observe(
+    document.body,
+    {
+        childList: true,
+        subtree: true
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
    ========================================================= */
 
 initializeStartingBalances();
 
 createStartingBalanceModal();
 
-createAdjustSignButtons();
 
-updateAdjustSignButtons();
+/*
+ * accounts.js has already performed its first render
+ * by the time this file is loaded.
+ *
+ * Therefore explicitly render again now.
+ */
+renderTransactions();
+
