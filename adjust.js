@@ -160,29 +160,35 @@ function sortDisplayTransactions(
                 return dateCompare;
             }
 
+            /*
+             * The transaction list is displayed
+             * newest-first.
+             *
+             * Within the same date:
+             *
+             * Adjust = top
+             * Debit  = middle
+             * Credit = bottom
+             *
+             * This is the reverse of the
+             * chronological calculation order.
+             */
 
-function displayRank(
-    transaction
-) {
+            function displayRank(
+                transaction
+            ) {
 
-    /*
-     * Display order within the same date:
-     *
-     * Adjust   = top
-     * Debit    = middle
-     * Credit   = bottom
-     *
-     * This is the reverse of the chronological
-     * calculation order.
-     */
-    if (isAdjust(transaction)) {
-        return 0;
-    }
+                if (
+                    isAdjust(transaction)
+                ) {
+                    return 0;
+                }
 
-    return transaction.amount >= 0
-        ? 2
-        : 1;
-}
+                return transaction.amount >= 0
+                    ? 2
+                    : 1;
+            }
+
 
             const rankA =
                 displayRank(a);
@@ -196,15 +202,19 @@ function displayRank(
             }
 
 
+            /*
+             * Keep the existing ordering
+             * for transactions of the
+             * same type.
+             */
             return (
                 Number(b.id) -
                 Number(a.id)
             );
+
         }
     );
 }
-
-
 /* =========================================================
    BALANCE CALCULATION
    ========================================================= */
