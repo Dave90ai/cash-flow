@@ -1196,7 +1196,7 @@ const startingBalanceObserver =
     new MutationObserver(
         function () {
 
-            createAdjustSignButtons();
+            addAdjustSignButtonsIfNeeded();
 
         }
     );
