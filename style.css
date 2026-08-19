@@ -1268,3 +1268,26 @@ button {
 .adjust-amount-row {
     margin-top: 0;
 }
+
+/* =====================================================
+   COMPACT MAIN SCREEN / ADJUST CLEANUP
+   ===================================================== */
+
+.adjust-transaction {
+    background: var(--bg);
+}
+
+.adjust-transaction::before {
+    display: none;
+}
+
+
+/*
+ * Keep the Adjust row completely opaque so
+ * the Delete button underneath cannot show
+ * through it before a swipe.
+ */
+.adjust-transaction {
+    position: relative;
+    z-index: 3;
+}
