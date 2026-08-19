@@ -1293,69 +1293,82 @@ button {
 }
 
 /* =====================================================
-   COMPACT LAYOUT
+   FINAL COMPACT / ADJUST OVERRIDES
    ===================================================== */
 
-/* Main balance */
+/* ---------- ADJUST ---------- */
+
+/* Remove the yellow vertical marker completely */
+.adjust-transaction::before {
+    content: none !important;
+    display: none !important;
+}
+
+/* Keep the row opaque so DELETE cannot show through */
+.adjust-transaction {
+    position: relative !important;
+    z-index: 5 !important;
+    background: var(--bg) !important;
+}
+
+
+/* ---------- MAIN BALANCE ---------- */
+
 .balance-section {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
 }
 
 .balance {
-    font-size: 32px;
-    line-height: 1;
+    font-size: 30px !important;
+    line-height: 1 !important;
 }
 
 .balance-label {
-    margin-top: 2px;
+    margin-top: 1px !important;
 }
 
 
-/* Graph */
+/* ---------- GRAPH ---------- */
+
 .graph-card {
-    margin-top: 5px;
-    padding-top: 7px;
-    padding-bottom: 5px;
+    margin-top: 3px !important;
+    padding-top: 5px !important;
+    padding-bottom: 3px !important;
 }
 
 .graph {
-    height: 155px;
-}
-
-.graph-dates {
-    padding-top: 3px;
+    height: 145px !important;
 }
 
 
-/* Transactions */
+/* ---------- TRANSACTIONS ---------- */
+
 .transactions {
-    margin-top: 7px;
+    margin-top: 4px !important;
 }
 
 .transaction {
-    min-height: 30px;
-    padding-top: 1px;
-    padding-bottom: 1px;
+    min-height: 29px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 
-/* Action buttons */
+/* ---------- ACCOUNT ACTION BAR ---------- */
+
 .account-action-bar {
-    margin-top: 4px;
-    margin-bottom: 3px;
+    margin-top: 3px !important;
+    margin-bottom: 2px !important;
 }
 
 .account-action-button {
-    height: 30px;
+    height: 30px !important;
 }
 
 
-/* Starting Balance */
-.starting-balance-wrap {
-    margin-top: 1px;
-}
+/* ---------- STARTING BALANCE ---------- */
 
 .starting-balance-row {
-    min-height: 30px;
+    min-height: 29px !important;
 }
