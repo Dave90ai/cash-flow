@@ -1291,3 +1291,71 @@ button {
     position: relative;
     z-index: 3;
 }
+
+/* =====================================================
+   COMPACT LAYOUT
+   ===================================================== */
+
+/* Main balance */
+.balance-section {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.balance {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.balance-label {
+    margin-top: 2px;
+}
+
+
+/* Graph */
+.graph-card {
+    margin-top: 5px;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+.graph {
+    height: 155px;
+}
+
+.graph-dates {
+    padding-top: 3px;
+}
+
+
+/* Transactions */
+.transactions {
+    margin-top: 7px;
+}
+
+.transaction {
+    min-height: 30px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+
+/* Action buttons */
+.account-action-bar {
+    margin-top: 4px;
+    margin-bottom: 3px;
+}
+
+.account-action-button {
+    height: 30px;
+}
+
+
+/* Starting Balance */
+.starting-balance-wrap {
+    margin-top: 1px;
+}
+
+.starting-balance-row {
+    min-height: 30px;
+}
