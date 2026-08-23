@@ -412,14 +412,25 @@ openAddTransaction =
         unifiedEditingId =
             null;
 
+        /*
+         * The main + button always starts
+         * with a new normal transaction.
+         */
+        unifiedMode =
+            "transaction";
+
         originalOpenAddTransaction();
 
+        /*
+         * Force the unified form back to
+         * Transaction after the original
+         * form has opened.
+         */
         setUnifiedMode(
             "transaction"
         );
 
     };
-
 
 /* =========================================================
    OPEN EDIT TRANSACTION
@@ -1287,3 +1298,37 @@ updateUnifiedAddButton();
 setUnifiedMode(
     "transaction"
 );
+
+const mainAddButton =
+    document.getElementById(
+        "addButton"
+    );
+
+if (mainAddButton) {
+
+    mainAddButton.addEventListener(
+        "click",
+        function () {
+
+            unifiedEditingId =
+                null;
+
+            unifiedMode =
+                "transaction";
+
+            setTimeout(
+                function () {
+
+                    setUnifiedMode(
+                        "transaction"
+                    );
+
+                },
+                0
+            );
+
+        },
+        true
+    );
+
+}
