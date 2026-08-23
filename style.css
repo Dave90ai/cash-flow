@@ -1632,3 +1632,124 @@ button {
 
 }
 
+/* =====================================================
+   MAIN BALANCE + BUTTON
+   ===================================================== */
+
+.balance-section {
+    position: relative;
+}
+
+.balance-main-row {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 48px;
+}
+
+/*
+ * Large, conspicuous Add button.
+ *
+ * It is positioned halfway between the
+ * balance center and the right edge.
+ */
+.balance-main-row .add-button {
+    position: absolute;
+
+    left: 75%;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 46px;
+    height: 46px;
+
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--button);
+    color: var(--button-text);
+
+    font-size: 34px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, .35);
+
+    z-index: 10;
+}
+
+.balance-main-row .add-button:active {
+    transform:
+        translateY(-50%)
+        scale(.92);
+}
+
+
+/* Small phones */
+@media (max-width: 380px) {
+
+    .balance-main-row .add-button {
+        width: 43px;
+        height: 43px;
+
+        font-size: 31px;
+    }
+
+}
+
+/* =====================================================
+   BALANCE COLUMN COLOR RULE
+   ===================================================== */
+
+/*
+ * Every balance value:
+ *
+ * 0 or positive = white
+ * negative      = red
+ *
+ * This intentionally overrides the old
+ * yellow Adjust balance and blue Starting
+ * Balance balance colors.
+ */
+
+.transaction-balance {
+    color: var(--text) !important;
+}
+
+.transaction-balance.negative-balance {
+    color: var(--red) !important;
+}
+
+
+/* Adjust balance follows the same rule. */
+.adjust-balance {
+    color: var(--text) !important;
+}
+
+.adjust-balance.negative-balance {
+    color: var(--red) !important;
+}
+
+
+/* Starting Balance follows the same rule. */
+.starting-balance-value {
+    color: var(--text) !important;
+}
+
+.starting-balance-value.negative-balance {
+    color: var(--red) !important;
+}
+
