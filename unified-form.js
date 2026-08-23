@@ -1306,6 +1306,14 @@ const mainAddButton =
 
 if (mainAddButton) {
 
+    /*
+     * The main + button always starts
+     * a NEW Transaction.
+     *
+     * This listener uses capture=true,
+     * so it runs before the original
+     * app.js click handler.
+     */
     mainAddButton.addEventListener(
         "click",
         function () {
@@ -1316,19 +1324,13 @@ if (mainAddButton) {
             unifiedMode =
                 "transaction";
 
-            setTimeout(
-                function () {
-
-                    setUnifiedMode(
-                        "transaction"
-                    );
-
-                },
-                0
+            setUnifiedMode(
+                "transaction"
             );
 
         },
         true
     );
 
+}
 }
