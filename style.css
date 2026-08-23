@@ -1374,7 +1374,7 @@ button {
 }
 
 /* =====================================================
-   ADJUST SIGN BUTTONS
+   ADJUST AMOUNT / SIGN BUTTONS
    ===================================================== */
 
 .adjust-amount-row {
@@ -1391,9 +1391,11 @@ button {
 }
 
 .adjust-sign-buttons .sign-button {
-    width: 38px;
-    min-width: 38px;
+    width: 42px;
+    min-width: 42px;
     height: 42px;
+
+    padding: 0;
 
     border: 1px solid var(--border);
     border-radius: 9px;
@@ -1404,7 +1406,10 @@ button {
     font-size: 21px;
     font-weight: 600;
 
+    line-height: 1;
+
     cursor: pointer;
+
     -webkit-tap-highlight-color: transparent;
 }
 
