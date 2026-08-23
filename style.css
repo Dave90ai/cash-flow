@@ -1571,16 +1571,6 @@ button {
 
 
 .unified-adjust-mode
-.sign-button.selected {
-    background: var(--adjust);
-
-    border-color: var(--adjust);
-
-    color: #000;
-}
-
-
-.unified-adjust-mode
 .amount-hint {
     color: var(--secondary);
 }
@@ -1753,3 +1743,16 @@ button {
     color: var(--red) !important;
 }
 
+/* =====================================================
+   UNIFIED FORM - CONSISTENT SIGN BUTTONS
+   ===================================================== */
+
+/*
+ * Transaction and Adjust use exactly
+ * the same + / − button appearance.
+ */
+.unified-adjust-mode .sign-button.selected {
+    background: var(--button) !important;
+    border-color: var(--button) !important;
+    color: var(--button-text) !important;
+}
