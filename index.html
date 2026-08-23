@@ -44,21 +44,32 @@
 
     </header>
 
-
+    
     <section class="balance-section">
-
-        <div
-            class="balance"
-            id="currentBalance">
-            0
+    
+        <div class="balance-main-row">
+    
+            <div
+                class="balance"
+                id="currentBalance">
+                0
+            </div>
+    
+            <button
+                class="add-button"
+                id="addButton"
+                type="button"
+                aria-label="Add transaction">
+                +
+            </button>
+    
         </div>
-
+    
         <div class="balance-label">
             current balance
         </div>
-
+    
     </section>
-
 
     <section class="graph-card">
 
@@ -138,13 +149,6 @@
     </section>
 
 </div>
-
-
-<button
-    class="add-button"
-    id="addButton">
-    +
-</button>
 
 
 <!-- ADD / EDIT TRANSACTION -->
@@ -305,6 +309,7 @@
 <script src="accounts.js"></script>
 <script src="adjust.js"></script>
 <script src="starting-balance.js"></script>
+<script src="unified-form.js"></script>
 
 </body>
 </html>
