@@ -915,7 +915,7 @@ function renderStartingBalanceRow() {
         </div>
 
         <div
-            class="transaction-balance starting-balance-value">
+            class="transaction-balance starting-balance-value ${value < 0 ? "negative-balance" : ""}">
             ${formatBalance(value)}
         </div>
     `;
