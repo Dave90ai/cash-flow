@@ -542,41 +542,40 @@ function createAdjustModal() {
 
             </div>
 
-
+            
             <div class="field">
-
-                <label
-                    class="field-label"
-                    for="adjustDateInput">
-                    Date
-                </label>
-
-                <input
-                    id="adjustDateInput"
-                    class="date-input"
-                    type="date">
-
-            </div>
-
-
-            <div class="field">
-
                 <label
                     class="field-label"
                     for="adjustBalanceInput">
                     Account balance
                 </label>
-
-                <input
-                    id="adjustBalanceInput"
-                    class="amount-input adjust-balance-input"
-                    type="text"
-                    inputmode="decimal"
-                    autocomplete="off"
-                    placeholder="0">
-
+            
+                <div class="adjust-amount-row">
+                    <div class="adjust-sign-buttons">
+                        <button
+                            type="button"
+                            class="sign-button adjust-minus-button"
+                            id="adjustMinusButton">
+                            −
+                        </button>
+            
+                        <button
+                            type="button"
+                            class="sign-button adjust-plus-button"
+                            id="adjustPlusButton">
+                            +
+                        </button>
+                    </div>
+            
+                    <input
+                        id="adjustBalanceInput"
+                        class="amount-input adjust-balance-input"
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        placeholder="0">
+                </div>
             </div>
-
 
             <div class="adjust-explanation">
                 This sets the account balance at
@@ -703,6 +702,82 @@ function createAdjustModal() {
         }
     );
 
+   const adjustMinusButton =
+    document.getElementById(
+        "adjustMinusButton"
+    );
+
+   const adjustPlusButton =
+       document.getElementById(
+           "adjustPlusButton"
+       );
+   
+   function setAdjustSign(sign) {
+   
+       const current =
+           document
+               .getElementById(
+                   "adjustBalanceInput"
+               )
+               .value
+               .replace(/,/g, "")
+               .trim();
+   
+       if (!current) {
+           return;
+       }
+   
+       const number =
+           Number(
+               current
+           );
+   
+       if (!Number.isFinite(number)) {
+           return;
+       }
+   
+       const absolute =
+           Math.abs(number);
+   
+       document
+           .getElementById(
+               "adjustBalanceInput"
+           )
+           .value =
+           sign === -1
+               ? "-" + absolute
+               : String(absolute);
+   }
+   
+   adjustMinusButton.addEventListener(
+       "click",
+       function () {
+   
+           setAdjustSign(-1);
+   
+           document
+               .getElementById(
+                   "adjustBalanceInput"
+               )
+               .focus();
+   
+       }
+   );
+   
+   adjustPlusButton.addEventListener(
+       "click",
+       function () {
+   
+           setAdjustSign(1);
+   
+           document
+               .getElementById(
+                   "adjustBalanceInput"
+               )
+               .focus();
+   
+       }
+   );
 
     document.addEventListener(
         "keydown",
