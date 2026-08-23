@@ -523,7 +523,6 @@ function createAdjustModal() {
 
     modal.innerHTML = `
         <div class="form-card">
-
             <div class="drag-bar"></div>
 
             <div class="form-header">
@@ -535,6 +534,7 @@ function createAdjustModal() {
                 </div>
 
                 <button
+                    type="button"
                     class="close-button"
                     id="adjustCloseButton">
                     ×
@@ -542,31 +542,50 @@ function createAdjustModal() {
 
             </div>
 
-            
+
             <div class="field">
+                <label
+                    class="field-label"
+                    for="adjustDateInput">
+                    Date
+                </label>
+
+                <input
+                    id="adjustDateInput"
+                    class="date-input"
+                    type="date">
+
+            </div>
+
+
+            <div class="field">
+
                 <label
                     class="field-label"
                     for="adjustBalanceInput">
                     Account balance
                 </label>
-            
+
                 <div class="adjust-amount-row">
+
                     <div class="adjust-sign-buttons">
+
                         <button
                             type="button"
-                            class="sign-button adjust-minus-button"
+                            class="sign-button"
                             id="adjustMinusButton">
                             −
                         </button>
-            
+
                         <button
                             type="button"
-                            class="sign-button adjust-plus-button"
+                            class="sign-button"
                             id="adjustPlusButton">
                             +
                         </button>
+
                     </div>
-            
+
                     <input
                         id="adjustBalanceInput"
                         class="amount-input adjust-balance-input"
@@ -574,8 +593,11 @@ function createAdjustModal() {
                         inputmode="decimal"
                         autocomplete="off"
                         placeholder="0">
+
                 </div>
+
             </div>
+
 
             <div class="adjust-explanation">
                 This sets the account balance at
@@ -586,12 +608,14 @@ function createAdjustModal() {
             <div class="form-actions">
 
                 <button
+                    type="button"
                     class="cancel-button"
                     id="adjustCancelButton">
                     Cancel
                 </button>
 
                 <button
+                    type="button"
                     class="save-button"
                     id="adjustSaveButton">
                     Save
@@ -601,6 +625,7 @@ function createAdjustModal() {
 
 
             <button
+                type="button"
                 id="deleteAdjustButton"
                 class="delete-edit-button">
                 Delete Adjust
@@ -615,6 +640,9 @@ function createAdjustModal() {
     );
 
 
+    /*
+     * Close button
+     */
     document
         .getElementById(
             "adjustCloseButton"
@@ -625,6 +653,9 @@ function createAdjustModal() {
         );
 
 
+    /*
+     * Cancel button
+     */
     document
         .getElementById(
             "adjustCancelButton"
@@ -635,6 +666,9 @@ function createAdjustModal() {
         );
 
 
+    /*
+     * Save button
+     */
     document
         .getElementById(
             "adjustSaveButton"
@@ -645,6 +679,9 @@ function createAdjustModal() {
         );
 
 
+    /*
+     * Delete button
+     */
     document
         .getElementById(
             "deleteAdjustButton"
@@ -661,36 +698,51 @@ function createAdjustModal() {
         );
 
 
+    /*
+     * Keep the balance input clean.
+     *
+     * Commas are allowed while displaying
+     * a number, but they are removed when
+     * saving.
+     */
     input.addEventListener(
         "input",
         function () {
 
-            const raw =
+            let value =
                 this.value
-                    .replace(/[^\d.-]/g, "");
+                    .replace(
+                        /[^\d.-]/g,
+                        ""
+                    );
 
 
             /*
-             * Only allow one minus sign
-             * and one decimal point.
+             * Keep only one decimal point.
              */
-            let value =
-                raw.replace(
+            value =
+                value.replace(
                     /(\..*)\./g,
                     "$1"
                 );
 
 
-            const minus =
+            /*
+             * Keep the minus sign only
+             * at the beginning.
+             */
+            const negative =
                 value.startsWith("-");
 
 
             value =
-                value
-                    .replace(/-/g, "");
+                value.replace(
+                    /-/g,
+                    ""
+                );
 
 
-            if (minus) {
+            if (negative) {
                 value =
                     "-" + value;
             }
@@ -702,83 +754,116 @@ function createAdjustModal() {
         }
     );
 
-   const adjustMinusButton =
-    document.getElementById(
-        "adjustMinusButton"
+
+    /*
+     * Adjust sign buttons.
+     *
+     * These change the sign of the
+     * existing balance. They do not
+     * change the amount itself.
+     *
+     * Example:
+     *
+     * 500  -> -500
+     * -500 -> 500
+     */
+    const minusButton =
+        document.getElementById(
+            "adjustMinusButton"
+        );
+
+    const plusButton =
+        document.getElementById(
+            "adjustPlusButton"
+        );
+
+
+    function setAdjustSign(
+        negative
+    ) {
+
+        let value =
+            input.value
+                .replace(
+                    /,/g,
+                    ""
+                )
+                .trim();
+
+
+        /*
+         * If the field is empty,
+         * don't insert a zero.
+         *
+         * This lets the user type
+         * the number normally.
+         */
+        if (!value) {
+            return;
+        }
+
+
+        const number =
+            Number(value);
+
+
+        if (
+            !Number.isFinite(
+                number
+            )
+        ) {
+            return;
+        }
+
+
+        const absolute =
+            Math.abs(number);
+
+
+        input.value =
+            negative
+                ? "-" + absolute
+                : String(absolute);
+
+
+        /*
+         * Put the cursor back in
+         * the balance field.
+         */
+        input.focus();
+
+    }
+
+
+    minusButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            setAdjustSign(true);
+
+        }
     );
 
-   const adjustPlusButton =
-       document.getElementById(
-           "adjustPlusButton"
-       );
-   
-   function setAdjustSign(sign) {
-   
-       const current =
-           document
-               .getElementById(
-                   "adjustBalanceInput"
-               )
-               .value
-               .replace(/,/g, "")
-               .trim();
-   
-       if (!current) {
-           return;
-       }
-   
-       const number =
-           Number(
-               current
-           );
-   
-       if (!Number.isFinite(number)) {
-           return;
-       }
-   
-       const absolute =
-           Math.abs(number);
-   
-       document
-           .getElementById(
-               "adjustBalanceInput"
-           )
-           .value =
-           sign === -1
-               ? "-" + absolute
-               : String(absolute);
-   }
-   
-   adjustMinusButton.addEventListener(
-       "click",
-       function () {
-   
-           setAdjustSign(-1);
-   
-           document
-               .getElementById(
-                   "adjustBalanceInput"
-               )
-               .focus();
-   
-       }
-   );
-   
-   adjustPlusButton.addEventListener(
-       "click",
-       function () {
-   
-           setAdjustSign(1);
-   
-           document
-               .getElementById(
-                   "adjustBalanceInput"
-               )
-               .focus();
-   
-       }
-   );
 
+    plusButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            setAdjustSign(false);
+
+        }
+    );
+
+
+    /*
+     * Keyboard shortcuts.
+     */
     document.addEventListener(
         "keydown",
         function (event) {
@@ -817,6 +902,21 @@ function createAdjustModal() {
                 "Enter"
             ) {
 
+                /*
+                 * Don't submit while the
+                 * user is using the date
+                 * field.
+                 */
+                if (
+                    document.activeElement ===
+                    document.getElementById(
+                        "adjustDateInput"
+                    )
+                ) {
+                    return;
+                }
+
+
                 event.preventDefault();
 
                 saveAdjust();
@@ -825,8 +925,8 @@ function createAdjustModal() {
 
         }
     );
-}
 
+}
 
 let editingAdjustId = null;
 
