@@ -1249,9 +1249,7 @@ const oldActionBar =
     );
 
 if (oldActionBar) {
-
     oldActionBar.remove();
-
 }
 
 
@@ -1261,9 +1259,7 @@ const oldAdjustModal =
     );
 
 if (oldAdjustModal) {
-
     oldAdjustModal.remove();
-
 }
 
 
@@ -1313,38 +1309,201 @@ setUnifiedMode(
     "transaction"
 );
 
+
+/* =========================================================
+   MAIN + BUTTON
+   ========================================================= */
+
+/*
+ * IMPORTANT:
+ *
+ * app.js attached its click handler before
+ * unified-form.js replaced openAddTransaction().
+ *
+ * Therefore simply replacing the function is
+ * not enough.
+ *
+ * We intercept the click during the capture
+ * phase and explicitly call the unified version.
+ */
+
 const mainAddButton =
     document.getElementById(
         "addButton"
     );
 
+
 if (mainAddButton) {
 
-    /*
-     * The main + button always starts
-     * a NEW Transaction.
-     *
-     * This listener uses capture=true,
-     * so it runs before the original
-     * app.js click handler.
-     */
     mainAddButton.addEventListener(
         "click",
-        function () {
+        function (event) {
 
+            /*
+             * Prevent app.js's original
+             * Add Transaction handler.
+             */
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+
+            /*
+             * Always start a NEW transaction.
+             *
+             * It does not matter whether the
+             * previous operation was Adjust.
+             */
             unifiedEditingId =
                 null;
 
             unifiedMode =
                 "transaction";
 
-            setUnifiedMode(
-                "transaction"
-            );
+
+            /*
+             * Call our wrapped function.
+             *
+             * This resets the original form,
+             * then puts it into Transaction mode.
+             */
+            openAddTransaction();
 
         },
         true
     );
 
 }
-}
+
+
+/* =========================================================
+   TRANSACTION ROW INTERCEPTION
+   ========================================================= */
+
+/*
+ * The transaction renderer in adjust.js creates
+ * its own click handler.
+ *
+ * Intercept the click before that handler so
+ * existing rows always use the unified form.
+ *
+ * This also leaves the swipe/delete mechanism
+ * alone.
+ */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const row =
+            event.target.closest(
+                ".transaction"
+            );
+
+
+        if (!row) {
+            return;
+        }
+
+
+        /*
+         * Don't interfere with the Delete button.
+         */
+        if (
+            event.target.closest(
+                ".transaction-delete"
+            )
+        ) {
+            return;
+        }
+
+
+        /*
+         * If the row is currently swiped open,
+         * let the original swipe behavior close it.
+         */
+        if (
+            row.classList.contains(
+                "swiped"
+            )
+        ) {
+            return;
+        }
+
+
+        /*
+         * Find the transaction represented
+         * by this row.
+         *
+         * The renderer doesn't currently put
+         * the ID into the HTML, so determine
+         * it by the row's position within the
+         * rendered transaction list.
+         */
+        const rows =
+            Array.from(
+                document.querySelectorAll(
+                    ".transaction"
+                )
+            );
+
+
+        const index =
+            rows.indexOf(row);
+
+
+        if (
+            index < 0 ||
+            index >= transactions.length
+        ) {
+            return;
+        }
+
+
+        /*
+         * The renderer uses sortDisplayTransactions()
+         * so we must use exactly the same order.
+         */
+        const displayed =
+            sortDisplayTransactions(
+                transactions
+            );
+
+
+        const transaction =
+            displayed[index];
+
+
+        if (!transaction) {
+            return;
+        }
+
+
+        /*
+         * Stop the old adjust.js/app.js row
+         * handler from opening the old form.
+         */
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+
+        if (
+            isAdjust(
+                transaction
+            )
+        ) {
+
+            openEditAdjust(
+                transaction.id
+            );
+
+        } else {
+
+            openEditTransaction(
+                transaction.id
+            );
+
+        }
+
+    },
+    true
+);
