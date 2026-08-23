@@ -285,18 +285,25 @@ function setUnifiedMode(mode) {
 
         }
 
-
-        if (commentField) {
-            commentField.style.display =
-                "none";
-        }
-
-
-        if (categoryField) {
-            categoryField.style.display =
-                "none";
-        }
-
+         
+         if (commentField) {
+         
+             commentField.style.visibility =
+                 "hidden";
+         
+             commentField.style.pointerEvents =
+                 "none";
+         }
+         
+         
+         if (categoryField) {
+         
+             categoryField.style.visibility =
+                 "hidden";
+         
+             categoryField.style.pointerEvents =
+                 "none";
+         }
 
         updateUnifiedAdjustColor();
 
@@ -339,18 +346,25 @@ function setUnifiedMode(mode) {
 
         }
 
-
-        if (commentField) {
-            commentField.style.display =
-                "";
-        }
-
-
-        if (categoryField) {
-            categoryField.style.display =
-                "";
-        }
-
+         
+         if (commentField) {
+         
+             commentField.style.visibility =
+                 "";
+         
+             commentField.style.pointerEvents =
+                 "";
+         }
+         
+         
+         if (categoryField) {
+         
+             categoryField.style.visibility =
+                 "";
+         
+             categoryField.style.pointerEvents =
+                 "";
+         }
 
         updateAmountColor();
 
