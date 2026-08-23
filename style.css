@@ -1756,3 +1756,13 @@ button {
     border-color: var(--button) !important;
     color: var(--button-text) !important;
 }
+
+/* =====================================================
+   UNIFIED FORM - CONSISTENT SIGN BUTTONS
+   ===================================================== */
+
+.unified-adjust-mode .sign-button.selected {
+    background: var(--button) !important;
+    border-color: var(--border) !important;
+    color: var(--button-text) !important;
+}
