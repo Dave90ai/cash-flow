@@ -1421,3 +1421,212 @@ button {
     flex: 1 1 auto;
     min-width: 0;
 }
+
+/* =====================================================
+   UNIFIED ADD / EDIT FORM
+   ===================================================== */
+
+
+/* ---------- BALANCE + ADD BUTTON ---------- */
+
+.balance-main-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+}
+
+
+.balance-main-row .balance {
+    flex: 0 0 auto;
+}
+
+
+/*
+ * The old floating button becomes a small
+ * inline + button beside the balance.
+ */
+.balance-main-row .add-button {
+    position: static;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    margin: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--button);
+    color: var(--button-text);
+
+    font-size: 25px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.25);
+
+    z-index: 5;
+}
+
+
+.balance-main-row .add-button:active {
+    transform: scale(.92);
+}
+
+
+/*
+ * The old Step 2 action bar is no longer used.
+ */
+.account-action-bar {
+    display: none !important;
+}
+
+
+/*
+ * The old dynamically-created Adjust modal
+ * is no longer used.
+ */
+#adjustModal {
+    display: none !important;
+}
+
+
+/* ---------- TYPE SELECTOR ---------- */
+
+.entry-type-selector {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 5px;
+
+    margin:
+        0
+        0
+        13px;
+        
+    padding: 3px;
+
+    border-radius: 11px;
+
+    background: var(--field);
+}
+
+
+.entry-type-button {
+    height: 34px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--secondary);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+}
+
+
+.entry-type-button.active {
+    background: var(--button);
+
+    color: var(--button-text);
+}
+
+
+/* ---------- ADJUST FORM ---------- */
+
+.unified-adjust-mode
+.amount-input {
+    color: var(--adjust);
+}
+
+
+.unified-adjust-mode
+.amount-input.adjust-form-amount {
+    color: var(--adjust) !important;
+}
+
+
+.unified-adjust-mode
+.sign-button.selected {
+    background: var(--adjust);
+
+    border-color: var(--adjust);
+
+    color: #000;
+}
+
+
+.unified-adjust-mode
+.amount-hint {
+    color: var(--secondary);
+}
+
+
+.adjust-form-hint {
+    max-width: 420px;
+
+    line-height: 1.35;
+}
+
+
+/* ---------- DESKTOP ---------- */
+
+@media (min-width: 760px) {
+
+    .balance-main-row .add-button {
+        width: 36px;
+        height: 36px;
+
+        font-size: 26px;
+    }
+
+}
+
+
+/* ---------- SMALL PHONES ---------- */
+
+@media (max-width: 380px) {
+
+    .balance-main-row {
+        gap: 7px;
+    }
+
+
+    .balance-main-row .add-button {
+        width: 31px;
+        height: 31px;
+
+        font-size: 23px;
+    }
+
+
+    .entry-type-button {
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+}
+
