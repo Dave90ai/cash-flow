@@ -1372,3 +1372,47 @@ button {
 .starting-balance-row {
     min-height: 29px !important;
 }
+
+/* =====================================================
+   ADJUST SIGN BUTTONS
+   ===================================================== */
+
+.adjust-amount-row {
+    display: flex;
+    align-items: stretch;
+    gap: 7px;
+    width: 100%;
+}
+
+.adjust-sign-buttons {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 5px;
+}
+
+.adjust-sign-buttons .sign-button {
+    width: 38px;
+    min-width: 38px;
+    height: 42px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: var(--field);
+    color: var(--text);
+
+    font-size: 21px;
+    font-weight: 600;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.adjust-sign-buttons .sign-button:active {
+    transform: scale(.96);
+}
+
+.adjust-balance-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
