@@ -1377,6 +1377,7 @@ button {
    ADJUST AMOUNT / SIGN BUTTONS
    ===================================================== */
 
+/* @Old Adjust@@
 .adjust-amount-row {
     display: flex;
     align-items: stretch;
@@ -1412,6 +1413,7 @@ button {
 
     -webkit-tap-highlight-color: transparent;
 }
+*/
 
 .adjust-sign-buttons .sign-button:active {
     transform: scale(.96);
