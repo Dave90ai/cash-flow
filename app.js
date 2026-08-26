@@ -546,56 +546,115 @@ function renderSuggestionList(
    BALANCE CALCULATION
    ========================================================= */
 
-function getChronologicalTransactions() {
+function sortCashFlowTransactions(list) {
+
+    return [...list].sort(function (a, b) {
+
+        const dateCompare =
+            a.date.localeCompare(b.date);
+
+        if (dateCompare !== 0) {
+            return dateCompare;
+        }
+
+        /*
+         * Calculation order within one date:
+         *
+         * Credit
+         * Debit
+         * Adjust
+         */
+
+        const aIsAdjust =
+            typeof isAdjust === "function" &&
+            isAdjust(a);
+
+        const bIsAdjust =
+            typeof isAdjust === "function" &&
+            isAdjust(b);
+
+        /*
+         * Adjust is always calculated last.
+         */
+        if (aIsAdjust && !bIsAdjust) {
+            return 1;
+        }
+
+        if (!aIsAdjust && bIsAdjust) {
+            return -1;
+        }
+
+        /*
+         * Credits before debits.
+         */
+        if (!aIsAdjust && !bIsAdjust) {
+
+            if (
+                Number(a.amount) >= 0 &&
+                Number(b.amount) < 0
+            ) {
+                return -1;
+            }
+
+            if (
+                Number(a.amount) < 0 &&
+                Number(b.amount) >= 0
+            ) {
+                return 1;
+            }
+        }
+
+        /*
+         * Preserve insertion order for
+         * transactions of the same type.
+         */
+        return Number(a.id) - Number(b.id);
+    });
+}
+
+
+function calculateTransactionBalances(list) {
 
     const sorted =
-        [...transactions].sort(
-            function (a, b) {
-
-                const dateCompare =
-                    a.date.localeCompare(b.date);
-
-                if (dateCompare !== 0) {
-                    return dateCompare;
-                }
-
-                /*
-                 * Credits before debits on the
-                 * same date.
-                 */
-                if (
-                    a.amount >= 0 &&
-                    b.amount < 0
-                ) {
-                    return -1;
-                }
-
-                if (
-                    a.amount < 0 &&
-                    b.amount >= 0
-                ) {
-                    return 1;
-                }
-
-                return a.id - b.id;
-            }
-        );
-
+        sortCashFlowTransactions(list);
 
     let balance = 0;
 
+    sorted.forEach(function (transaction) {
 
-    sorted.forEach(
-        function (transaction) {
+        if (
+            typeof isAdjust === "function" &&
+            isAdjust(transaction)
+        ) {
 
-            balance += transaction.amount;
+            balance =
+                Number(
+                    getAdjustBalance(
+                        transaction
+                    )
+                );
 
-            transaction.balance = balance;
+        } else {
+
+            balance +=
+                Number(
+                    transaction.amount
+                );
         }
-    );
 
+        transaction.balance =
+            balance;
+    });
 
     return sorted;
+}
+
+
+function getChronologicalTransactions() {
+
+    return calculateTransactionBalances(
+        transactions
+    );
 }
 
 
