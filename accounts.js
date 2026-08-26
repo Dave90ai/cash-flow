@@ -791,7 +791,6 @@ function createAccountCard(
 /* =========================================================
    MINI GRAPH
    ========================================================= */
-
 function createMiniGraph(
     account
 ) {
@@ -839,6 +838,7 @@ function createMiniGraph(
             ...values
         );
 
+
     const lowest =
         Math.min(
             0,
@@ -859,6 +859,7 @@ function createMiniGraph(
 
     const top =
         highest + padding;
+
 
     const bottom =
         lowest - padding;
@@ -886,23 +887,140 @@ function createMiniGraph(
     }
 
 
-    let path = "";
+    /*
+     * Build separate positive and negative
+     * paths, including a precise crossing
+     * point when the balance changes sign.
+     */
+    let positivePath = "";
+    let negativePath = "";
 
 
-    data.forEach(
-        (item, index) => {
+    for (
+        let i = 0;
+        i < data.length - 1;
+        i++
+    ) {
 
-            const command =
-                index === 0
-                    ? "M"
-                    : "L";
+        const v1 =
+            data[i].balance;
+
+        const v2 =
+            data[i + 1].balance;
 
 
-            path +=
-                `${command} ${x(index)} ${y(item.balance)} `;
+        const x1 =
+            x(i);
 
+        const y1 =
+            y(v1);
+
+        const x2 =
+            x(i + 1);
+
+        const y2 =
+            y(v2);
+
+
+        /*
+         * Both positive or zero.
+         */
+        if (
+            v1 >= 0 &&
+            v2 >= 0
+        ) {
+
+            positivePath +=
+                `M ${x1} ${y1} L ${x2} ${y2} `;
+
+            continue;
         }
-    );
+
+
+        /*
+         * Both negative.
+         */
+        if (
+            v1 < 0 &&
+            v2 < 0
+        ) {
+
+            negativePath +=
+                `M ${x1} ${y1} L ${x2} ${y2} `;
+
+            continue;
+        }
+
+
+        /*
+         * The line crosses zero.
+         */
+        const denominator =
+            Math.abs(v1) +
+            Math.abs(v2);
+
+
+        const fraction =
+            denominator === 0
+                ? 0
+                : Math.abs(v1) /
+                  denominator;
+
+
+        const crossX =
+            x1 +
+            (x2 - x1) *
+            fraction;
+
+
+        const crossY =
+            y(0);
+
+
+        if (v1 >= 0) {
+
+            positivePath +=
+                `M ${x1} ${y1} L ${crossX} ${crossY} `;
+
+            negativePath +=
+                `M ${crossX} ${crossY} L ${x2} ${y2} `;
+
+        } else {
+
+            negativePath +=
+                `M ${x1} ${y1} L ${crossX} ${crossY} `;
+
+            positivePath +=
+                `M ${crossX} ${crossY} L ${x2} ${y2} `;
+        }
+    }
+
+
+    /*
+     * Only one date.
+     */
+    if (data.length === 1) {
+
+        const px =
+            x(0);
+
+        const py =
+            y(data[0].balance);
+
+
+        if (
+            data[0].balance >= 0
+        ) {
+
+            positivePath =
+                `M ${px} ${py}`;
+
+        } else {
+
+            negativePath =
+                `M ${px} ${py}`;
+        }
+    }
 
 
     const zeroY =
@@ -926,13 +1044,18 @@ function createMiniGraph(
             </line>
 
             <path
-                d="${path}"
+                d="${positivePath}"
                 fill="none"
-                stroke="${
-                    balanceColor(
-                        values[values.length - 1]
-                    )
-                }"
+                stroke="#45d483"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+            </path>
+
+            <path
+                d="${negativePath}"
+                fill="none"
+                stroke="#ff453a"
                 stroke-width="2.5"
                 stroke-linecap="round"
                 stroke-linejoin="round">
@@ -944,7 +1067,6 @@ function createMiniGraph(
 
     return wrapper;
 }
-
 
 function balanceColor(value) {
 
