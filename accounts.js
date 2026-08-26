@@ -175,60 +175,23 @@ function getCurrentAccount() {
 
 function getAccountBalance(account) {
 
+    if (!account) {
+        return 0;
+    }
+
     const sorted =
-        [...account.transactions].sort(
-            function (a, b) {
-
-                const dateCompare =
-                    a.date.localeCompare(
-                        b.date
-                    );
-
-                if (dateCompare !== 0) {
-                    return dateCompare;
-                }
-
-
-                /*
-                 * Credits first.
-                 */
-
-                if (
-                    a.amount >= 0 &&
-                    b.amount < 0
-                ) {
-                    return -1;
-                }
-
-                if (
-                    a.amount < 0 &&
-                    b.amount >= 0
-                ) {
-                    return 1;
-                }
-
-
-                return a.id - b.id;
-            }
+        calculateTransactionBalances(
+            account.transactions
         );
 
+    if (!sorted.length) {
+        return 0;
+    }
 
-    let balance = 0;
-
-
-    sorted.forEach(
-        transaction => {
-
-            balance +=
-                transaction.amount;
-
-        }
-    );
-
-
-    return balance;
+    return sorted[
+        sorted.length - 1
+    ].balance;
 }
-
 
 function getAccountDailyBalances(account) {
 
