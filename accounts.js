@@ -457,7 +457,7 @@ function switchAccount(accountId) {
         allScreen.style.display = "none";
     }
 
-    renderAccountTabs();
+    
 
     saveAccountData();
 
@@ -570,7 +570,7 @@ function showAllAccounts() {
 
     setMainScreenVisible(false);
 
-    renderAccountTabs();
+    
 
     renderAllAccountsScreen();
 
@@ -594,6 +594,13 @@ function showAllAccounts() {
      * view as well.
      */
     window.scrollTo(0, 0);
+
+   if (
+          typeof updateUnifiedAddButton ===
+          "function"
+      ) {
+          updateUnifiedAddButton();
+        }
 }
 
 /* =========================================================
@@ -1177,7 +1184,7 @@ function saveAccountName() {
     closeEditAccount();
 
 
-    renderAccountTabs();
+    
 
 
     /*
@@ -1372,6 +1379,12 @@ renderTransactions =
 
         renderAccountTabs();
 
+       if (
+              typeof updateUnifiedAddButton ===
+             "function"
+           ) {
+                updateUnifiedAddButton();
+             }
         /*
          * After adding, editing or deleting
          * a transaction, return to the top.
