@@ -398,7 +398,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            closeTransactionForm();
+            closeUnifiedForm();
 
             return;
         }
@@ -414,7 +414,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            saveTransaction();
+            saveUnifiedForm();
 
             return;
         }
@@ -1968,20 +1968,6 @@ function setTheme(theme) {
  *
  * If it has id="addButton", connect it.
  */
-
-const addButton =
-    document.getElementById(
-        "addButton"
-    );
-
-
-if (addButton) {
-
-    addButton.addEventListener(
-        "click",
-        openAddTransaction
-    );
-}
 
 
 /* =========================================================
