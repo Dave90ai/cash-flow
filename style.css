@@ -424,6 +424,9 @@ button {
 
     inset: 0;
 
+    width: 100%;
+    height: 100dvh;
+
     background: rgba(0,0,0,.72);
 
     z-index: 100;
@@ -449,9 +452,13 @@ button {
         16px
         max(16px, env(safe-area-inset-bottom));
 
-    max-height: 90vh;
+    max-height: 90dvh;
+
+    min-height: 0;
 
     overflow-y: auto;
+
+    overscroll-behavior: contain;
 }
 
 .drag-bar {
@@ -655,8 +662,17 @@ button {
     gap: 8px;
 
     margin-top: 13px;
-}
 
+    position: sticky;
+    bottom: 0;
+
+    padding-top: 8px;
+    padding-bottom: 4px;
+
+    background: var(--card);
+
+    z-index: 5;
+}
 .cancel-button,
 .save-button {
     height: 45px;
