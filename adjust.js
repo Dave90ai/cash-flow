@@ -1333,7 +1333,11 @@ renderTransactions =
                             )}
                         </div>
 
-                        <div class="transaction-balance adjust-balance">
+                        <div class="${
+                            balance < 0
+                                ? "transaction-balance adjust-balance negative-balance"
+                                : "transaction-balance adjust-balance"
+                        }">
                             ${formatBalance(
                                 balance
                             )}
