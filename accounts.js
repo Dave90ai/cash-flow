@@ -195,82 +195,48 @@ function getAccountBalance(account) {
 
 function getAccountDailyBalances(account) {
 
+    if (!account) {
+        return [];
+    }
+
     const sorted =
-        [...account.transactions].sort(
-            function (a, b) {
-
-                const dateCompare =
-                    a.date.localeCompare(
-                        b.date
-                    );
-
-                if (dateCompare !== 0) {
-                    return dateCompare;
-                }
-
-
-                if (
-                    a.amount >= 0 &&
-                    b.amount < 0
-                ) {
-                    return -1;
-                }
-
-                if (
-                    a.amount < 0 &&
-                    b.amount >= 0
-                ) {
-                    return 1;
-                }
-
-
-                return a.id - b.id;
-            }
+        calculateTransactionBalances(
+            account.transactions
         );
 
-
     const daily = [];
-    let balance = 0;
+
     let currentDate = null;
 
+    sorted.forEach(function (transaction) {
 
-    sorted.forEach(
-        transaction => {
+        if (
+            currentDate !==
+            transaction.date
+        ) {
 
-            balance +=
-                transaction.amount;
+            currentDate =
+                transaction.date;
 
+            daily.push({
+                date:
+                    transaction.date,
 
-            if (
-                currentDate !==
-                transaction.date
-            ) {
+                balance:
+                    transaction.balance
+            });
 
-                currentDate =
-                    transaction.date;
+        } else {
 
-                daily.push({
-                    date:
-                        transaction.date,
-                    balance:
-                        balance
-                });
-
-            } else {
-
-                daily[
-                    daily.length - 1
-                ].balance =
-                    balance;
-            }
-
+            daily[
+                daily.length - 1
+            ].balance =
+                transaction.balance;
         }
-    );
-
+    });
 
     return daily;
 }
-
 
 /* =========================================================
    NUMBER FORMATTING
