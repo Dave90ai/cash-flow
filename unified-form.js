@@ -1,35 +1,28 @@
 /* =========================================================
    CASH FLOW - unified-form.js
 
-   Unified Add/Edit screen for:
+   One Add/Edit form for:
+
    - Transaction
    - Adjust
-
-   This file is loaded after:
-   app.js
-   accounts.js
-   adjust.js
-   starting-balance.js
-
-   It deliberately leaves the existing calculation,
-   account and Adjust architecture intact.
    ========================================================= */
 
+let unifiedMode =
+    "transaction";
 
-let unifiedMode = "transaction";
-let unifiedEditingId = null;
+let unifiedEditingId =
+    null;
 
 
 /* =========================================================
    HELPERS
    ========================================================= */
 
-function unifiedGetDate() {
+function unifiedToday() {
 
-    return document
-        .getElementById("dateInput")
-        .value;
-
+    return new Date()
+        .toISOString()
+        .split("T")[0];
 }
 
 
@@ -45,16 +38,6 @@ function unifiedGetAmount() {
             .replace(/,/g, "")
             .trim()
     );
-
-}
-
-
-function unifiedToday() {
-
-    return new Date()
-        .toISOString()
-        .split("T")[0];
-
 }
 
 
@@ -106,7 +89,6 @@ function createUnifiedTypeSelector() {
 
 
     selector.innerHTML = `
-
         <button
             type="button"
             class="entry-type-button active"
@@ -120,7 +102,6 @@ function createUnifiedTypeSelector() {
             id="adjustTypeButton">
             Adjust
         </button>
-
     `;
 
 
@@ -160,7 +141,6 @@ function createUnifiedTypeSelector() {
 
             }
         );
-
 }
 
 
@@ -191,7 +171,6 @@ function setUnifiedMode(mode) {
             "active",
             mode === "transaction"
         );
-
     }
 
 
@@ -201,21 +180,23 @@ function setUnifiedMode(mode) {
             "active",
             mode === "adjust"
         );
-
     }
 
+
+    const modal =
+        document.getElementById(
+            "transactionModal"
+        );
 
     const title =
         document.getElementById(
             "formTitle"
         );
 
-
     const amountLabel =
         document.querySelector(
             'label[for="amountInput"]'
         );
-
 
     const hint =
         document.getElementById(
@@ -224,28 +205,18 @@ function setUnifiedMode(mode) {
 
 
     const commentField =
-        document
-            .getElementById(
-                "commentInput"
-            )
-            ?.closest(
-                ".field"
-            );
+        document.getElementById(
+            "commentInput"
+        )?.closest(
+            ".field"
+        );
 
 
     const categoryField =
-        document
-            .getElementById(
-                "categoryInput"
-            )
-            ?.closest(
-                ".field"
-            );
-
-
-    const modal =
         document.getElementById(
-            "transactionModal"
+            "categoryInput"
+        )?.closest(
+            ".field"
         );
 
 
@@ -262,7 +233,6 @@ function setUnifiedMode(mode) {
                 unifiedEditingId === null
                     ? "Add Adjust"
                     : "Edit Adjust";
-
         }
 
 
@@ -270,7 +240,6 @@ function setUnifiedMode(mode) {
 
             amountLabel.textContent =
                 "Account balance";
-
         }
 
 
@@ -282,30 +251,35 @@ function setUnifiedMode(mode) {
             hint.classList.add(
                 "adjust-form-hint"
             );
-
         }
 
-         
-         if (commentField) {
-         
-             commentField.style.visibility =
-                 "hidden";
-         
-             commentField.style.pointerEvents =
-                 "none";
-         }
-         
-         
-         if (categoryField) {
-         
-             categoryField.style.visibility =
-                 "hidden";
-         
-             categoryField.style.pointerEvents =
-                 "none";
-         }
 
-        updateUnifiedAdjustColor();
+        /*
+         * Preserve the layout height.
+         *
+         * Do NOT use display:none.
+         */
+        if (commentField) {
+
+            commentField.style.visibility =
+                "hidden";
+
+            commentField.style.pointerEvents =
+                "none";
+        }
+
+
+        if (categoryField) {
+
+            categoryField.style.visibility =
+                "hidden";
+
+            categoryField.style.pointerEvents =
+                "none";
+        }
+
+
+        updateUnifiedAmountColor();
 
 
     } else {
@@ -321,7 +295,6 @@ function setUnifiedMode(mode) {
                 unifiedEditingId === null
                     ? "Add Transaction"
                     : "Edit Transaction";
-
         }
 
 
@@ -329,7 +302,6 @@ function setUnifiedMode(mode) {
 
             amountLabel.textContent =
                 "Amount";
-
         }
 
 
@@ -343,41 +315,39 @@ function setUnifiedMode(mode) {
                 transactionSign === -1
                     ? "Debit selected"
                     : "Credit selected";
-
         }
 
-         
-         if (commentField) {
-         
-             commentField.style.visibility =
-                 "";
-         
-             commentField.style.pointerEvents =
-                 "";
-         }
-         
-         
-         if (categoryField) {
-         
-             categoryField.style.visibility =
-                 "";
-         
-             categoryField.style.pointerEvents =
-                 "";
-         }
 
-        updateAmountColor();
+        if (commentField) {
 
+            commentField.style.visibility =
+                "";
+
+            commentField.style.pointerEvents =
+                "";
+        }
+
+
+        if (categoryField) {
+
+            categoryField.style.visibility =
+                "";
+
+            categoryField.style.pointerEvents =
+                "";
+        }
+
+
+        updateUnifiedAmountColor();
     }
-
 }
 
 
 /* =========================================================
-   ADJUST FORM COLOR
+   AMOUNT COLOR
    ========================================================= */
 
-function updateUnifiedAdjustColor() {
+function updateUnifiedAmountColor() {
 
     const input =
         document.getElementById(
@@ -391,11 +361,14 @@ function updateUnifiedAdjustColor() {
 
     input.classList.remove(
         "debit",
-        "credit"
+        "credit",
+        "adjust-form-amount"
     );
 
 
-    if (unifiedMode === "adjust") {
+    if (
+        unifiedMode === "adjust"
+    ) {
 
         input.classList.add(
             "adjust-form-amount"
@@ -403,155 +376,249 @@ function updateUnifiedAdjustColor() {
 
     } else {
 
-        input.classList.remove(
-            "adjust-form-amount"
+        input.classList.add(
+            transactionSign === -1
+                ? "debit"
+                : "credit"
         );
-
     }
-
 }
 
 
 /* =========================================================
-   OPEN ADD
+   OPEN NEW TRANSACTION
    ========================================================= */
 
-const originalOpenAddTransaction =
-    openAddTransaction;
+function openAddTransaction() {
+
+    unifiedEditingId =
+        null;
 
 
-openAddTransaction =
-    function () {
+    setUnifiedMode(
+        "transaction"
+    );
 
-        unifiedEditingId =
-            null;
 
-        /*
-         * The main + button always starts
-         * with a new normal transaction.
-         */
-        unifiedMode =
-            "transaction";
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Add Transaction";
 
-        originalOpenAddTransaction();
 
-        /*
-         * Force the unified form back to
-         * Transaction after the original
-         * form has opened.
-         */
-        setUnifiedMode(
-            "transaction"
+    document.getElementById(
+        "deleteEditButton"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "dateInput"
+    ).value =
+        unifiedToday();
+
+
+    amountInput.value =
+        "";
+
+    amountInput.placeholder =
+        "−0";
+
+    amountInput.classList.add(
+        "placeholder"
+    );
+
+
+    document.getElementById(
+        "commentInput"
+    ).value =
+        "";
+
+    document.getElementById(
+        "categoryInput"
+    ).value =
+        "";
+
+
+    setSign(-1);
+
+
+    const modal =
+        document.getElementById(
+            "transactionModal"
         );
 
-    };
+    modal.classList.add(
+        "open"
+    );
+
+
+    setUnifiedMode(
+        "transaction"
+    );
+
+
+    focusAmount();
+}
+
 
 /* =========================================================
    OPEN EDIT TRANSACTION
    ========================================================= */
 
-const originalOpenEditTransaction =
-    openEditTransaction;
+function openEditTransaction(id) {
+
+    closeAllSwipeRows();
 
 
-openEditTransaction =
-    function (id) {
-
-        const transaction =
-            transactions.find(
-                item =>
-                    item.id === id
-            );
-
-
-        if (!transaction) {
-            return;
-        }
-
-
-        unifiedEditingId =
-            id;
-
-
-        originalOpenEditTransaction(
-            id
+    const transaction =
+        transactions.find(
+            item =>
+                item.id === id
         );
 
 
-        setUnifiedMode(
-            "transaction"
+    if (!transaction) {
+        return;
+    }
+
+
+    if (
+        isAdjust(transaction)
+    ) {
+        openEditAdjust(id);
+        return;
+    }
+
+
+    unifiedEditingId =
+        id;
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Edit Transaction";
+
+
+    document.getElementById(
+        "deleteEditButton"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "dateInput"
+    ).value =
+        transaction.date;
+
+
+    amountInput.value =
+        Math.abs(
+            transaction.amount
+        ).toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 2
+            }
         );
 
-    };
+
+    amountInput.classList.remove(
+        "placeholder"
+    );
+
+
+    document.getElementById(
+        "commentInput"
+    ).value =
+        transaction.comment || "";
+
+
+    document.getElementById(
+        "categoryInput"
+    ).value =
+        transaction.category || "";
+
+
+    setSign(
+        transaction.amount < 0
+            ? -1
+            : 1
+    );
+
+
+    const modal =
+        document.getElementById(
+            "transactionModal"
+        );
+
+    modal.classList.add(
+        "open"
+    );
+
+
+    setUnifiedMode(
+        "transaction"
+    );
+
+
+    focusAmount();
+}
 
 
 /* =========================================================
    OPEN EDIT ADJUST
-
-   adjust.js calls this function when an Adjust row
-   is selected.
    ========================================================= */
 
-openEditAdjust =
-    function (id) {
+function openEditAdjust(id) {
 
-        const transaction =
-            transactions.find(
-                item =>
-                    item.id === id
-            );
-
-
-        if (
-            !transaction ||
-            !isAdjust(transaction)
-        ) {
-            return;
-        }
+    const transaction =
+        transactions.find(
+            item =>
+                item.id === id
+        );
 
 
-        unifiedEditingId =
-            id;
+    if (
+        !transaction ||
+        !isAdjust(transaction)
+    ) {
+        return;
+    }
 
 
-        /*
-         * We intentionally don't call the old
-         * Adjust modal.
-         *
-         * We use the normal transaction modal.
-         */
-
-        const title =
-            document.getElementById(
-                "formTitle"
-            );
-
-        if (title) {
-
-            title.textContent =
-                "Edit Adjust";
-
-        }
+    unifiedEditingId =
+        id;
 
 
-        document.getElementById(
-            "deleteEditButton"
-        ).style.display =
-            "block";
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Edit Adjust";
 
 
-        document.getElementById(
-            "dateInput"
-        ).value =
-            transaction.date;
+    document.getElementById(
+        "deleteEditButton"
+    ).style.display =
+        "block";
 
 
-        amountInput.value =
-            Math.abs(
-                getAdjustBalance(
-                    transaction
-                )
-            ).toLocaleString(
+    document.getElementById(
+        "dateInput"
+    ).value =
+        transaction.date;
+
+
+    const balance =
+        getAdjustBalance(
+            transaction
+        );
+
+
+    amountInput.value =
+        Math.abs(balance)
+            .toLocaleString(
                 "en-US",
                 {
                     maximumFractionDigits: 2
@@ -559,167 +626,144 @@ openEditAdjust =
             );
 
 
-        amountInput.classList.remove(
-            "placeholder"
-        );
+    amountInput.classList.remove(
+        "placeholder"
+    );
 
 
-        setSign(
-            getAdjustBalance(
-                transaction
-            ) < 0
-                ? -1
-                : 1
-        );
+    document.getElementById(
+        "commentInput"
+    ).value =
+        "";
+
+    document.getElementById(
+        "categoryInput"
+    ).value =
+        "";
 
 
-        /*
-         * Empty the normal transaction fields.
-         */
+    setSign(
+        balance < 0
+            ? -1
+            : 1
+    );
+
+
+    const modal =
         document.getElementById(
-            "commentInput"
-        ).value = "";
-
-
-        document.getElementById(
-            "categoryInput"
-        ).value = "";
-
-
-        const modal =
-            document.getElementById(
-                "transactionModal"
-            );
-
-
-        modal.classList.add(
-            "open"
+            "transactionModal"
         );
 
+    modal.classList.add(
+        "open"
+    );
 
-        setUnifiedMode(
-            "adjust"
-        );
+
+    setUnifiedMode(
+        "adjust"
+    );
 
 
-        setTimeout(
-            function () {
-
-                amountInput.focus();
-                amountInput.select();
-
-            },
-            100
-        );
-
-    };
+    focusAmount();
+}
 
 
 /* =========================================================
    ADD ADJUST
-
-   Kept as a compatibility function in case another part
-   of the application calls openAddAdjust().
    ========================================================= */
 
-openAddAdjust =
-    function () {
+function openAddAdjust() {
 
-        unifiedEditingId =
-            null;
-
-
-        const today =
-            unifiedToday();
+    unifiedEditingId =
+        null;
 
 
-        document.getElementById(
-            "dateInput"
-        ).value =
-            today;
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Add Adjust";
 
 
-        const balance =
-            getAccountBalance(
-                getCurrentAccount()
+    document.getElementById(
+        "deleteEditButton"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "dateInput"
+    ).value =
+        unifiedToday();
+
+
+    const balance =
+        getAccountBalance(
+            getCurrentAccount()
+        );
+
+
+    amountInput.value =
+        Math.abs(balance)
+            .toLocaleString(
+                "en-US",
+                {
+                    maximumFractionDigits: 2
+                }
             );
 
 
-        amountInput.value =
-            Math.abs(balance)
-                .toLocaleString(
-                    "en-US",
-                    {
-                        maximumFractionDigits: 2
-                    }
-                );
+    amountInput.classList.remove(
+        "placeholder"
+    );
 
 
-        amountInput.classList.remove(
-            "placeholder"
-        );
+    document.getElementById(
+        "commentInput"
+    ).value =
+        "";
+
+    document.getElementById(
+        "categoryInput"
+    ).value =
+        "";
 
 
+    setSign(
+        balance < 0
+            ? -1
+            : 1
+    );
+
+
+    const modal =
         document.getElementById(
-            "commentInput"
-        ).value = "";
-
-
-        document.getElementById(
-            "categoryInput"
-        ).value = "";
-
-
-        document.getElementById(
-            "deleteEditButton"
-        ).style.display =
-            "none";
-
-
-        setSign(
-            balance < 0
-                ? -1
-                : 1
+            "transactionModal"
         );
 
-
-        const modal =
-            document.getElementById(
-                "transactionModal"
-            );
+    modal.classList.add(
+        "open"
+    );
 
 
-        modal.classList.add(
-            "open"
-        );
+    setUnifiedMode(
+        "adjust"
+    );
 
 
-        setUnifiedMode(
-            "adjust"
-        );
-
-
-        setTimeout(
-            function () {
-
-                amountInput.focus();
-                amountInput.select();
-
-            },
-            100
-        );
-
-    };
+    focusAmount();
+}
 
 
 /* =========================================================
-   UNIFIED SAVE
+   SAVE
    ========================================================= */
 
 function saveUnifiedForm() {
 
     const date =
-        unifiedGetDate();
+        document.getElementById(
+            "dateInput"
+        ).value;
 
 
     const amount =
@@ -728,46 +772,43 @@ function saveUnifiedForm() {
 
     if (!date) {
 
-        document
-            .getElementById(
-                "dateInput"
-            )
-            .focus();
+        document.getElementById(
+            "dateInput"
+        ).focus();
 
         return;
-
     }
 
 
     if (
-        !Number.isFinite(amount) ||
-        amount < 0
+        !Number.isFinite(amount)
     ) {
 
         amountInput.focus();
 
         return;
-
     }
 
 
-    /*
-     * ADJUST
-     */
+    /* =====================================================
+       ADJUST
+       ===================================================== */
 
     if (
-        unifiedMode ===
-        "adjust"
+        unifiedMode === "adjust"
     ) {
 
-        /*
-         * Zero is a valid account balance.
-         */
         const balance =
             amount *
             transactionSign;
 
 
+        /*
+         * One Adjust per date.
+         *
+         * If adding another Adjust to
+         * an existing date, update it.
+         */
         const existing =
             transactions.find(
                 transaction =>
@@ -781,11 +822,6 @@ function saveUnifiedForm() {
             );
 
 
-        /*
-         * Adding an Adjust to a date that
-         * already has one updates the
-         * existing Adjust.
-         */
         if (
             existing &&
             unifiedEditingId === null
@@ -854,9 +890,7 @@ function saveUnifiedForm() {
 
                 transaction.category =
                     "";
-
             }
-
         }
 
 
@@ -870,41 +904,31 @@ function saveUnifiedForm() {
         );
 
         return;
-
     }
 
 
-    /*
-     * NORMAL TRANSACTION
-     */
+    /* =====================================================
+       NORMAL TRANSACTION
+       ===================================================== */
 
-    if (
-        amount <= 0
-    ) {
+    if (amount <= 0) {
 
         amountInput.focus();
 
         return;
-
     }
 
 
     const comment =
-        document
-            .getElementById(
-                "commentInput"
-            )
-            .value
-            .trim();
+        document.getElementById(
+            "commentInput"
+        ).value.trim();
 
 
     const category =
-        document
-            .getElementById(
-                "categoryInput"
-            )
-            .value
-            .trim();
+        document.getElementById(
+            "categoryInput"
+        ).value.trim();
 
 
     const signedAmount =
@@ -932,7 +956,6 @@ function saveUnifiedForm() {
 
             category:
                 category
-
         });
 
 
@@ -949,9 +972,9 @@ function saveUnifiedForm() {
         if (transaction) {
 
             /*
-             * If an Adjust was changed back
-             * to Transaction, remove its
-             * Adjust-specific fields.
+             * If an Adjust was converted
+             * to Transaction, remove
+             * its Adjust-specific fields.
              */
             delete transaction.type;
             delete transaction.adjustBalance;
@@ -968,9 +991,7 @@ function saveUnifiedForm() {
 
             transaction.category =
                 category;
-
         }
-
     }
 
 
@@ -982,7 +1003,6 @@ function saveUnifiedForm() {
         0,
         0
     );
-
 }
 
 
@@ -1007,74 +1027,72 @@ function closeUnifiedForm() {
         modal.classList.remove(
             "unified-adjust-mode"
         );
-
     }
 
 
     unifiedEditingId =
         null;
-
-    editingId =
-        null;
-
 }
 
 
 /* =========================================================
-   SAVE BUTTON
-
-   Use capture phase so the original app.js save handler
-   doesn't save a second time.
+   DELETE FROM EDIT FORM
    ========================================================= */
 
-document.addEventListener(
-    "click",
-    function (event) {
+function deleteUnifiedEditing() {
 
-        const saveButton =
-            event.target.closest(
-                "#saveButton"
-            );
-
-
-        if (!saveButton) {
-            return;
-        }
+    if (
+        unifiedEditingId === null
+    ) {
+        return;
+    }
 
 
-        const modal =
-            document.getElementById(
-                "transactionModal"
-            );
+    const message =
+        unifiedMode === "adjust"
+            ? "Delete this Adjust?"
+            : "Delete this transaction?";
 
 
-        if (
-            !modal ||
-            !modal.classList.contains(
-                "open"
-            )
-        ) {
-            return;
-        }
+    if (
+        !confirm(message)
+    ) {
+        return;
+    }
 
 
-        event.preventDefault();
-        event.stopImmediatePropagation();
+    transactions =
+        transactions.filter(
+            transaction =>
+                transaction.id !==
+                unifiedEditingId
+        );
 
 
-        saveUnifiedForm();
+    closeUnifiedForm();
 
-    },
-    true
-);
+    renderTransactions();
+
+    window.scrollTo(
+        0,
+        0
+    );
+}
 
 
 /* =========================================================
-   DELETE
-
-   For Adjust, use Adjust deletion.
-   For normal transactions, use the existing deletion.
+   BUTTONS
    ========================================================= */
+
+document
+    .getElementById(
+        "saveButton"
+    )
+    .addEventListener(
+        "click",
+        saveUnifiedForm
+    );
+
 
 document
     .getElementById(
@@ -1082,61 +1100,9 @@ document
     )
     .addEventListener(
         "click",
-        function (event) {
-
-            if (
-                unifiedMode !==
-                "adjust"
-            ) {
-                return;
-            }
-
-
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-
-            if (
-                unifiedEditingId ===
-                null
-            ) {
-                return;
-            }
-
-
-            if (
-                !confirm(
-                    "Delete this Adjust?"
-                )
-            ) {
-                return;
-            }
-
-
-            transactions =
-                transactions.filter(
-                    transaction =>
-                        transaction.id !==
-                        unifiedEditingId
-                );
-
-
-            closeUnifiedForm();
-
-            renderTransactions();
-
-            window.scrollTo(
-                0,
-                0
-            );
-
-        }
+        deleteUnifiedEditing
     );
 
-
-/* =========================================================
-   CLOSE BUTTON / CANCEL
-   ========================================================= */
 
 document
     .getElementById(
@@ -1144,12 +1110,7 @@ document
     )
     .addEventListener(
         "click",
-        function () {
-
-            unifiedEditingId =
-                null;
-
-        }
+        closeUnifiedForm
     );
 
 
@@ -1159,19 +1120,12 @@ document
     )
     .addEventListener(
         "click",
-        function () {
-
-            unifiedEditingId =
-                null;
-
-        }
+        closeUnifiedForm
     );
 
 
 /* =========================================================
-   ENTER KEY
-
-   Intercept before app.js's old Enter handler.
+   KEYBOARD
    ========================================================= */
 
 document.addEventListener(
@@ -1195,106 +1149,58 @@ document.addEventListener(
 
 
         if (
-            event.key !==
-            "Enter"
+            event.key ===
+            "Escape"
         ) {
+
+            event.preventDefault();
+
+            closeUnifiedForm();
+
             return;
         }
 
 
-        event.preventDefault();
-        event.stopImmediatePropagation();
+        if (
+            event.key ===
+            "Enter"
+        ) {
 
+            /*
+             * Enter saves the form.
+             */
+            event.preventDefault();
 
-        saveUnifiedForm();
-
-    },
-    true
+            saveUnifiedForm();
+        }
+    }
 );
 
 
 /* =========================================================
-   MAIN SCREEN PLUS BUTTON
+   MAIN +
    ========================================================= */
 
-function updateUnifiedAddButton() {
-
-    const button =
-        document.getElementById(
-            "addButton"
-        );
-
-
-    if (!button) {
-        return;
-    }
-
-
-    button.style.display =
-        allAccountsMode
-            ? "none"
-            : "flex";
-
-}
-
-
-/*
- * Hide the old Step 2 action bar and
- * the old dynamically-created Adjust modal.
- */
-
-const oldActionBar =
+const addButton =
     document.getElementById(
-        "accountActionBar"
+        "addButton"
     );
 
-if (oldActionBar) {
-    oldActionBar.remove();
-}
 
+if (addButton) {
 
-const oldAdjustModal =
-    document.getElementById(
-        "adjustModal"
+    addButton.addEventListener(
+        "click",
+        function () {
+
+            /*
+             * Always a NEW transaction.
+             */
+            openAddTransaction();
+
+        }
     );
-
-if (oldAdjustModal) {
-    oldAdjustModal.remove();
 }
-
-
-/* =========================================================
-   ACCOUNT NAVIGATION HOOKS
-   ========================================================= */
-
-const unifiedOriginalSwitchAccount =
-    switchAccount;
-
-
-switchAccount =
-    function (accountId) {
-
-        unifiedOriginalSwitchAccount(
-            accountId
-        );
-
-        updateUnifiedAddButton();
-
-    };
-
-
-const unifiedOriginalShowAllAccounts =
-    showAllAccounts;
-
-
-showAllAccounts =
-    function () {
-
-        unifiedOriginalShowAllAccounts();
-
-        updateUnifiedAddButton();
-
-    };
 
 
 /* =========================================================
@@ -1303,207 +1209,6 @@ showAllAccounts =
 
 createUnifiedTypeSelector();
 
-updateUnifiedAddButton();
-
 setUnifiedMode(
     "transaction"
-);
-
-
-/* =========================================================
-   MAIN + BUTTON
-   ========================================================= */
-
-/*
- * IMPORTANT:
- *
- * app.js attached its click handler before
- * unified-form.js replaced openAddTransaction().
- *
- * Therefore simply replacing the function is
- * not enough.
- *
- * We intercept the click during the capture
- * phase and explicitly call the unified version.
- */
-
-const mainAddButton =
-    document.getElementById(
-        "addButton"
-    );
-
-
-if (mainAddButton) {
-
-    mainAddButton.addEventListener(
-        "click",
-        function (event) {
-
-            /*
-             * Prevent app.js's original
-             * Add Transaction handler.
-             */
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-
-            /*
-             * Always start a NEW transaction.
-             *
-             * It does not matter whether the
-             * previous operation was Adjust.
-             */
-            unifiedEditingId =
-                null;
-
-            unifiedMode =
-                "transaction";
-
-
-            /*
-             * Call our wrapped function.
-             *
-             * This resets the original form,
-             * then puts it into Transaction mode.
-             */
-            openAddTransaction();
-
-        },
-        true
-    );
-
-}
-
-
-/* =========================================================
-   TRANSACTION ROW INTERCEPTION
-   ========================================================= */
-
-/*
- * The transaction renderer in adjust.js creates
- * its own click handler.
- *
- * Intercept the click before that handler so
- * existing rows always use the unified form.
- *
- * This also leaves the swipe/delete mechanism
- * alone.
- */
-
-document.addEventListener(
-    "click",
-    function (event) {
-
-        const row =
-            event.target.closest(
-                ".transaction"
-            );
-
-
-        if (!row) {
-            return;
-        }
-
-
-        /*
-         * Don't interfere with the Delete button.
-         */
-        if (
-            event.target.closest(
-                ".transaction-delete"
-            )
-        ) {
-            return;
-        }
-
-
-        /*
-         * If the row is currently swiped open,
-         * let the original swipe behavior close it.
-         */
-        if (
-            row.classList.contains(
-                "swiped"
-            )
-        ) {
-            return;
-        }
-
-
-        /*
-         * Find the transaction represented
-         * by this row.
-         *
-         * The renderer doesn't currently put
-         * the ID into the HTML, so determine
-         * it by the row's position within the
-         * rendered transaction list.
-         */
-        const rows =
-            Array.from(
-                document.querySelectorAll(
-                    ".transaction"
-                )
-            );
-
-
-        const index =
-            rows.indexOf(row);
-
-
-        if (
-            index < 0 ||
-            index >= transactions.length
-        ) {
-            return;
-        }
-
-
-        /*
-         * The renderer uses sortDisplayTransactions()
-         * so we must use exactly the same order.
-         */
-        const displayed =
-            sortDisplayTransactions(
-                transactions
-            );
-
-
-        const transaction =
-            displayed[index];
-
-
-        if (!transaction) {
-            return;
-        }
-
-
-        /*
-         * Stop the old adjust.js/app.js row
-         * handler from opening the old form.
-         */
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-
-        if (
-            isAdjust(
-                transaction
-            )
-        ) {
-
-            openEditAdjust(
-                transaction.id
-            );
-
-        } else {
-
-            openEditTransaction(
-                transaction.id
-            );
-
-        }
-
-    },
-    true
 );
