@@ -666,17 +666,27 @@ function renderTransactions() {
             "transactionList"
         );
 
-    if (!list) return;
+    if (!list) {
+        return;
+    }
 
     list.innerHTML = "";
-
 
     const chronological =
         getChronologicalTransactions();
 
-
     /*
-     * Newest first in the transaction list.
+     * Calculation order is:
+     *
+     * Credit
+     * Debit
+     * Adjust
+     *
+     * Display order is the reverse:
+     *
+     * Adjust
+     * Debit
+     * Credit
      */
     const display =
         [...chronological].reverse();
@@ -686,14 +696,22 @@ function renderTransactions() {
         function (transaction) {
 
             const wrapper =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             wrapper.className =
                 "transaction-wrap";
 
 
+            /* =================================================
+               DELETE BUTTON
+               ================================================= */
+
             const deleteButton =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
 
             deleteButton.className =
                 "transaction-delete";
@@ -702,81 +720,169 @@ function renderTransactions() {
                 "Delete";
 
 
-       //     deleteButton.addEventListener(
-       //         "click",
-       //         function (event) {
-       //
-       //             event.stopPropagation();
-       //
-       //             deleteTransaction(
-       //                 transaction.id
-       //             );
-       //         }
-       //     );
-           function deleteThisTransaction(event) {
-            
+            function deleteThisTransaction(
+                event
+            ) {
+
                 event.preventDefault();
                 event.stopPropagation();
-            
-                deleteTransaction(transaction.id);
+
+                deleteTransaction(
+                    transaction.id
+                );
             }
-            
+
+
             deleteButton.addEventListener(
                 "click",
                 deleteThisTransaction
             );
-            
+
             deleteButton.addEventListener(
                 "touchend",
                 deleteThisTransaction,
-                { passive: false }
-            ); 
+                {
+                    passive: false
+                }
+            );
 
+
+            /* =================================================
+               TRANSACTION ROW
+               ================================================= */
 
             const row =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             row.className =
                 "transaction";
 
 
-            const amountClass =
-                transaction.amount < 0
-                    ? "transaction-amount debit"
-                    : "transaction-amount credit";
+            /*
+             * Important:
+             *
+             * The ID is now stored directly
+             * on the row.
+             *
+             * This eliminates the old
+             * "find the row by its position"
+             * logic from unified-form.js.
+             */
+            row.dataset.transactionId =
+                transaction.id;
 
 
-            const balanceClass =
-                transaction.balance < 0
-                    ? "transaction-balance negative-balance"
-                    : "transaction-balance";
+            const balance =
+                transaction.balance;
 
 
-            row.innerHTML = `
-                <div class="transaction-date">
-                    ${formatDate(transaction.date)}
-                </div>
+            /* =================================================
+               ADJUST
+               ================================================= */
 
-                <div class="transaction-comment">
-                    ${escapeHtml(transaction.comment)}
-                </div>
+            if (
+                isAdjust(transaction)
+            ) {
 
-                <div class="${amountClass}">
-                    ${formatAmount(transaction.amount)}
-                </div>
+                row.classList.add(
+                    "adjust-transaction"
+                );
 
-                <div class="${balanceClass}">
-                    ${formatBalance(transaction.balance)}
-                </div>
-            `;
 
+                const balanceClass =
+                    balance < 0
+                        ? "transaction-balance negative-balance"
+                        : "transaction-balance";
+
+
+                row.innerHTML = `
+                    <div class="transaction-date">
+                        ${formatDate(
+                            transaction.date
+                        )}
+                    </div>
+
+                    <div class="transaction-comment adjust-label">
+                        <span class="adjust-icon">↳</span>
+                        ADJUST
+                    </div>
+
+                    <div class="transaction-amount adjust-amount">
+                        ${formatBalance(
+                            getAdjustBalance(
+                                transaction
+                            )
+                        )}
+                    </div>
+
+                    <div class="${balanceClass}">
+                        ${formatBalance(
+                            balance
+                        )}
+                    </div>
+                `;
+
+
+            } else {
+
+                /* =============================================
+                   NORMAL TRANSACTION
+                   ============================================= */
+
+                const amountClass =
+                    transaction.amount < 0
+                        ? "transaction-amount debit"
+                        : "transaction-amount credit";
+
+
+                const balanceClass =
+                    balance < 0
+                        ? "transaction-balance negative-balance"
+                        : "transaction-balance";
+
+
+                row.innerHTML = `
+                    <div class="transaction-date">
+                        ${formatDate(
+                            transaction.date
+                        )}
+                    </div>
+
+                    <div class="transaction-comment">
+                        ${escapeHtml(
+                            transaction.comment
+                        )}
+                    </div>
+
+                    <div class="${amountClass}">
+                        ${formatAmount(
+                            transaction.amount
+                        )}
+                    </div>
+
+                    <div class="${balanceClass}">
+                        ${formatBalance(
+                            balance
+                        )}
+                    </div>
+                `;
+            }
+
+
+            /* =================================================
+               EDIT
+               ================================================= */
 
             row.addEventListener(
                 "click",
                 function () {
 
                     if (
-                        row.classList.contains("swiped")
+                        row.classList.contains(
+                            "swiped"
+                        )
                     ) {
 
                         closeSwipe(row);
@@ -784,9 +890,22 @@ function renderTransactions() {
                         return;
                     }
 
-                    openEditTransaction(
-                        transaction.id
-                    );
+
+                    if (
+                        isAdjust(transaction)
+                    ) {
+
+                        openEditAdjust(
+                            transaction.id
+                        );
+
+                    } else {
+
+                        openEditTransaction(
+                            transaction.id
+                        );
+                    }
+
                 }
             );
 
@@ -794,20 +913,28 @@ function renderTransactions() {
             addSwipeSupport(row);
 
 
-            wrapper.appendChild(deleteButton);
+            wrapper.appendChild(
+                deleteButton
+            );
 
-            wrapper.appendChild(row);
+            wrapper.appendChild(
+                row
+            );
 
-            list.appendChild(wrapper);
+            list.appendChild(
+                wrapper
+            );
+
         }
     );
 
 
     updateCurrentBalance();
 
-    updateGraph(chronological);
+    updateGraph(
+        chronological
+    );
 }
-
 
 /* =========================================================
    BALANCE HEADER
@@ -1508,377 +1635,6 @@ function getDateIndexes(length) {
     return [
         ...new Set(result)
     ];
-}
-
-
-/* =========================================================
-   ADD TRANSACTION
-   ========================================================= */
-
-function openAddTransaction() {
-
-    editingId = null;
-
-
-    const title =
-        document.getElementById(
-            "formTitle"
-        );
-
-    if (title) {
-        title.textContent =
-            "Add Transaction";
-    }
-
-
-    const deleteButton =
-        document.getElementById(
-            "deleteEditButton"
-        );
-
-    if (deleteButton) {
-        deleteButton.style.display =
-            "none";
-    }
-
-
-    const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
-
-
-    document.getElementById(
-        "dateInput"
-    ).value = today;
-
-
-    amountInput.value = "";
-
-    amountInput.placeholder = "−0";
-
-    amountInput.classList.add(
-        "placeholder"
-    );
-
-
-    document.getElementById(
-        "commentInput"
-    ).value = "";
-
-
-    document.getElementById(
-        "categoryInput"
-    ).value = "";
-
-
-    setSign(-1);
-
-
-    if (modal) {
-
-        modal.classList.add("open");
-    }
-
-
-   focusAmount();
- //   setTimeout(
- //       function () {
- //           amountInput.focus();
- //       },
- //       100
- //   );
-}
-
-
-/* =========================================================
-   EDIT TRANSACTION
-   ========================================================= */
-
-function openEditTransaction(id) {
-
-    closeAllSwipeRows();
-
-
-    const transaction =
-        transactions.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!transaction) {
-        return;
-    }
-
-
-    editingId = id;
-
-
-    document.getElementById(
-        "formTitle"
-    ).textContent =
-        "Edit Transaction";
-
-
-    document.getElementById(
-        "deleteEditButton"
-    ).style.display =
-        "block";
-
-
-    document.getElementById(
-        "dateInput"
-    ).value =
-        transaction.date;
-
-
-    amountInput.value =
-        Math.abs(
-            transaction.amount
-        ).toLocaleString(
-            "en-US",
-            {
-                maximumFractionDigits: 2
-            }
-        );
-
-
-    amountInput.classList.remove(
-        "placeholder"
-    );
-
-
-    document.getElementById(
-        "commentInput"
-    ).value =
-        transaction.comment || "";
-
-
-    document.getElementById(
-        "categoryInput"
-    ).value =
-        transaction.category || "";
-
-
-    setSign(
-        transaction.amount < 0
-            ? -1
-            : 1
-    );
-
-
-    if (modal) {
-        modal.classList.add("open");
-    }
-
-   focusAmount();
-}
-
-
-/* =========================================================
-   CLOSE TRANSACTION WINDOW
-   ========================================================= */
-
-function closeTransactionForm() {
-
-    if (modal) {
-        modal.classList.remove("open");
-    }
-
-    editingId = null;
-}
-
-
-document
-    .getElementById("closeButton")
-    .addEventListener(
-        "click",
-        closeTransactionForm
-    );
-
-
-document
-    .getElementById("cancelButton")
-    .addEventListener(
-        "click",
-        closeTransactionForm
-    );
-
-
-/* =========================================================
-   SAVE TRANSACTION
-   ========================================================= */
-
-document
-    .getElementById("saveButton")
-    .addEventListener(
-        "click",
-        saveTransaction
-    );
-
-
-function saveTransaction() {
-
-    const date =
-        document.getElementById(
-            "dateInput"
-        ).value;
-
-
-    const amount =
-        Number(
-            amountInput.value
-                .replace(/,/g, "")
-        );
-
-
-    const comment =
-        document.getElementById(
-            "commentInput"
-        ).value.trim();
-
-
-    const category =
-        document.getElementById(
-            "categoryInput"
-        ).value.trim();
-
-
-    if (!date) {
-
-        document.getElementById(
-            "dateInput"
-        ).focus();
-
-        return;
-    }
-
-
-    if (
-        !Number.isFinite(amount) ||
-        amount <= 0
-    ) {
-
-        amountInput.focus();
-
-        return;
-    }
-
-
-    const signedAmount =
-        amount * transactionSign;
-
-
-    if (editingId === null) {
-
-        transactions.push({
-
-            id: nextId++,
-
-            date: date,
-
-            amount: signedAmount,
-
-            comment: comment,
-
-            category: category
-        });
-
-    } else {
-
-        const transaction =
-            transactions.find(
-                item =>
-                    item.id === editingId
-            );
-
-
-        if (transaction) {
-
-            transaction.date = date;
-
-            transaction.amount =
-                signedAmount;
-
-            transaction.comment =
-                comment;
-
-            transaction.category =
-                category;
-        }
-    }
-
-
-    closeTransactionForm();
-
-    renderTransactions();
-}
-
-
-/* =========================================================
-   DELETE
-   ========================================================= */
-
-function deleteTransaction(id) {
-
-    if (
-        !confirm(
-            "Delete this transaction?"
-        )
-    ) {
-
-        closeAllSwipeRows();
-
-        return;
-    }
-
-
-    transactions =
-        transactions.filter(
-            item =>
-                item.id !== id
-        );
-
-
-    renderTransactions();
-}
-
-
-document
-    .getElementById("deleteEditButton")
-    .addEventListener(
-        "click",
-        deleteEditingTransaction
-    );
-
-
-function deleteEditingTransaction() {
-
-    if (editingId === null) {
-        return;
-    }
-
-
-    if (
-        !confirm(
-            "Delete this transaction?"
-        )
-    ) {
-        return;
-    }
-
-
-    transactions =
-        transactions.filter(
-            item =>
-                item.id !== editingId
-        );
-
-
-    closeTransactionForm();
-
-    renderTransactions();
 }
 
 
