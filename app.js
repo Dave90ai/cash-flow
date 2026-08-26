@@ -573,9 +573,6 @@ function sortCashFlowTransactions(list) {
             typeof isAdjust === "function" &&
             isAdjust(b);
 
-        /*
-         * Adjust is always calculated last.
-         */
         if (aIsAdjust && !bIsAdjust) {
             return 1;
         }
