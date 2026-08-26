@@ -887,6 +887,249 @@ function createMiniGraph(
     }
 
 
+    let positivePath = "";
+    let negativePath = "";
+
+
+    for (
+        let i = 0;
+        i < data.length - 1;
+        i++
+    ) {
+
+        const v1 =
+            data[i].balance;
+
+        const v2 =
+            data[i + 1].balance;
+
+
+        const x1 =
+            x(i);
+
+        const y1 =
+            y(v1);
+
+        const x2 =
+            x(i + 1);
+
+        const y2 =
+            y(v2);
+
+
+        /*
+         * Entire segment is positive
+         * or exactly zero.
+         */
+        if (
+            v1 >= 0 &&
+            v2 >= 0
+        ) {
+
+            positivePath +=
+                `M ${x1} ${y1} L ${x2} ${y2} `;
+
+            continue;
+        }
+
+
+        /*
+         * Entire segment is negative.
+         */
+        if (
+            v1 < 0 &&
+            v2 < 0
+        ) {
+
+            negativePath +=
+                `M ${x1} ${y1} L ${x2} ${y2} `;
+
+            continue;
+        }
+
+
+        /*
+         * Segment crosses zero.
+         */
+        const denominator =
+            Math.abs(v1) +
+            Math.abs(v2);
+
+
+        const fraction =
+            denominator === 0
+                ? 0
+                : Math.abs(v1) /
+                  denominator;
+
+
+        const crossX =
+            x1 +
+            (x2 - x1) *
+            fraction;
+
+
+        const crossY =
+            y(0);
+
+
+        if (v1 >= 0) {
+
+            positivePath +=
+                `M ${x1} ${y1} L ${crossX} ${crossY} `;
+
+            negativePath +=
+                `M ${crossX} ${crossY} L ${x2} ${y2} `;
+
+        } else {
+
+            negativePath +=
+                `M ${x1} ${y1} L ${crossX} ${crossY} `;
+
+            positivePath +=
+                `M ${crossX} ${crossY} L ${x2} ${y2} `;
+        }
+    }
+
+
+    /*
+     * Only one date.
+     */
+    if (data.length === 1) {
+
+        const px =
+            x(0);
+
+        const py =
+            y(data[0].balance);
+
+
+        if (
+            data[0].balance >= 0
+        ) {
+
+            positivePath =
+                `M ${px} ${py}`;
+
+        } else {
+
+            negativePath =
+                `M ${px} ${py}`;
+        }
+    }
+
+
+    const zeroY =
+        y(0);
+
+
+    wrapper.innerHTML = `
+        <svg
+            viewBox="0 0 ${width} ${height}"
+            preserveAspectRatio="none"
+            aria-hidden="true">
+
+            <line
+                x1="0"
+                y1="${zeroY}"
+                x2="${width}"
+                y2="${zeroY}"
+                stroke="#555"
+                stroke-width="1"
+                stroke-dasharray="3 3">
+            </line>
+
+            <path
+                d="${positivePath}"
+                fill="none"
+                stroke="#45d483"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+            </path>
+
+            <path
+                d="${negativePath}"
+                fill="none"
+                stroke="#ff453a"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+            </path>
+
+        </svg>
+    `;
+
+
+    return wrapper;
+}
+
+    const width = 300;
+    const height = 80;
+
+
+    const values =
+        data.map(
+            item =>
+                item.balance
+        );
+
+
+    const highest =
+        Math.max(
+            0,
+            ...values
+        );
+
+
+    const lowest =
+        Math.min(
+            0,
+            ...values
+        );
+
+
+    const range =
+        Math.max(
+            1,
+            highest - lowest
+        );
+
+
+    const padding =
+        range * 0.12;
+
+
+    const top =
+        highest + padding;
+
+
+    const bottom =
+        lowest - padding;
+
+
+    function x(index) {
+
+        if (data.length === 1) {
+            return width / 2;
+        }
+
+        return (
+            index /
+            (data.length - 1)
+        ) * width;
+    }
+
+
+    function y(value) {
+
+        return (
+            (top - value) /
+            (top - bottom)
+        ) * height;
+    }
+
+
     /*
      * Build separate positive and negative
      * paths, including a precise crossing
