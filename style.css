@@ -1181,11 +1181,14 @@ button {
 
 
 .adjust-balance {
-    color: var(--adjust);
+    color: var(--text);
 
     font-weight: 800 !important;
 }
 
+.adjust-balance.negative-balance {
+    color: var(--red) !important;
+}
 
 /* =====================================================
    STEP 2 - ADJUST FORM
