@@ -671,6 +671,33 @@ function getChronologicalTransactions() {
     );
 }
 
+/* =========================================================
+   DELETE TRANSACTION
+   ========================================================= */
+
+function deleteTransaction(id) {
+
+    if (!confirm("Delete this transaction?")) {
+        return;
+    }
+
+
+    transactions =
+        transactions.filter(
+            function (transaction) {
+                return transaction.id !== id;
+            }
+        );
+
+
+    renderTransactions();
+
+    window.scrollTo(
+        0,
+        0
+    );
+}
+
 
 /* =========================================================
    TRANSACTION LIST
@@ -808,28 +835,6 @@ function renderTransactions() {
                 "click",
                 deleteThisTransaction
             );
-           
-            deleteButton.addEventListener(
-                "touchstart",
-                function (event) {
-                    event.stopPropagation();
-                },
-                {
-                    passive: false
-                }
-            );
-            
-            deleteButton.addEventListener(
-                "touchend",
-                function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                },
-                {
-                    passive: false
-                }
-            );
-
 
             /* =================================================
                TRANSACTION ROW
@@ -1877,6 +1882,22 @@ document.addEventListener(
 
 
         if (!openRow) {
+            return;
+        }
+
+
+        /*
+         * The DELETE button belongs to the
+         * currently open swipe action.
+         *
+         * Do not close the row when the
+         * user touches DELETE.
+         */
+        if (
+            event.target.closest(
+                ".transaction-delete"
+            )
+        ) {
             return;
         }
 
