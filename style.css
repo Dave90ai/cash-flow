@@ -1889,3 +1889,22 @@ button {
 
     z-index: 3;
 }
+
+/* =====================================================
+   ALL ACCOUNTS - LARGER PC GRAPHS
+   ===================================================== */
+
+@media (min-width: 700px) {
+    .mini-graph-chart {
+        height: 70px;
+    }
+
+    .mini-graph-dates {
+        height: 16px;
+    }
+
+    .mini-graph-date,
+    .mini-graph-zero-date {
+        font-size: 9px;
+    }
+}
