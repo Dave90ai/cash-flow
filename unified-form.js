@@ -452,6 +452,7 @@ function openAddTransaction() {
         "open"
     );
 
+   updateUnifiedModalViewport();
 
     setUnifiedMode(
         "transaction"
@@ -557,7 +558,8 @@ function openEditTransaction(id) {
         "open"
     );
 
-
+   updateUnifiedModalViewport();
+   
     setUnifiedMode(
         "transaction"
     );
@@ -658,6 +660,7 @@ function openEditAdjust(id) {
         "open"
     );
 
+   updateUnifiedModalViewport();
 
     setUnifiedMode(
         "adjust"
@@ -1017,6 +1020,15 @@ function closeUnifiedForm() {
             "transactionModal"
         );
 
+   modal.style.height = "";
+   const formCard =
+       modal.querySelector(
+           ".form-card"
+       );
+   
+   if (formCard) {
+       formCard.style.maxHeight = "";
+   }
 
     if (modal) {
 
@@ -1175,6 +1187,57 @@ document.addEventListener(
         }
     }
 );
+
+/* =========================================================
+   MOBILE KEYBOARD / VISUAL VIEWPORT
+   ========================================================= */
+
+function updateUnifiedModalViewport() {
+
+    const modal =
+        document.getElementById(
+            "transactionModal"
+        );
+
+    if (
+        !modal ||
+        !modal.classList.contains("open") ||
+        !window.visualViewport
+    ) {
+        return;
+    }
+
+    const viewportHeight =
+        window.visualViewport.height;
+
+    modal.style.height =
+        viewportHeight + "px";
+
+    const formCard =
+        modal.querySelector(
+            ".form-card"
+        );
+
+    if (formCard) {
+
+        formCard.style.maxHeight =
+            viewportHeight + "px";
+    }
+}
+
+
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        updateUnifiedModalViewport
+    );
+
+    window.visualViewport.addEventListener(
+        "scroll",
+        updateUnifiedModalViewport
+    );
+}
 
 
 /* =========================================================
