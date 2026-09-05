@@ -1191,7 +1191,6 @@ document.addEventListener(
 /* =========================================================
    MOBILE KEYBOARD / VISUAL VIEWPORT
    ========================================================= */
-
 function updateUnifiedModalViewport() {
 
     const modal =
@@ -1227,7 +1226,6 @@ function updateUnifiedModalViewport() {
             `${viewport.height - 16}px`;
     }
 }
-
 
 if (window.visualViewport) {
 
