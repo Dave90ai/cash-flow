@@ -808,6 +808,27 @@ function renderTransactions() {
                 "click",
                 deleteThisTransaction
             );
+           
+            deleteButton.addEventListener(
+                "touchstart",
+                function (event) {
+                    event.stopPropagation();
+                },
+                {
+                    passive: false
+                }
+            );
+            
+            deleteButton.addEventListener(
+                "touchend",
+                function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                },
+                {
+                    passive: false
+                }
+            );
 
 
             /* =================================================
