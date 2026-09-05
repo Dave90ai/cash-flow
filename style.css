@@ -452,7 +452,7 @@ button {
         16px
         max(16px, env(safe-area-inset-bottom));
 
-    max-height: 90dvh;
+    max-height: 100dvh;
 
     min-height: 0;
 
