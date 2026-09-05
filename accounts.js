@@ -1574,16 +1574,6 @@ initializeAccounts();
 
 function formatDateShort(date) {
 
-    if (!date) {
-        return "";
-    }
-
-    const parts =
-        date.split("-");
-
-    return (
-        parts[2] +
-        "/" +
-        parts[1]
-    );
+    return formatDate(date);
 }
+
