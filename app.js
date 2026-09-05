@@ -137,7 +137,24 @@ function formatDate(date) {
 
     const parts = date.split("-");
 
-    return parts[2] + "/" + parts[1];
+    if (parts.length !== 3) {
+        return "";
+    }
+
+    const localDate =
+        new Date(
+            Number(parts[0]),
+            Number(parts[1]) - 1,
+            Number(parts[2])
+        );
+
+    return localDate.toLocaleDateString(
+        undefined,
+        {
+            day: "2-digit",
+            month: "2-digit"
+        }
+    );
 }
 
 
@@ -693,7 +710,61 @@ function renderTransactions() {
 
 
     display.forEach(
-        function (transaction) {
+        function (transaction, displayIndex) {
+            /* =================================================
+               HISTORY / FUTURE DIVIDER
+            
+               The list is newest first.
+            
+               Today belongs to History.
+            
+               Therefore the divider appears:
+               - before today's transactions, if today exists
+               - otherwise before the first past transaction
+               ================================================= */
+            
+            const today =
+                new Date();
+            
+            const todayString =
+                today.getFullYear() +
+                "-" +
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0") +
+                "-" +
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+            
+            const previousTransaction =
+                displayIndex > 0
+                    ? display[
+                        displayIndex - 1
+                    ]
+                    : null;
+            
+            const crossesHistoryBoundary =
+                previousTransaction &&
+                previousTransaction.date >
+                    todayString &&
+                transaction.date <=
+                    todayString;
+            
+            if (crossesHistoryBoundary) {
+            
+                const divider =
+                    document.createElement(
+                        "div"
+                    );
+            
+                divider.className =
+                    "history-future-divider";
+            
+                list.appendChild(
+                    divider
+                );
+            }
 
             const wrapper =
                 document.createElement(
