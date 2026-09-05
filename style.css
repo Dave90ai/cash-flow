@@ -1823,3 +1823,69 @@ button {
 
     z-index: 3;
 }
+
+/* =====================================================
+   ALL ACCOUNTS - MINI GRAPH DATES
+   ===================================================== */
+
+.mini-graph {
+    overflow: visible;
+}
+
+.mini-graph-chart {
+    width: 100%;
+    height: 58px;
+}
+
+.mini-graph-chart svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.mini-graph-dates {
+    position: relative;
+    height: 12px;
+    margin-top: 2px;
+}
+
+.mini-graph-date {
+    position: absolute;
+    top: 0;
+
+    transform: translateX(-50%);
+
+    color: var(--secondary);
+
+    font-size: 8px;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+.mini-graph-zero-date {
+    position: absolute;
+    top: 0;
+
+    transform: translateX(-50%);
+
+    color: var(--text);
+
+    font-size: 8px;
+    font-weight: 600;
+    line-height: 1;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    background: var(--card);
+
+    padding:
+        1px
+        2px;
+
+    border-radius: 3px;
+
+    z-index: 3;
+}
