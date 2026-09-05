@@ -678,6 +678,9 @@ function getChronologicalTransactions() {
 function deleteTransaction(id) {
 
     if (!confirm("Delete this transaction?")) {
+
+        closeAllSwipeRows();
+
         return;
     }
 
@@ -697,6 +700,7 @@ function deleteTransaction(id) {
         0
     );
 }
+
 
 
 /* =========================================================
