@@ -809,14 +809,6 @@ function renderTransactions() {
                 deleteThisTransaction
             );
 
-            deleteButton.addEventListener(
-                "touchend",
-                deleteThisTransaction,
-                {
-                    passive: false
-                }
-            );
-
 
             /* =================================================
                TRANSACTION ROW
