@@ -565,13 +565,9 @@ function setMainScreenVisible(
 function showAllAccounts() {
 
     syncCurrentTransactions();
-
     allAccountsMode = true;
-
+    renderAccountTabs();
     setMainScreenVisible(false);
-
-    
-
     renderAllAccountsScreen();
 
     /*
@@ -1029,8 +1025,8 @@ function createMiniGraph(
     const zeroY =
         y(0);
 
-
-    wrapper.innerHTML = `
+wrapper.innerHTML = `
+    <div class="mini-graph-chart">
         <svg
             viewBox="0 0 ${width} ${height}"
             preserveAspectRatio="none"
@@ -1065,7 +1061,127 @@ function createMiniGraph(
             </path>
 
         </svg>
-    `;
+    </div>
+
+    <div class="mini-graph-dates"></div>
+`;
+
+const datesElement =
+    wrapper.querySelector(
+        ".mini-graph-dates"
+    );
+
+if (datesElement) {
+
+    const dateIndexes = [];
+
+    if (data.length === 1) {
+
+        dateIndexes.push(0);
+
+    } else {
+
+        dateIndexes.push(0);
+
+        if (data.length > 2) {
+            dateIndexes.push(
+                Math.round(
+                    (data.length - 1) / 2
+                )
+            );
+        }
+
+        dateIndexes.push(
+            data.length - 1
+        );
+    }
+
+    [
+        ...new Set(dateIndexes)
+    ].forEach(function (index) {
+
+        const date =
+            document.createElement(
+                "span"
+            );
+
+        date.className =
+            "mini-graph-date";
+
+        date.textContent =
+            formatDateShort(
+                data[index].date
+            );
+
+        date.style.left =
+            `${(x(index) / width) * 100}%`;
+
+        datesElement.appendChild(
+            date
+        );
+    });
+
+    /*
+     * Add the first date on the new side
+     * whenever the balance crosses zero.
+     */
+    for (
+        let i = 0;
+        i < data.length - 1;
+        i++
+    ) {
+
+        const previous =
+            Number(
+                data[i].balance
+            );
+
+        const current =
+            Number(
+                data[i + 1].balance
+            );
+
+        if (
+            (
+                previous >= 0 &&
+                current < 0
+            ) ||
+            (
+                previous < 0 &&
+                current >= 0
+            )
+        ) {
+
+            const crossingIndex =
+                i + 1;
+
+            const crossingDate =
+                document.createElement(
+                    "span"
+                );
+
+            crossingDate.className =
+                "mini-graph-zero-date";
+
+            crossingDate.textContent =
+                formatDateShort(
+                    data[
+                        crossingIndex
+                    ].date
+                );
+
+            crossingDate.style.left =
+                `${(
+                    x(crossingIndex) /
+                    width
+                ) * 100}%`;
+
+            datesElement.appendChild(
+                crossingDate
+            );
+        }
+    }
+}
 
 
     return wrapper;
@@ -1454,5 +1570,20 @@ function initializeAccounts() {
     renderTransactions();
 }
 
-
 initializeAccounts();
+
+function formatDateShort(date) {
+
+    if (!date) {
+        return "";
+    }
+
+    const parts =
+        date.split("-");
+
+    return (
+        parts[2] +
+        "/" +
+        parts[1]
+    );
+}
