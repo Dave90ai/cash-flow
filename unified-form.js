@@ -1224,6 +1224,21 @@ function updateUnifiedModalViewport() {
 
         formCard.style.maxHeight =
             `${viewport.height - 16}px`;
+
+        /*
+         * When the iPhone keyboard opens,
+         * iOS may automatically scroll the
+         * form card to the focused amount field.
+         *
+         * Keep the entire popup positioned
+         * from the top instead.
+         */
+        if (
+            viewport.height <
+            window.innerHeight - 100
+        ) {
+            formCard.scrollTop = 0;
+        }
     }
 }
 
