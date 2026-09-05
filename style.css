@@ -1908,14 +1908,3 @@ button {
         font-size: 9px;
     }
 }
-
-/* =====================================================
-   MOBILE MODAL - KEYBOARD VIEWPORT
-   ===================================================== */
-
-@media (max-width: 759px) {
-    .modal {
-        top: 0;
-        bottom: auto;
-    }
-}
