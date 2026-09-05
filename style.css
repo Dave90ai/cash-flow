@@ -1908,3 +1908,44 @@ button {
         font-size: 9px;
     }
 }
+
+/* =====================================================
+   MINI GRAPH - ALLOW DATE LABELS TO FIT
+   ===================================================== */
+
+.mini-graph {
+    height: auto;
+    overflow: visible;
+}
+
+.mini-graph-chart {
+    height: 58px;
+}
+
+.mini-graph-dates {
+    height: 16px;
+    margin-top: 2px;
+}
+
+@media (min-width: 700px) {
+
+    .mini-graph-chart {
+        height: 70px;
+    }
+
+}
+
+/* =====================================================
+   HISTORY / FUTURE DIVIDER
+   ===================================================== */
+
+.history-future-divider {
+    height: 1px;
+
+    margin:
+        8px
+        0;
+
+    background:
+        rgba(255, 255, 255, .14);
+}
