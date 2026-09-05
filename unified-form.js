@@ -1207,11 +1207,14 @@ function updateUnifiedModalViewport() {
         return;
     }
 
-    const viewportHeight =
-        window.visualViewport.height;
+    const viewport =
+        window.visualViewport;
 
     modal.style.height =
-        viewportHeight + "px";
+        `${viewport.height}px`;
+
+    modal.style.top =
+        `${viewport.offsetTop}px`;
 
     const formCard =
         modal.querySelector(
@@ -1221,7 +1224,7 @@ function updateUnifiedModalViewport() {
     if (formCard) {
 
         formCard.style.maxHeight =
-            viewportHeight + "px";
+            `${viewport.height - 16}px`;
     }
 }
 
